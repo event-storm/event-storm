@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useCallback } from 'react';
 
-function App() {
+import First from './layers/first'
+import Second from './layers/second';
+
+import { publishMainContainer } from 'models';
+
+const App = () => {
+  const [counter, setCounter] = useState(0);
+  const clickHandler = useCallback(() => {
+    setCounter(prev => {
+      publishMainContainer(prev + 1);
+      return prev + 1;
+    });
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ background: 'red' }}>
+      Main fragment
+      <button onClick={clickHandler}>
+        click main counter
+      </button>
+      {counter}
+      <First />
+      <Second />
     </div>
   );
 }
