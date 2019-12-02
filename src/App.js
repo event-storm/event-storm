@@ -1,25 +1,32 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import First from './layers/first'
 import Second from './layers/second';
 
-import { publishMainContainer } from 'models';
+import models from 'models';
+import useSubscription from 'helpers/eventBus/useSubscription';
+
+const { publishTest1, subscribeTest1 } = models;
 
 const App = () => {
   const [counter, setCounter] = useState(0);
+
   const clickHandler = useCallback(() => {
     setCounter(prev => {
-      publishMainContainer(prev + 1);
+      publishTest1(prev + 1);
       return prev + 1;
     });
   }, []);
+
+  const [test1] = useSubscription(subscribeTest1);
+
   return (
     <div style={{ background: 'red' }}>
       Main fragment
       <button onClick={clickHandler}>
-        click main counter
+        click main counter :::: {counter}
       </button>
-      {counter}
+      test1 :::: {test1}
       <First />
       <Second />
     </div>

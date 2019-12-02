@@ -1,5 +1,5 @@
-import configureModel from './eventBus';
+import configureModels from './eventBus';
 
 export {
-  configureModel,
+  configureModels,
 };
