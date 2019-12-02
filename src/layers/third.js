@@ -3,14 +3,13 @@ import React, { useState, useCallback, memo } from 'react';
 import models from 'models';
 import useSubscription from 'helpers/eventBus/useSubscription';
 
-const { subscribeTest2, subscribeTest3 } = models;
+const { subscribeEvent2, subscribeEvent3 } = models;
 
 const Third = () => {
   const [counter, setCounter] = useState(0);
   const clickHandler = useCallback(() => setCounter(prev => prev + 1), []);
 
-  const [data, concat] = useSubscription(subscribeTest2, subscribeTest3);
-  console.log(concat)
+  const [data, concat] = useSubscription(subscribeEvent2, subscribeEvent3);
 
   return (
     <div style={{ background: 'blue' }}>

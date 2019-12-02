@@ -6,19 +6,19 @@ import Second from './layers/second';
 import models from 'models';
 import useSubscription from 'helpers/eventBus/useSubscription';
 
-const { publishTest1, subscribeTest1 } = models;
+const { publishEvent1, subscribeEvent1 } = models;
 
 const App = () => {
   const [counter, setCounter] = useState(0);
 
   const clickHandler = useCallback(() => {
     setCounter(prev => {
-      publishTest1(prev + 1);
+      publishEvent1(prev + 1);
       return prev + 1;
     });
   }, []);
 
-  const [test1] = useSubscription(subscribeTest1);
+  const [event] = useSubscription(subscribeEvent1);
 
   return (
     <div style={{ background: 'red' }}>
@@ -26,7 +26,7 @@ const App = () => {
       <button onClick={clickHandler}>
         click main counter :::: {counter}
       </button>
-      test1 :::: {test1}
+      event :::: {event}
       <First />
       <Second />
     </div>
