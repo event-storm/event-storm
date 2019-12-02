@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 
 import models from 'models';
-import useSubscription from 'helpers/eventBus/useSubscription';
+import { useSubscription } from 'helpers/eventBus';
 
 const { subscribeEvent2, subscribeEvent3 } = models;
 

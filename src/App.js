@@ -4,7 +4,7 @@ import First from './layers/first'
 import Second from './layers/second';
 
 import models from 'models';
-import useSubscription from 'helpers/eventBus/useSubscription';
+import { useSubscription } from 'helpers/eventBus';
 
 const { publishEvent1, subscribeEvent1 } = models;
 

@@ -1,4 +1,4 @@
-import { configureModels } from 'helpers';
+import { configureModels } from 'helpers/eventBus';
 
 const options = {
   event1: 0,

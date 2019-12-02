@@ -1,4 +1,4 @@
-import { mapToObject, isEqual } from './utils'
+import { mapToObject, isEqual } from './utils';
 
 class EventBus {
 

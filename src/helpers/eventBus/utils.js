@@ -11,5 +11,4 @@ export const mapToObject = map => {
 };
 
 // NOTE:: more relevant comparison needed
-
 export const isEqual = (next, prev) => Object.is(next, prev);
