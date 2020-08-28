@@ -3,22 +3,18 @@ import React, { useState, useCallback, useEffect } from 'react';
 import First from './layers/first'
 import Second from './layers/second';
 
-import models from 'models';
-import { useSubscription } from 'helpers/eventBus';
-
-const { publishEvent1, subscribeEvent1 } = models;
+import model from 'models/event1';
+import useModel from 'helpers/eventBus/useModel';
 
 const App = () => {
   const [counter, setCounter] = useState(0);
+  const [event, publishEvent] = useModel(model);
 
   const clickHandler = useCallback(() => {
-    setCounter(prev => {
-      publishEvent1(prev + 1);
-      return prev + 1;
-    });
+    publishEvent(prev => prev + 1);
   }, []);
 
-  const [event] = useSubscription(subscribeEvent1);
+  console.log('>>> render')
 
   return (
     <div style={{ background: 'red' }}>

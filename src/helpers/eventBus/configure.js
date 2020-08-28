@@ -1,31 +1,50 @@
-import EventBus from './eventBus';
+import { register, log, doesEventExists, subscribe, publish } from './eventBus';
 
-import { capitalize } from './utils';
-
-const configure = options => Object.keys(options).reduce((models, event) => {
-  const defaultState = options[event];
-
-  if (!EventBus.events.has(event)) {
-    EventBus.register(event, defaultState);
-  } else {
-    EventBus.log(`There is an event already registered with name "${event}"`);
+const createModel = (event, defaultData) => {
+  if (doesEventExists(event)) {
+    log(`There is an event already registered with name "${event}"`);
+    return;
   }
+  const model = register(event, defaultData);
 
-  const subscribe = function(callback, needPrevious = true) {
-    return EventBus.subscribe(event, callback, needPrevious);
-  }
+  return {
+    event,
+    getState: () => model.lastState,
+    publish: nextState => publish(event, nextState),
+    subscribe: (callback, needPrevious) => {
+      return subscribe(event, callback, needPrevious);
+    },
+  };
+}
 
-  subscribe.event = event;
+const createVirtualModel = (...models) => {
+  const info = {};
+  const needPrevious = true;
+  return handler => ({
+    getState: () => {
+      const result = models.reduce((state, model) => {
+        state[model.event] = model.getState();
+        return state;
+      }, {});
+      return handler(result);
+    },
+    subscribe: callback => {
+      const subscriptions = models.reduce((subscriptions, model) => {
+        const subscription = model.subscribe((nextState) => {
+          info[model.event] = nextState;
+          Object.keys(info).length === models.length && callback(handler(info));
+        }, needPrevious);
 
-  const capitalizedEvent = capitalize(event);
+        subscriptions.push(subscription);
+        return subscriptions;
+      }, []);
 
-  models.publishers[`publish${capitalizedEvent}`] = data => EventBus.publish(event, data);
-  models.subscribers[`subscribe${capitalizedEvent}`] = subscribe;
+      return () => subscriptions.forEach(subscription => subscription());
+    }
+  });
+}
 
-  return models;
-}, {
-  subscribers: {},
-  publishers: {},
-});
-
-export default configure;
+export {
+  createModel,
+  createVirtualModel,
+}

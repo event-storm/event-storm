@@ -1,84 +1,67 @@
-import { mapToObject, isEqual } from './utils';
+import { isEqual, needLogs, defaultEventData } from './utils';
 
-class EventBus {
+const events = new Map();
 
-  static needLogs = process.env.NODE_ENV === 'development';
+const publish = (event, data) => {
+  const neededEvent = getEvent(event);
 
-  events = new Map();
+  if (!isEqual(data, neededEvent.lastState)) {
 
-  publish(event, data) {
+    if (data === undefined && !neededEvent.lastState) {
+      log(`There is no passed data for published event named ${event}. Use "null" instead of "undefined" as default.`);
+    }
+
     const isFunction = typeof data === 'function';
 
-    const neededEvent = this.getEvent(event);
+    neededEvent.lastState = isFunction ? data(neededEvent.lastState) : data;
+    neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
+  } else {
+    log(`There is no need for update. Unnecassary event publishment ${event}`);
+  }
+}
 
-    if (!isEqual(data, neededEvent.lastState)) {      
+const subscribe = (event, callback, needPrevious) => {
+  const neededEvent = getEvent(event);
 
-      if (data === undefined && !neededEvent.lastState) {
-        this.log(`There is no passed data for published event named ${event}. Use "null" instead of "undefined"`);
-      }
+  needPrevious && callback(neededEvent.lastState);
+  neededEvent.subscribers.push(callback);
 
-      neededEvent.lastState = isFunction ? data(neededEvent.lastState, mapToObject(this.events)) : data;
-      neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
+  return () => {
+    neededEvent.subscribers = neededEvent.subscribers.filter(subscription => subscription !== callback);
+  }
+}
 
-      !neededEvent.isComposed && this.triggerComposedEvents();
-    } else {
-      this.log(`There is no need for update. Unnecassary event publishment ${event}`);
-    }
+const register = (event, initial) => {
+  const neededEvent = getEvent(event);
+  neededEvent.lastState = initial;
+  return neededEvent;
+}
+
+const doesEventExists = event => events.has(event);
+
+const createEvent = event => {
+  events.set(event, defaultEventData());
+  console.log(`Event: ${event} created`);
+}
+
+const getEvent = event => {
+  if (!doesEventExists(event)) {
+    // TODO:: consider proper sulution
+    createEvent(event);
   }
 
-  subscribe(event, callback, needPrevious) {
-    const neededEvent = this.getEvent(event);
+  return events.get(event);
+}
 
-    needPrevious && callback(neededEvent.lastState);
-    neededEvent.subscribers.push(callback);
+const log = message => {
+  needLogs && console.trace(message);
+}
 
-    return () => {
-      neededEvent.subscribers = neededEvent.subscribers.filter(subscription => subscription !== callback);
-    }
-  }
-
-  triggerComposedEvents() {
-    this.events.forEach((value, event) => {
-      if (value.isComposed) {
-        const nextState = value.handler(mapToObject(this.events));
-        if (!isEqual(nextState, value.lastState)) {
-          this.publish(event, nextState);
-        }
-      }
-    });
-  }
-
-  register(event, initial) {
-    const neededEvent = this.getEvent(event);
-    if (typeof initial === 'function') {
-      neededEvent.isComposed = true;
-      neededEvent.handler = initial;
-      neededEvent.lastState = neededEvent.handler(mapToObject(this.events));
-    } else {
-      neededEvent.isComposed = false;
-      neededEvent.handler = null;
-      neededEvent.lastState = initial;
-    }
-  }
-
-  getEvent(event) {
-    if (!this.events.has(event)) {
-      this.events.set(event, {
-        handler: null,
-        lastState: null,
-        subscribers: [],
-        isComposed: false,
-      });
-    }
-
-    return this.events.get(event);
-  }
-
-  log(message) {
-    EventBus.needLogs && console.trace(message);
-  }
+export {
+  log,
+  events,
+  publish,
+  register,
+  subscribe,
+  doesEventExists,
 };
-
-const eventBus = new EventBus();
-
-export default eventBus;
