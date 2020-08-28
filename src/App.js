@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 
 import First from './layers/first'
 import Second from './layers/second';
@@ -7,7 +7,6 @@ import model from 'models/event1';
 import useModel from 'helpers/eventBus/useModel';
 
 const App = () => {
-  const [counter, setCounter] = useState(0);
   const [event, publishEvent] = useModel(model);
 
   const clickHandler = useCallback(() => {
@@ -20,7 +19,7 @@ const App = () => {
     <div style={{ background: 'red' }}>
       Main fragment
       <button onClick={clickHandler}>
-        click main counter :::: {counter}
+        click main counter
       </button>
       event :::: {event}
       <First />
