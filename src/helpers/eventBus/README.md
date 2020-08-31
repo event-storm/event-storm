@@ -5,7 +5,7 @@ Event store implementation for React(hooks).
 
   - React: `^16.8.0`
 
-# Provided API
+# Provided API(outdated)
 
 ## configureModels
 
