@@ -19,8 +19,8 @@ const createModel = (event, defaultData) => {
 
 const createVirtualModel = (...models) => {
   const info = {};
-  const needPrevious = true;
-  return handler => ({
+  return handle => ({
+    event: models.map(({ event }) => event),
     getState: () => {
       const result = models.reduce((state, model) => {
         state[model.event] = model.getState();
@@ -28,7 +28,7 @@ const createVirtualModel = (...models) => {
       }, {});
       return handler(result);
     },
-    subscribe: callback => {
+    subscribe: (callback, needPrevious = true) => {
       const subscriptions = models.reduce((subscriptions, model) => {
         const subscription = model.subscribe((nextState) => {
           info[model.event] = nextState;
@@ -40,7 +40,15 @@ const createVirtualModel = (...models) => {
       }, []);
 
       return () => subscriptions.forEach(subscription => subscription());
-    }
+    },
+    publish: options => Object.entries(options).forEach(([event, data]) => {
+      const neededModel = models.find(model => model.event === event);
+      if (neededModel) {
+        publish(event, data);
+      } else {
+        log(`Wrong event key: ${event} was provided for virtual model`);
+      }
+    }),
   });
 }
 
