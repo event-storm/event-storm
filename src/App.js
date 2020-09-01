@@ -1,29 +1,24 @@
 import React, { useCallback } from 'react';
 
-import First from './layers/first'
-import Second from './layers/second';
-
-import model from 'models/event1';
+import nameModel from 'models/name';
+import fullnameModel from 'models/fullname';
+import combinedModel from 'models/combined';
 import useModel from 'helpers/eventBus/useModel';
 
 const App = () => {
-  const [event, publishEvent] = useModel(model);
+  const [name, setName] = useModel(nameModel);
+  const [fullname] = useModel(fullnameModel);
+  const [combined] = useModel(combinedModel);
 
-  const clickHandler = useCallback(() => {
-    publishEvent(prev => prev + 1);
+  const onChange = useCallback(event => {
+    setName(event.target.value);
   }, []);
-
-  console.log('>>> render')
 
   return (
     <div style={{ background: 'red' }}>
-      Main fragment
-      <button onClick={clickHandler}>
-        click main counter
-      </button>
-      event :::: {event}
-      <First />
-      <Second />
+      {fullname}
+      <input onChange={onChange} value={name} />
+      {combined}
     </div>
   );
 }

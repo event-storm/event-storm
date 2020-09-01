@@ -1,23 +1,18 @@
-import { useRef, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { useMount, useForceUpdate } from 'helpers/hooks';
+import { publish } from './eventBus';
 
 const useModel = model => {
-  const state = useRef(model.getState());
   const forceUpdate = useForceUpdate();
 
-  useMount(() => {
-    return model.subscribe(data => {
-      state.current = data;
-      forceUpdate();
-    });
-  });
+  useMount(() => model.subscribe(() => forceUpdate()));
 
   const setState = useCallback(data => {
-    model.publish(data);
-  }, [model.publish]);
+    publish(model.event, data);
+  }, [model.event]);
 
-  return [state.current, setState];
+  return [model.getState(), setState];
 }
 
 export default useModel;

@@ -1,6 +1,8 @@
 import { register, log, doesEventExists, subscribe, publish } from './eventBus';
+import { generateId } from './utils';
 
-const createModel = (event, defaultData) => {
+const createModel = defaultData => {
+  const event = generateId();
   if (doesEventExists(event)) {
     log(`There is an event already registered with name "${event}"`);
     return;
@@ -10,7 +12,6 @@ const createModel = (event, defaultData) => {
   return {
     event,
     getState: () => model.lastState,
-    publish: nextState => publish(event, nextState),
     subscribe: (callback, needPrevious) => {
       return subscribe(event, callback, needPrevious);
     },
@@ -18,21 +19,19 @@ const createModel = (event, defaultData) => {
 }
 
 const createVirtualModel = (...models) => {
-  const info = {};
-  return handle => ({
+  const info = [];
+  return handler => ({
     event: models.map(({ event }) => event),
-    getState: () => {
-      const result = models.reduce((state, model) => {
-        state[model.event] = model.getState();
-        return state;
-      }, {});
-      return handler(result);
-    },
+    getState: () => handler(models.map(model => model.getState())),
     subscribe: (callback, needPrevious = true) => {
-      const subscriptions = models.reduce((subscriptions, model) => {
-        const subscription = model.subscribe((nextState) => {
-          info[model.event] = nextState;
-          Object.keys(info).length === models.length && callback(handler(info));
+      const uniqueModels = [];
+      models.forEach(model => {
+        !uniqueModels.includes(model.event) && uniqueModels.push(model);
+      });
+      const subscriptions = uniqueModels.reduce((subscriptions, model) => {
+        const subscription = model.subscribe((nextState, index) => {
+          info[index] = nextState;
+          info.length === models.length && callback(handler(info));
         }, needPrevious);
 
         subscriptions.push(subscription);
@@ -41,14 +40,6 @@ const createVirtualModel = (...models) => {
 
       return () => subscriptions.forEach(subscription => subscription());
     },
-    publish: options => Object.entries(options).forEach(([event, data]) => {
-      const neededModel = models.find(model => model.event === event);
-      if (neededModel) {
-        publish(event, data);
-      } else {
-        log(`Wrong event key: ${event} was provided for virtual model`);
-      }
-    }),
   });
 }
 
