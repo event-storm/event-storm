@@ -32,8 +32,8 @@ const createModel = (defaultData = null) => {
 const createVirtualModel = (...models) => {
   const info = [];
   return handler => {
-    const current = handler(models.map(model => model.getState()));
-    const state = { current, };
+    const current = handler(...models.map(model => model.getState()));
+    const state = { current };
     return ({
       event: models.map(({ event }) => event),
       getState: () => state.current,
@@ -45,7 +45,7 @@ const createVirtualModel = (...models) => {
             info[index] = nextState;
             // NOTE: Some memoization can be needed if the processed value is the same as the previous one
             if (info.length === models.length) {
-              const computed = handler(info);
+              const computed = handler(...info);
               if (!isEqual(computed, state.current)) {
                 state.current = computed;
                 callback(state.current);
@@ -57,7 +57,7 @@ const createVirtualModel = (...models) => {
           return subscriptions;
         }, []);
 
-        return () => subscriptions.forEach(subscription => subscription());
+        return () => subscriptions.forEach(unsubscribe => unsubscribe());
       },
     })
   };
