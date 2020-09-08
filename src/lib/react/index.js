@@ -1,1 +1,1 @@
-export { default as useModel } from './useModel';
+export { default as useModels } from './useModels';
