@@ -1,16 +1,19 @@
 import React from 'react';
 
-import { useModel } from 'lib/react';
+import { useModels } from 'lib/react';
 
-import firstPublishedModel from 'example/models/firstPublished';
+import firstPublished from 'example/models/firstPublished';
+
+const { firstBookNameModel, booksCountModel } = firstPublished;
 
 function FirstPublished() {
 
-  const firstPublishedName = useModel(firstPublishedModel);
+  const [firstPublishedName, booksCount] = useModels(firstBookNameModel, booksCountModel);
 
   return (
     <span>
       first in the order(updates only on first update): {firstPublishedName}
+      <br/>{booksCount}
     </span>
   );
 }
