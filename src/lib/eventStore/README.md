@@ -14,9 +14,9 @@ The library consists of 2 parts: event store implementation and data model absra
 - log for development
   - event registration
   - publishing the same data twice
-- option to not propagate on duplicate changes
-- history object
-- time travel
+- option to not propagate on duplicate changes (n.i.)
+- history object (n.i.)
+- time travel (n.i.)
 
 Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`):
 - creating a data on real information
