@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { useVirtualModel } from 'lib/react';
+import { useModel } from 'lib/react';
 
 import firstPublishedModel from 'example/models/firstPublished';
 
 function FirstPublished() {
 
-  const firstPublishedName = useVirtualModel(firstPublishedModel);
+  const firstPublishedName = useModel(firstPublishedModel);
 
   return (
     <span>
