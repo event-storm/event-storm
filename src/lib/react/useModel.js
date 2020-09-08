@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 
-import { useMount, useForceUpdate } from 'helpers/hooks';
-import { publish } from './eventBus';
+import { publishModel } from '../eventStore';
+import useMount from './useMount';
+import useForceUpdate from './useForceUpdate';
 
 const useModel = model => {
   const forceUpdate = useForceUpdate();
@@ -9,8 +10,8 @@ const useModel = model => {
   useMount(() => model.subscribe(() => forceUpdate()));
 
   const setState = useCallback(data => {
-    publish(model.event, data);
-  }, [model.event]);
+    publishModel(model, data);
+  }, [model]);
 
   return [model.getState(), setState];
 }

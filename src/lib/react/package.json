@@ -1,0 +1,19 @@
+{
+  "name": "react-event-store",
+  "version": "1.0.0",
+  "description": "React wrapper for event-store library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-event-store",
+    "store-management"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Artur93gev/update-models.git"
+  },
+  "author": "artur93gev",
+  "license": "MIT"
+}

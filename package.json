@@ -2,16 +2,18 @@
   "name": "udpate-models",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.11.0",
-    "react-scripts": "^3.4.3"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "react-dom": "^16.11.0",
+    "react-scripts": "^3.4.3"
   },
   "eslintConfig": {
     "extends": "react-app"

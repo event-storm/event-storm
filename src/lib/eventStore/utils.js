@@ -6,4 +6,4 @@ export const needLogs = process.env.NODE_ENV === 'development';
 let counter = 0;
 export const generateId = () => String(Date.now() + counter++);
 
-export const defaultEventData = () => ({ handler: null, lastState: null, subscribers: [] });
+export const defaultEventData = () => ({ lastState: null, subscribers: [] });
