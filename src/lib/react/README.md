@@ -5,9 +5,21 @@ The solution can be used for React application, and for hybrid applications wher
 As the underlying concept is separating the source of truth from the application processors, this will allow to combine any kind of application makers arround one single peace of information(model).
 
 ## Technical stack
+
 - React ^16.8.0(hooks support)
 
 ## API
 
+- useModel
+  Example:
+  ```js
+  // userModel.js
+  const userModel = createModel({});
+
+  // in any component
+  const [user] = useModels(userModel);
+  ```
+
+  `useModel` will handle subscription, updates, also will unsubscribe the events on component unmount.
 
 ## Playground

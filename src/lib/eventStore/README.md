@@ -10,7 +10,7 @@ to have an event base store for the data. Inspired by (Event store)[https://en.w
 ## Basic concepts
 
 The library consists of 2 parts: event store implementation and data model absraction. The event store supports:
-- register/publish/subscribe of events
+- publish/subscribe of events
 - log for development
   - event registration
   - publishing the same data twice
@@ -18,7 +18,7 @@ The library consists of 2 parts: event store implementation and data model absra
 - history object (n.i.)
 - time travel (n.i.)
 
-Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`):
+Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`). This will give following benefits:
 - creating a data on real information
 - get last state of model at any time
 - subscription to last event(even if it happens earlier)

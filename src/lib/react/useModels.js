@@ -1,13 +1,13 @@
-import useMount from './useMount';
-import useForceUpdate from './useForceUpdate';
+import { useState, useEffect } from 'react';
 
 const useModels = (...models) => {
-  const forceUpdate = useForceUpdate();
+  // eslint-disable-next-line
+  const [_, forceUpdate] = useState();
 
-  useMount(() => {
-    const subscriptions = models.map(model => model.subscribe(() => forceUpdate()));
+  useEffect(() => {
+    const subscriptions = models.map(model => model.subscribe(() => forceUpdate([])));
     return () => subscriptions.map(unsubscribe => unsubscribe());
-  });
+  }, []);
 
   return models.map(model => model.getState());
 }
