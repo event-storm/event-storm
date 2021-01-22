@@ -67,6 +67,17 @@ const publishModel = (model, data) => {
   publish(model.event, data);
 }
 
+const createModels = options => {
+  const result = Object.entries(options).reduce((models, [event, value]) => {
+    if (typeof(value) !== 'function') {
+      models[event] = createModel(value);
+      return models;
+    }
+    models[event] = createVirtualModel(models)(value);
+  }, {});
+
+}
+
 export {
   createModel,
   publishModel,

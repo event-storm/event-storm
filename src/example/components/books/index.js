@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useModels } from 'lib/react';
 import { publishModel } from 'lib/eventStore';
 

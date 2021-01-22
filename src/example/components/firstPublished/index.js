@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useModels } from 'lib/react';
 
 import firstPublished from 'example/models/firstPublished';

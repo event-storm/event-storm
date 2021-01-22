@@ -1,5 +1,3 @@
-import React from 'react';
-
 function BookItem({ name }) {
   return (
     <span className="book-starter">

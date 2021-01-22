@@ -26,4 +26,29 @@ Data model abstraction represents pubsub implementation. The data models are of 
 
 ## API
 
+- createModel
+  Example:
+  `const userModel = createModel({});`
+- createVirtualModel
+  ```js
+  const time = createModel(0);
+  const velocity = createModel(10);
+  const road = createVirtualModel(time, velocity)((timeValue, velocityValue) => {
+    return timeValue * velocityValue;
+  });
+  ```
+- publishModel
+  ```js
+  const time = createModel(0);
+  publishModel(time, 10);
+  ```
+
+  Listening to changes
+  ```js
+  const userModel = createModel({});
+  userModel.subscribe(newInfo => console.log(newInfo, 'update receives'));
+
+  // anywhere in application
+  publishModel(userModel, { name: 'new user' });
+  ```
 ## Playground

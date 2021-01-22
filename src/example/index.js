@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Books from './components/books';
 import AddBook from './components/addBook';
 import FirstPublished from './components/firstPublished';
