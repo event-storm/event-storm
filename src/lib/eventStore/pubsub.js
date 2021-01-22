@@ -4,7 +4,7 @@ import { isEqual, needLogs, defaultEventData } from './utils';
 const events = new Map();
 
 /**
- * Eventbus publish
+ * Publish
  * @param {string} event The event name that need to be published
  * @param {any} data The value, that need to be delivered to subscribers
  */
@@ -27,7 +27,7 @@ const publish = (event, data) => {
 }
 
 /**
- * Eventbus subscribe
+ * Subscribe
  * @param  {string} event Event name to be, on which need to register a subscription
  * @param  {Function} callback The function will be called on each next value
  * @param  {boolean} needPrevious Passing the value as true will deliver the last published state for this event
@@ -45,7 +45,7 @@ const subscribe = (event, callback, needPrevious) => {
 }
 
 /**
- * Eventbus register
+ * Register
  * @param {string} event The event name to be registered
  * @param {any} initial Initial value of the event
  * @return {object} Event The stored object
@@ -59,14 +59,14 @@ const register = (event, initial) => {
 }
 
 /**
- * Eventbus doesEventExists
+ * DoesEventExists
  * @param {string} event The event name to be checked
  * @return {boolean} The boolean value that describes does the event is registered or not.
  */
 const doesEventExists = event => events.has(event);
 
 /**
- * Eventbus createEvent
+ * CreateEvent
  * @param {string} event The event name to be created
  */
 const createEvent = event => {
@@ -75,7 +75,7 @@ const createEvent = event => {
 }
 
 /**
- * Eventbus getEvent
+ * GetEvent
  * @param {string} event The event name to get from storage
  * @return {object} Event returns the event object(creates new if not exist)
  */
@@ -90,7 +90,7 @@ const getEvent = event => {
 }
 
 /**
- * Eventbus log - tracing the stack, as this will help to find the code segment that propagates the change
+ * Log - tracing the stack, as this will help to find the code segment that propagates the change
  * @param {string} message Message to log
  */
 const log = message => {

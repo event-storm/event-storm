@@ -1,4 +1,4 @@
-import { register, log, doesEventExists, subscribe, publish } from './eventBus';
+import { register, log, doesEventExists, subscribe, publish } from './pubsub';
 import { generateId, isEqual } from './utils';
 
 /**
