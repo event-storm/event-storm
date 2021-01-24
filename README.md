@@ -53,4 +53,4 @@ Data model abstraction represents pubsub implementation. The data models are of 
   ```
 ## Playground
 
-You can play with a live example in the [codesandbox](https://codesandbox.io/s/serene-wood-cjvem)
+You can play with a live example in the <a href="https://codesandbox.io/s/serene-wood-cjvem" target="_blank">codesandbox</a>
