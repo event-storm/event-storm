@@ -1,5 +1,5 @@
 {
-  "name": "event-store",
+  "name": "event-storm",
   "version": "0.0.1",
   "description": "In memory event store",
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "bundle": "rollup -c",
-    "prepublish": "rimraf ./dist && npm run bundle"
+    "build": "rimraf ./dist && npm run bundle"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
