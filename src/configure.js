@@ -34,21 +34,27 @@ const createVirtualModel = (...models) => {
   return handler => {
     const current = handler(...models.map(model => model.getState()));
     const state = { current };
+    const subscribers = [];
     return ({
       event: models.map(({ event }) => event),
       getState: () => state.current,
       subscribe: (callback, needPrevious = true) => {
+        subscribers.push(callback);
+
         // NOTE: one single model can include many subscriptions of the same event, if it is virtual.
-        // Need to be considered wheter we need the uniqunes of the models underlyed events or not.
+        // Need to be considered wheter we need the uniquness of the models underlyed events or not.
+
         const subscriptions = models.reduce((subscriptions, model, index) => {
           const subscription = model.subscribe(nextState => {
             info[index] = nextState;
+
             // NOTE: Some memoization can be needed if the processed value is the same as the previous one
+
             if (info.length === models.length) {
               const computed = handler(...info);
               if (!isEqual(computed, state.current)) {
                 state.current = computed;
-                callback(state.current);
+                subscribers.forEach(subscriber => subscriber(state.current));
               }
             }
           }, needPrevious);
@@ -57,7 +63,10 @@ const createVirtualModel = (...models) => {
           return subscriptions;
         }, []);
 
-        return () => subscriptions.forEach(unsubscribe => unsubscribe());
+        return () => {
+          subscribers = subscribers.filter(subscriber => callback !== subscriber);
+          subscriptions.forEach(unsubscribe => unsubscribe())
+        };
       },
     })
   };
@@ -75,7 +84,6 @@ const createModels = options => {
     }
     models[event] = createVirtualModel(models)(value);
   }, {});
-
 }
 
 export {
