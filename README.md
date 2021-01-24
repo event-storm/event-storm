@@ -52,3 +52,5 @@ Data model abstraction represents pubsub implementation. The data models are of 
   publishModel(userModel, { name: 'new user' });
   ```
 ## Playground
+
+You can play with a live example in the [codesandbox](https://codesandbox.io/s/serene-wood-cjvem)
