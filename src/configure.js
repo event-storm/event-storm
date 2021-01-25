@@ -1,4 +1,4 @@
-import { register, log, doesEventExist, subscribe, publish } from './pubsub';
+import { register, subscribe, publish } from './pubsub';
 import { generateId, isEqual } from './utils';
 
 /**
@@ -12,10 +12,7 @@ import { generateId, isEqual } from './utils';
  */
 const createModel = (defaultData, fireDuplicates) => {
   const event = generateId();
-  if (doesEventExist(event)) {
-    log(`There is an event already registered with name "${event}"`);
-    return;
-  }
+
   const model = register(event, defaultData, fireDuplicates);
 
   return {

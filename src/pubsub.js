@@ -52,11 +52,10 @@ const subscribe = (event, callback, needPrevious) => {
  * @return {any} Event.lastState The last published or the initial value
  * @return {Function[]} Event.subscribers The subscriber functions list
  */
-const register = (event, initial, fireDuplicates) => {
-  if (doesEventExist(event)) return log(`Event already exists: ${event}.`);
-  const neededEvent = createEvent(event, initial, fireDuplicates);
-  return neededEvent;
-}
+const register = (event, initial, fireDuplicates) =>
+  doesEventExist(event)
+    ? log(`Event already exists: ${event}.`)
+    : createEvent(event, initial, fireDuplicates);
 
 /**
  * DoesEventExist
@@ -72,6 +71,7 @@ const doesEventExist = event => events.has(event);
 const createEvent = (event, inital, fireDuplicates) => {
   events.set(event, defaultEventData(fireDuplicates));
   console.log(`Event has been created: ${event}.`);
+  return getEvent(event);
 }
 
 /**
@@ -90,10 +90,7 @@ const log = message => {
 }
 
 export {
-  log,
-  events,
   publish,
   register,
   subscribe,
-  doesEventExist,
 };
