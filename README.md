@@ -1,11 +1,31 @@
+<a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/badge/npm-event--storm-brightgreen.svg"></a> <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/npm/v/event-storm.svg"></a>
+
 # In memory event store
 
-A tiny(`4kb`) event store implementation with pure javascript.
+A tiny(`4kb` :boom:) event store implementation with pure javascript. Work for Javascript's any hoist envirenment(browser, backend, desktop).
+The library has wrapper for:
+- React(will be published soon)
 
-## Motivation
+## Motivation :blue_book:
 
 Mainly in modern applications developer faces a problem to store data. As web-based applications are natively event based, it'll be nice
-to have an event base store for the data. Inspired by (Event store)[https://en.wikipedia.org/wiki/Event_store].
+to have an event base store for the data. Inspired by (Event store :bulb:)[https://en.wikipedia.org/wiki/Event_store].
+
+<details>
+  <summary>Deep look at the concept</summary>
+  Conceptually, in an event store, only the events of a dossier or policy are stored. The idea behind it is that the dossier
+  or policy can be derived from these events(*Mainly the same as single source of truth*).
+  The events (and their corresponding data) are the only "real" facts(*name `models` will be use in the libray scope*)
+  that should be stored in the database. The instantiation of all other objects can be derived from these events.
+  The code instantiates these objects in memory(*name `virtual model` will be used in library scope*). In an event store
+  database, this means that all objects that should be instantiated, are not stored in the database. Instead these objects are
+  instantiated 'on the fly' in memory by the code based on the events. After usage of these objects, the instantiated
+  objects are removed from memory.
+
+  Another crucial part of an event store database is that events that are stored are not allowed to be changed.
+  Once stored, also erroneous events are not changed anymore. The only way to change (or better: correct) these events
+  is to instantiate a new event with the new values and using the double timeline(*So as we know no mutation allowed*).
+</details>
 
 Conceptually, in an event store, only the events of a dossier or policy are stored. The idea behind it is that the dossier
 or policy can be derived from these events(*Mainly the same as single source of truth*).
@@ -23,19 +43,20 @@ is to instantiate a new event with the new values and using the double timeline(
 ## Basic concepts
 
 The library consists of 2 parts: event store implementation and data model absraction. The event store supports:
-- publish/subscribe of events
-- log for development
+- :star: publish/subscribe of events
+- :star: log for development
   - event registration
   - publishing the same data twice
-- option to not propagate on duplicate changes (n.i.)
-- history object (n.i.)
-- time travel (n.i.)
+- :star: option to not propagate on duplicate changes (n.i.)
+- :boom: history object (n.i.)
+- :zap: time travel (n.i.)
 
-Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`). This will give following benefits:
-- creating a data on real information
-- get last state of model at any time
-- subscription to last event(even if it happens earlier)
-- creating a model by combining existing models(virtual model)
+Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`).
+This will give following benefits:
+- :punch: creating a data on real information
+- :pill: get last state of model at any time
+- :pushpin: subscription to last event(even if it happens earlier)
+- :hammer: creating a model by combining existing models(virtual model)
 
 ## API
 
@@ -73,6 +94,7 @@ Data model abstraction represents pubsub implementation. The data models are of 
     return timeValue * velocityValue;
   });
   ```
+
 - publishModel
   You can publish updates for your model using `publishModel` function.
   ```js
