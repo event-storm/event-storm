@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/event-store/event-store/compare/v0.2.0...v0.2.1) (2021-01-25)
+
+
+### Bug Fixes
+
+* **pubsub:** createEvent was not returning the created event ([b3dfae0](https://github.com/event-store/event-store/commit/b3dfae0919033c8bac4f95285ee7a3073cc76704))
+
+
+
 # [0.2.0](https://github.com/event-store/event-store/compare/v0.1.1...v0.2.0) (2021-01-25)
 
 
