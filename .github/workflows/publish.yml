@@ -22,8 +22,11 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn install --frozen-lockfile
-      - name: Conventional Changelog Action
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Linting
+        run: yarn run lint
+      - name: Generate changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2
         with:
@@ -36,7 +39,7 @@ jobs:
         run: yarn run publish-lib
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Create Release
+      - name: Create release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
