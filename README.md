@@ -102,14 +102,14 @@ This will give following benefits:
   publishModel(time, 1);
   ```
 
-  Here is an eqvivalent of the previous example:
+  Here is an equivalent of the previous example:
   ```js
   const time = createModel(0);
   publishModel(time, (prev) => prev + 1);
   ```
   Whenever your next state depends on the previous one you can just pass a function to `publishModel` to get a hook with previous model.
 
-  NOTE: Its important to notice that publishin a virtual model will cause a lot of pain in your code, as you need to describe the value-model map. As the virtual model is something relaying on real data, the best approach is to update the real data itself.
+  NOTE: Its important to notice that publishing a virtual model will cause a lot of pain in your code, as you need to describe the value-model map. As the virtual model is something relaying on real data, the best approach is to update the real data itself.
   Allowing otherwise will end up in wishes to reuse the processor function, additional descriptor for publishment, also syncronization issues. That far publish a `virtual model will do nothing`.
 
 - Listening to changes
