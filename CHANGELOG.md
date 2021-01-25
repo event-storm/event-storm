@@ -1,3 +1,12 @@
+## [0.2.2](https://github.com/event-store/event-store/compare/v0.2.1...v0.2.2) (2021-01-25)
+
+
+### Bug Fixes
+
+* **createevent:** missing attribute ([66a02d0](https://github.com/event-store/event-store/commit/66a02d08c6236ac5d049522c93c2781e4e35f603))
+
+
+
 ## [0.2.1](https://github.com/event-store/event-store/compare/v0.2.0...v0.2.1) (2021-01-25)
 
 
