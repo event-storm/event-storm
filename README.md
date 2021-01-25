@@ -2,7 +2,7 @@
 
 # In memory event store
 
-A tiny(`4kb` :boom:) event store implementation with pure javascript. Work for Javascript's any hoist envirenment(browser, backend, desktop).
+A tiny(`1.8kb` :boom:) event store implementation with pure javascript. Work for Javascript's any hoist envirenment(browser, backend, desktop).
 The library has wrapper for:
 - React(will be published soon)
 
