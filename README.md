@@ -34,7 +34,7 @@ The library consists of 2 parts: event store implementation and data model absra
 - :star: log for development
   - event registration
   - publishing the same data twice
-- :star: option to not propagate on duplicate changes (n.i.)
+- :star: not propagates on duplicate changes
 - :boom: history object (n.i.)
 - :zap: time travel (n.i.)
 
@@ -57,6 +57,16 @@ This will give following benefits:
   When defining a model it is often usefull to have a **default value**:
   ```js
   const clientModel = createModel({});
+  ```
+
+  NOT RECOMMENDED!
+  You can also pass the second parameter to `createModel`, which will make model propagate
+  on duplicate changes. Most likely if the code depends on duplicated event it need to be refactored,
+  instead of firing the same event twice.
+
+  ```js
+  const fireDuplicates = true;
+  const clientModel = createModel({}, fireDuplicates);
   ```
 - createVirtualModel
   The example above will show how to create a new model based on existing models.
