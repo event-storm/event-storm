@@ -27,19 +27,6 @@ to have an event base store for the data. Inspired by (Event store :bulb:)[https
   is to instantiate a new event with the new values and using the double timeline(*So as we know no mutation allowed*).
 </details>
 
-Conceptually, in an event store, only the events of a dossier or policy are stored. The idea behind it is that the dossier
-or policy can be derived from these events(*Mainly the same as single source of truth*).
-The events (and their corresponding data) are the only "real" facts(*name `models` will be use in the libray scope*)
-that should be stored in the database. The instantiation of all other objects can be derived from these events.
-The code instantiates these objects in memory(*name `virtual model` will be used in library scope*). In an event store
-database, this means that all objects that should be instantiated, are not stored in the database. Instead these objects are
-instantiated 'on the fly' in memory by the code based on the events. After usage of these objects, the instantiated
-objects are removed from memory.
-
-Another crucial part of an event store database is that events that are stored are not allowed to be changed.
-Once stored, also erroneous events are not changed anymore. The only way to change (or better: correct) these events
-is to instantiate a new event with the new values and using the double timeline(*So as we know no mutation allowed*).
-
 ## Basic concepts
 
 The library consists of 2 parts: event store implementation and data model absraction. The event store supports:
