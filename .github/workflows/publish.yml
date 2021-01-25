@@ -47,3 +47,16 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
+       - name: Rollback release
+        if: failure() && steps.changelog.outputs.id != ''
+        uses: author/action-rollback@stable
+        with:
+          id: ${{ steps.changelog.outputs.id }}
+          tag: ${{ steps.changelog.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Automatic Revert
+        if: failure()
+        uses: srt32/revert@v0.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
