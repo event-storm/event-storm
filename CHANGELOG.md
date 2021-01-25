@@ -1,3 +1,12 @@
+## [0.1.1](https://github.com/event-store/event-store/compare/v0.1.0...v0.1.1) (2021-01-25)
+
+
+### Bug Fixes
+
+* **actions:** fix syntax yml ([290c320](https://github.com/event-store/event-store/commit/290c320df233b8d35ebeaeaa4cff08766ff12f6f))
+
+
+
 # [0.1.0](https://github.com/event-store/event-store/compare/v0.0.8...v0.1.0) (2021-01-25)
 
 
