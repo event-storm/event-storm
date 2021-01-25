@@ -1,4 +1,4 @@
-import { register, log, doesEventExists, subscribe, publish } from './pubsub';
+import { register, log, doesEventExist, subscribe, publish } from './pubsub';
 import { generateId, isEqual } from './utils';
 
 /**
@@ -12,7 +12,7 @@ import { generateId, isEqual } from './utils';
  */
 const createModel = (defaultData, fireDuplicates) => {
   const event = generateId();
-  if (doesEventExists(event)) {
+  if (doesEventExist(event)) {
     log(`There is an event already registered with name "${event}"`);
     return;
   }
@@ -32,7 +32,7 @@ const createModel = (defaultData, fireDuplicates) => {
  */
 const createVirtualModel = (...models) => {
   return handler => {
-    const info = [];
+    let info = [];
     let subscribers = [];
     const current = handler(...models.map(model => model.getState()));
     const lastState = { current };
@@ -50,6 +50,7 @@ const createVirtualModel = (...models) => {
             // NOTE: Some memoization can be needed if the processed value is the same as the previous one
 
             if (info.length === models.length) {
+              info = [];
               const computed = handler(...info);
               if (!isEqual(computed, lastState.current)) {
                 lastState.current = computed;

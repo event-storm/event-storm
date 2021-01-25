@@ -53,17 +53,17 @@ const subscribe = (event, callback, needPrevious) => {
  * @return {Function[]} Event.subscribers The subscriber functions list
  */
 const register = (event, initial, fireDuplicates) => {
-  if (getEvent(event)) return log(`Event already exists: ${event}.`);
+  if (doesEventExist(event)) return log(`Event already exists: ${event}.`);
   const neededEvent = createEvent(event, initial, fireDuplicates);
   return neededEvent;
 }
 
 /**
- * DoesEventExists
+ * DoesEventExist
  * @param {string} event The event name to be checked
  * @return {boolean} The boolean value that describes does the event is registered or not.
  */
-const doesEventExists = event => events.has(event);
+const doesEventExist = event => events.has(event);
 
 /**
  * CreateEvent
@@ -95,5 +95,5 @@ export {
   publish,
   register,
   subscribe,
-  doesEventExists,
+  doesEventExist,
 };
