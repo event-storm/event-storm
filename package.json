@@ -5,22 +5,10 @@
   "main": "./index.js",
   "license": "MIT",
   "author": "artur93gev",
-  "keywords": [
-    "event-store",
-    "store-management"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/event-store/event-store.git"
-  },
-  "homepage": "https://github.com/event-store/event-store#readme",
-  "bugs": {
-    "url": "https://github.com/event-store/event-store/issues"
-  },
   "scripts": {
     "bundle": "rollup -c",
-    "build": "rimraf ./dist && npm run bundle",
-    "publish-lib": "npm run build && cd dist && npm publish"
+    "build": "rimraf ./dist && yarn run bundle",
+    "publish-lib": "yarn run build && cd dist && yarn publish"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -33,6 +21,18 @@
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-gzip": "^2.5.0",
     "rollup-plugin-uglify-es": "^0.0.1"
+  },
+  "keywords": [
+    "event-store",
+    "store-management"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/event-store/event-store.git"
+  },
+  "homepage": "https://github.com/event-store/event-store#readme",
+  "bugs": {
+    "url": "https://github.com/event-store/event-store/issues"
   },
   "config": {
     "commitizen": {
