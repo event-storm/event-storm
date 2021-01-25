@@ -54,7 +54,7 @@ const subscribe = (event, callback, needPrevious) => {
  */
 const register = (event, initial, fireDuplicates) => {
   if (getEvent(event)) return log(`Event already exists: ${event}.`);
-  const neededEvent = createEvent(event, inital, fireDuplicates);
+  const neededEvent = createEvent(event, initial, fireDuplicates);
   return neededEvent;
 }
 

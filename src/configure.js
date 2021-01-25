@@ -33,7 +33,7 @@ const createModel = (defaultData, fireDuplicates) => {
 const createVirtualModel = (...models) => {
   return handler => {
     const info = [];
-    const subscribers = [];
+    let subscribers = [];
     const current = handler(...models.map(model => model.getState()));
     const lastState = { current };
     return ({
@@ -62,7 +62,7 @@ const createVirtualModel = (...models) => {
           return subscriptions;
         }, []);
 
-        needPrevious && callback(state.current);
+        needPrevious && callback(lastState.current);
         subscribers.push(callback);
 
         return () => {
