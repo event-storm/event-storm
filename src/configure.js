@@ -47,8 +47,8 @@ const createVirtualModel = (...models) => {
             // NOTE: Some memoization can be needed if the processed value is the same as the previous one
 
             if (info.length === models.length) {
-              info = [];
               const computed = handler(...info);
+              info = [];
               if (!isEqual(computed, lastState.current)) {
                 lastState.current = computed;
                 subscribers.forEach(subscriber => subscriber(lastState.current));
