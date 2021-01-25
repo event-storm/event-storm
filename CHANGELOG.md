@@ -1,3 +1,17 @@
+# [0.1.0](https://github.com/event-store/event-store/compare/v0.0.8...v0.1.0) (2021-01-25)
+
+
+### Bug Fixes
+
+* **actions:** workflow step order fixed ([d12dbe4](https://github.com/event-store/event-store/commit/d12dbe4b00e29b60aade25f5177dacf2e5de9fd6))
+
+
+### Features
+
+* **models:** add an option to fire duplicates ([7904425](https://github.com/event-store/event-store/commit/79044257b4fd7b0b5f7233179be7c4637bbc3bb2))
+
+
+
 ## [0.0.8](https://github.com/event-store/event-store/compare/v0.0.7...v0.0.8) (2021-01-25)
 
 
