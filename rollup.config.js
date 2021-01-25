@@ -30,6 +30,7 @@ const config = {
         { src: './package.json', dest: './dist' },
         { src: './LICENSE', dest: './dist' },
         { src: './README.md', dest: './dist' },
+        { src: './types', dest: './dist' },
       ],
     }),
   ],
