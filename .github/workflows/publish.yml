@@ -47,7 +47,7 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
-       - name: Rollback release
+      - name: Rollback release
         if: failure() && steps.changelog.outputs.id != ''
         uses: author/action-rollback@stable
         with:
