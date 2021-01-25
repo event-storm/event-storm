@@ -10,21 +10,20 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.yarn
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Use NodeJS, check with linter and  run tests
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
       - name: Build Project
-        run: npm run build
+        run: yarn run build
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2
-        if: github.event_name == 'push'
         with:
           github-token: ${{ secrets.RELEASE_TOKEN }}
           git-message: 'chore(release): {version}'
@@ -40,4 +39,4 @@ jobs:
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
       - name: Publish to Nexus
-        run: npm run publish-lib
+        run: yarn run publish-lib
