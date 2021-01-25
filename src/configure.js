@@ -27,7 +27,7 @@ const createModel = (defaultData, fireDuplicates) => {
 
 /**
  * createVirutalModel
- * @param  {Model[]} models [description]
+ * @param {Model[]} models [description]
  * @return {Function}
  */
 const createVirtualModel = (...models) => {
