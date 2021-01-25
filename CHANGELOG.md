@@ -1,4 +1,8 @@
-## 0.0.5 (2021-01-25)
+## [0.0.6](https://github.com/event-store/event-store/compare/v0.0.5...v0.0.6) (2021-01-25)
+
+
+
+## [0.0.5](https://github.com/event-store/event-store/compare/3fb8c551e9784e82b2c41f07d3df87ade949509b...v0.0.5) (2021-01-25)
 
 
 ### Bug Fixes
