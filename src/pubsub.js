@@ -69,7 +69,7 @@ const doesEventExist = event => events.has(event);
  * @param {string} event The event name to be created
  */
 const createEvent = (event, inital, fireDuplicates) => {
-  events.set(event, defaultEventData(fireDuplicates));
+  events.set(event, defaultEventData(inital, fireDuplicates));
   console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }
