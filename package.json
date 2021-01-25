@@ -2,7 +2,6 @@
   "name": "event-storm",
   "version": "0.0.4",
   "description": "In memory event store",
-  "type": "module",
   "main": "./index.js",
   "license": "MIT",
   "author": "artur93gev",
@@ -20,14 +19,29 @@
   },
   "scripts": {
     "bundle": "rollup -c",
-    "build": "rimraf ./dist && npm run bundle"
+    "build": "rimraf ./dist && npm run bundle",
+    "publish-lib": "npm run build && cd dist && npm publish"
   },
   "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^4.3.8",
     "rimraf": "^3.0.2",
     "rollup": "^2.38.0",
     "rollup-plugin-babel-minify": "^10.0.0",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-gzip": "^2.5.0",
     "rollup-plugin-uglify-es": "^0.0.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
   }
 }

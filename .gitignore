@@ -4,3 +4,7 @@ node_modules
 # build
 
 dist
+
+# package manager logs
+
+yarn-error.log
