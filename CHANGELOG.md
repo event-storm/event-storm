@@ -1,3 +1,7 @@
+## [0.0.8](https://github.com/event-store/event-store/compare/v0.0.7...v0.0.8) (2021-01-25)
+
+
+
 ## [0.0.7](https://github.com/event-store/event-store/compare/v0.0.6...v0.0.7) (2021-01-25)
 
 
