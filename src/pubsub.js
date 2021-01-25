@@ -11,10 +11,10 @@ const events = new Map();
 const publish = (event, data) => {
   const neededEvent = getEvent(event);
 
-  if (!isEqual(data, neededEvent.lastState)) {
+  if (neededEvent.fireDuplicates || !isEqual(data, neededEvent.lastState)) {
 
     if (data === undefined && !neededEvent.lastState) {
-      log(`There is no passed data for published event named ${event}. Use "null" instead of "undefined" as default.`);
+      log(`No passed data when publishing: ${event}.`);
     }
 
     const isFunction = typeof data === 'function';
@@ -22,7 +22,7 @@ const publish = (event, data) => {
     neededEvent.lastState = isFunction ? data(neededEvent.lastState) : data;
     neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
   } else {
-    log(`There is no need for update. Unnecassary event publishment ${event}`);
+    log(`There is no need for update: ${event}.`);
   }
 }
 
@@ -52,9 +52,9 @@ const subscribe = (event, callback, needPrevious) => {
  * @return {any} Event.lastState The last published or the initial value
  * @return {Function[]} Event.subscribers The subscriber functions list
  */
-const register = (event, initial) => {
-  const neededEvent = getEvent(event);
-  neededEvent.lastState = initial;
+const register = (event, initial, fireDuplicates) => {
+  if (getEvent(event)) return log(`Event already exists: ${event}.`);
+  const neededEvent = createEvent(event, inital, fireDuplicates);
   return neededEvent;
 }
 
@@ -69,9 +69,9 @@ const doesEventExists = event => events.has(event);
  * CreateEvent
  * @param {string} event The event name to be created
  */
-const createEvent = event => {
-  events.set(event, defaultEventData());
-  console.log(`Event: ${event} has been created!`);
+const createEvent = (event, inital, fireDuplicates) => {
+  events.set(event, defaultEventData(fireDuplicates));
+  console.log(`Event has been created: ${event}.`);
 }
 
 /**
@@ -79,15 +79,7 @@ const createEvent = event => {
  * @param {string} event The event name to get from storage
  * @return {object} Event returns the event object(creates new if not exist)
  */
-const getEvent = event => {
-  if (!doesEventExists(event)) {
-    // TODO:: consider proper sulution
-    // Conceptually the getter can't insert anything to the value
-    createEvent(event);
-  }
-
-  return events.get(event);
-}
+const getEvent = event => events.get(event);
 
 /**
  * Log - tracing the stack, as this will help to find the code segment that propagates the change
