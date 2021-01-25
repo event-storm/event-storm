@@ -1,3 +1,12 @@
+## [0.0.7](https://github.com/event-store/event-store/compare/v0.0.6...v0.0.7) (2021-01-25)
+
+
+### Bug Fixes
+
+* **relase action:** adding a registry to package manager ([cb553f7](https://github.com/event-store/event-store/commit/cb553f76a33604752d88eec4824637a7171ee40b))
+
+
+
 ## [0.0.6](https://github.com/event-store/event-store/compare/v0.0.5...v0.0.6) (2021-01-25)
 
 
