@@ -1,3 +1,17 @@
+# [0.2.0](https://github.com/event-store/event-store/compare/v0.1.1...v0.2.0) (2021-01-25)
+
+
+### Bug Fixes
+
+* **pubsub:** register returns wrong type ([e0cd9c9](https://github.com/event-store/event-store/commit/e0cd9c921352efb3f3b8d7c9993fffa657143e06))
+
+
+### Features
+
+* **types:** add a typescript declaration file ([0f7ac67](https://github.com/event-store/event-store/commit/0f7ac67de266d35573aa89bffa5bb165b2d04691))
+
+
+
 ## [0.1.1](https://github.com/event-store/event-store/compare/v0.1.0...v0.1.1) (2021-01-25)
 
 
