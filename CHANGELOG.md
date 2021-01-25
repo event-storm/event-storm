@@ -1,3 +1,12 @@
+## [0.2.3](https://github.com/event-store/event-store/compare/v0.2.2...v0.2.3) (2021-01-25)
+
+
+### Bug Fixes
+
+* **virtualmodel:** info clearance wrong line ([626b66a](https://github.com/event-store/event-store/commit/626b66ac7f3fbd3992fbd4ce6fc5af3a78a0dd89))
+
+
+
 ## [0.2.2](https://github.com/event-store/event-store/compare/v0.2.1...v0.2.2) (2021-01-25)
 
 
