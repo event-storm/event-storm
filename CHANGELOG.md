@@ -1,3 +1,13 @@
+# [0.3.0](https://github.com/event-store/event-store/compare/v0.2.3...v0.3.0) (2021-01-26)
+
+
+### Features
+
+* **types:** add typescript support ([8bd8f8d](https://github.com/event-store/event-store/commit/8bd8f8dd90626aca7ac87f0cb787e96c24bdd5de))
+* **types:** add typescript support, build step ([e5f8f3f](https://github.com/event-store/event-store/commit/e5f8f3f56e01e25d530c7ebd8c8071edb9138a8d))
+
+
+
 ## [0.2.3](https://github.com/event-store/event-store/compare/v0.2.2...v0.2.3) (2021-01-25)
 
 
