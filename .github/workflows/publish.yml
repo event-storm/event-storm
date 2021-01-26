@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/*.js'
       - '.github/**/*.*'
+      - 'types/*.d.ts'
 jobs:
   build:
     runs-on: ubuntu-latest
