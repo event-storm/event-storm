@@ -157,3 +157,4 @@ This will give following benefits:
 ## Playground
 
 You can play with a live example in the [codesandbox](https://codesandbox.io/s/serene-wood-cjvem)
+For **React** example [see this link](https://codesandbox.io/s/nameless-bash-8e2o4)
