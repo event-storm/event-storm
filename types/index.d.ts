@@ -1,6 +1,6 @@
 export interface IModel<T> {
   getState: () => T;
-  event: string;
+  event: string | string[];
   subscribe: (callback: () => void, needPrevious?: boolean) => () => void;
 }
 
