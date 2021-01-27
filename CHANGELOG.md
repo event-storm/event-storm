@@ -1,3 +1,17 @@
+# [0.4.0](https://github.com/event-store/event-store/compare/v0.3.1...v0.4.0) (2021-01-27)
+
+
+### Bug Fixes
+
+* **logger:** still one log in production. conditioned with config ([9125cc5](https://github.com/event-store/event-store/commit/9125cc5cef4b1fefe20c677ae1f35810fad41fa8))
+
+
+### Features
+
+* **testing:** add testing tool jest ([cc48382](https://github.com/event-store/event-store/commit/cc483829eae1232d9f0d9024709459edddc614af))
+
+
+
 ## [0.3.1](https://github.com/event-store/event-store/compare/v0.3.0...v0.3.1) (2021-01-27)
 
 
