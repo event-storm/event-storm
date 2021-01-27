@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/event-store/event-store/compare/v0.3.0...v0.3.1) (2021-01-27)
+
+
+### Bug Fixes
+
+* **types:** virtualModel event field type ([cf29132](https://github.com/event-store/event-store/commit/cf29132564cc8d1f2411cda920be8a898ad254ad))
+
+
+
 # [0.3.0](https://github.com/event-store/event-store/compare/v0.2.3...v0.3.0) (2021-01-26)
 
 
