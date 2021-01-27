@@ -70,7 +70,7 @@ const doesEventExist = event => events.has(event);
  */
 const createEvent = (event, inital, fireDuplicates) => {
   events.set(event, defaultEventData(inital, fireDuplicates));
-  console.log(`Event has been created: ${event}.`);
+  needLogs && console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }
 
