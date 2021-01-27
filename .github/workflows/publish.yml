@@ -26,6 +26,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Linting
         run: yarn run lint
+      - name: Testing
+        run: yarn run jest
       - name: Generate changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2

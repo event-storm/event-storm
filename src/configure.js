@@ -1,5 +1,5 @@
 import { register, subscribe, publish } from './pubsub';
-import { generateId, isEqual } from './utils';
+import { generateId } from './utils';
 
 /**
  * createModel
@@ -29,44 +29,27 @@ const createModel = (defaultData, fireDuplicates) => {
  */
 const createVirtualModel = (...models) => {
   return handler => {
-    let info = [];
-    let subscribers = [];
-    const current = handler(...models.map(model => model.getState()));
-    const lastState = { current };
+    const virtualEvent = {
+      subscribers: [],
+      lastState: handler(...models.map(model => model.getState())),
+    }
+
+    models.map(model =>
+      model.subscribe(() => {
+        virtualEvent.lastState = handler(...models.map(model => model.getState()));
+        virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));
+      })
+    );
+
     return ({
       event: models.map(({ event }) => event),
-      getState: () => lastState.current,
+      getState: () => virtualEvent.lastState,
       subscribe: (callback, needPrevious) => {
-        // NOTE: one single model can include many subscriptions of the same event, if it is virtual.
-        // Need to be considered whether we need the uniquness of the models underlyed events or not.
-
-        const subscriptions = models.reduce((subscriptions, model, index) => {
-          const subscription = model.subscribe(nextState => {
-            info[index] = nextState;
-
-            // NOTE: Some memoization can be needed if the processed value is the same as the previous one
-
-            if (info.length === models.length) {
-              const computed = handler(...info);
-              info = [];
-              if (!isEqual(computed, lastState.current)) {
-                lastState.current = computed;
-                subscribers.forEach(subscriber => subscriber(lastState.current));
-              }
-            }
-          }, true);
-
-          subscriptions.push(subscription);
-          return subscriptions;
-        }, []);
-
-        needPrevious && callback(lastState.current);
-        subscribers.push(callback);
-
+        needPrevious && callback(virtualEvent.lastState);
+        virtualEvent.subscribers.push(callback);
         return () => {
-          subscribers = subscribers.filter(subscriber => callback !== subscriber);
-          subscriptions.forEach(unsubscribe => unsubscribe())
-        };
+          virtualEvent.subscribers = virtualEvent.subscribers(subscriber => subscriber !== callback);
+        }
       },
     });
   };
