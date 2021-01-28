@@ -2,6 +2,7 @@ import copy from 'rollup-plugin-copy';
 import gzipPlugin from 'rollup-plugin-gzip';
 import uglify from 'rollup-plugin-uglify-es';
 import minify from 'rollup-plugin-babel-minify';
+import resolve from 'rollup-plugin-node-resolve';
 
 const config = {
   input: './src/index.js',
@@ -20,6 +21,7 @@ const config = {
     },
   ],
   plugins: [
+    resolve(),
     uglify(),
     minify({
       comments: false,

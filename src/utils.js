@@ -1,9 +1,6 @@
-// NOTE:: more relevant comparison needed
-export const isEqual = (next, prev) => Object.is(next, prev);
+// TODO: provide an option for changin comparizon logic
+const isEqual = (next, prev) => Object.is(next, prev);
 
-export const needLogs = process.env.NODE_ENV === 'development';
+const createDefault = (lastState, options = {}) => ({ lastState, options, subscribers: [] });
 
-let counter = 0;
-export const generateId = () => String(Date.now() + counter++);
-
-export const defaultEventData = (lastState, fireDuplicates) => ({ lastState, fireDuplicates, subscribers: [] });
+export { isEqual, createDefault };
