@@ -9,7 +9,7 @@ The library has wrapper for:
 ## Motivation :blue_book:
 
 Mainly in modern applications developer faces a problem to store data. **As web-based applications are natively event based, it'll be nice
-to have an event base store for the data**. Inspired by (Event store :bulb:)[https://en.wikipedia.org/wiki/Event_store].
+to have an event base store for the data**. Inspired by [Event store](https://en.wikipedia.org/wiki/Event_store) :bulb:.
 
 <details>
   <summary>Deep look at the concept</summary>
