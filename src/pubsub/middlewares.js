@@ -1,13 +1,14 @@
 const middlewares = [];
 
-const addMiddleware = middleware => {
-  middlewares.push(middleware);
+const addMiddleware = (...args) => {
+  middlewares.push(...args);
 }
 
-const runMiddlewares = (eventName, event, prev, next, options, middlewares) => {
-  if (middlewares.length) {
-    const [middleware, ...rest] = middlewares;
-    return middleware(eventName, event, prev, next, options, rest);
+const runMiddlewares = (eventName, event, prev, next, options, callbacks) => {
+  if (callbacks.length) {
+    const [middleware, ...rest] = callbacks;
+    middleware(eventName, event, prev, next, options);
+    return runMiddlewares(eventName, event, prev, next, options, rest);
   }
 }
 
