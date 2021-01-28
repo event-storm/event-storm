@@ -119,7 +119,7 @@ This will give following benefits:
   **Whenever your next state depends on the previous one you can just pass a function to `publishModel` to get a hook with previous model**.
 
   <details>
-    <summary>**Publishing a virtual model will do nothing**</summary>
+    <summary><strong>Publishing a virtual model will do nothing</strong></summary>
     Its important to notice that publishing a virtual model will cause a lot of pain in your code, as you need to
     describe the value-model map. As the virtual model is something relaying on real data,
     the best approach is to update the real data itself.
@@ -156,5 +156,6 @@ This will give following benefits:
 
 ## Playground
 
-You can play with a live example in the [codesandbox](https://codesandbox.io/s/serene-wood-cjvem)
-For **React** example [see this link](https://codesandbox.io/s/nameless-bash-8e2o4)
+Examples:
+ - [**PureJs**](https://codesandbox.io/s/serene-wood-cjvem)
+ - [**React**](https://codesandbox.io/s/nameless-bash-8e2o4)
