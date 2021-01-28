@@ -47,7 +47,7 @@ describe('Creating a Model', () => {
     model.subscribe(callback);
     publishModel(model, nextValue);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(nextValue);
   });
 
@@ -59,7 +59,7 @@ describe('Creating a Model', () => {
     model.subscribe(callback);
     publishModel(model, initialValue);
 
-    expect(callback.mock.calls.length).toBe(0);
+    expect(callback).toBeCalledTimes(0);
   });
 
   test('Subscribe must fire on same value published, when second parameter is true', () => {
@@ -70,7 +70,7 @@ describe('Creating a Model', () => {
     model.subscribe(callback);
     publishModel(model, initialValue);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
   });
 
   test('Subscribe method must be fired immediatly when second argument is set to true', () => {
@@ -80,7 +80,7 @@ describe('Creating a Model', () => {
 
     model.subscribe(callback, true);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(initialValue);
   });
 });

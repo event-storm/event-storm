@@ -11,7 +11,7 @@ describe('Creating a Virtual Model', () => {
 
     const virtualModel = combinedModel(processor);
 
-    expect(processor.mock.calls.length).toBe(1);
+    expect(processor).toBeCalledTimes(1);
     expect(processor.mock.calls[0][0]).toBe(first.getState());
     expect(processor.mock.calls[0][1]).toBe(second.getState());
     expect(typeof virtualModel).toBe('object');
@@ -72,12 +72,12 @@ describe('Creating a Virtual Model', () => {
     virtual.subscribe(callback);
     publishModel(model2, nextValue2);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(`${value1} is alone in ${value3.city} at his ${nextValue2}`);
 
     publishModel(model3, nextValue3);
 
-    expect(callback.mock.calls.length).toBe(2);
+    expect(callback).toBeCalledTimes(2);
     expect(callback.mock.calls[1][0]).toBe(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`);
   });
 
@@ -94,12 +94,12 @@ describe('Creating a Virtual Model', () => {
     netSalaryInEuros.subscribe(callback);
     publishModel(taxes, 40);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(48_000);
 
     publishModel(euroRate, 0.5);
 
-    expect(callback.mock.calls.length).toBe(2);
+    expect(callback).toBeCalledTimes(2);
     expect(callback.mock.calls[1][0]).toBe(30_000);
   });
 });
