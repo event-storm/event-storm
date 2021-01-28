@@ -50,17 +50,18 @@ describe('Publishing a Model', () => {
     expect(callback.mock.calls[0][0]).toBe(initialValue);
   });
 
-  test('update state with async function', () => {
-    // const initialValue = 'sync';
-    // const finalValue = 'async';
-    // const model = createModel(initialValue);
-    // const callback = jest.fn().mockImplementation(() => {
-    //     return new Promise(resolve => resolve(finalValue));
-    // });
+  test('update state with async function', async () => {
+    const initialValue = 'sync';
+    const finalValue = 'async';
+    const model = createModel(initialValue);
+    const waitTime = 1000;
+    const callback = () => {
+      return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
+    }
 
-    // publishModel(model, callback);
+    publishModel(model, callback);
+    await callback();
 
-    // expect(callback).resolves.toBeCalledTimes(1);
-    // expect(model.getState()).toBe(finalValue);
+    expect(model.getState()).toBe(finalValue);
   });
 });
