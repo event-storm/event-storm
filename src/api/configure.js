@@ -1,5 +1,7 @@
-import { register, subscribe, publish } from './pubsub';
-import { generateId, isEqual, defaultEventData } from './utils';
+import { generateId  } from './utils';
+
+import { isEqual, defaultEventData } from '../utils';
+import { register, subscribe, publish } from '../pubsub';
 
 const createModel = (defaultData, options) => {
   const event = generateId();
