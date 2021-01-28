@@ -1,5 +1,5 @@
 import { register, subscribe, publish } from './pubsub';
-import { generateId } from './utils';
+import { generateId, isEqual, defaultEventData } from './utils';
 
 /**
  * createModel
@@ -10,10 +10,10 @@ import { generateId } from './utils';
  * @return {Function} Model.getState
  * @return {Function} Model.subscribe
  */
-const createModel = (defaultData, fireDuplicates) => {
+const createModel = (defaultData, options) => {
   const event = generateId();
 
-  const model = register(event, defaultData, fireDuplicates);
+  const model = register(event, defaultData, options);
 
   return {
     event,
@@ -28,17 +28,18 @@ const createModel = (defaultData, fireDuplicates) => {
  * @return {Function}
  */
 const createVirtualModel = (...models) => {
-  return handler => {
-    const virtualEvent = {
-      subscribers: [],
-      lastState: handler(...models.map(model => model.getState())),
-    }
+  return (handler, options) => {
+
+    const virtualEvent = defaultEventData(handler(...models.map(model => model.getState())), options);
 
     models.map(model =>
       model.subscribe(() => {
-        virtualEvent.lastState = handler(...models.map(model => model.getState()));
-        virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));
-      })
+        const nextState = handler(...models.map(model => model.getState()));
+        if (virtualEvent.options.fireDuplcates || !isEqual(nextState, virtualEvent.lastState)) {
+          virtualEvent.lastState = nextState;
+          virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));
+        }
+      }),
     );
 
     return ({
