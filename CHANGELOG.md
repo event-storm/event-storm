@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/event-store/event-store/compare/v0.4.0...v0.5.0) (2021-01-28)
+
+
+### Features
+
+* **pubsub:** add middlewares hook into publishment process ([4cb3173](https://github.com/event-store/event-store/commit/4cb317304f085e4a96044881d15d66e47f5a9b32))
+
+
+
 # [0.4.0](https://github.com/event-store/event-store/compare/v0.3.1...v0.4.0) (2021-01-27)
 
 
