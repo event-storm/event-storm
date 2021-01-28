@@ -13,7 +13,7 @@ describe('Publishing a Model', () => {
     model.subscribe(callback);
     publishModel(model, nextValue);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(nextValue);
 
     expect(model.getState()).toBe(nextValue);
@@ -31,9 +31,9 @@ describe('Publishing a Model', () => {
     model.subscribe(callback);
     publishModel(model, publisher);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(nextValue);
-    expect(publisher.mock.calls.length).toBe(1);
+    expect(publisher).toBeCalledTimes(1);
     expect(publisher.mock.results[0].value).toBe(nextValue);
 
     expect(model.getState()).toBe(nextValue);
@@ -46,7 +46,21 @@ describe('Publishing a Model', () => {
 
     publishModel(model, callback);
 
-    expect(callback.mock.calls.length).toBe(1);
+    expect(callback).toBeCalledTimes(1);
     expect(callback.mock.calls[0][0]).toBe(initialValue);
+  });
+
+  test('update state with async function', () => {
+    // const initialValue = 'sync';
+    // const finalValue = 'async';
+    // const model = createModel(initialValue);
+    // const callback = jest.fn().mockImplementation(() => {
+    //     return new Promise(resolve => resolve(finalValue));
+    // });
+
+    // publishModel(model, callback);
+
+    // expect(callback).resolves.toBeCalledTimes(1);
+    // expect(model.getState()).toBe(finalValue);
   });
 });

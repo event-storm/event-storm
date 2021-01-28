@@ -8,7 +8,7 @@ describe('Addin a middleware', () => {
     addMiddleware(middleware);
     publishModel(example, 'final');
 
-    expect(middleware.mock.calls.length).toBe(1);
+    expect(middleware).toBeCalledTimes(1);
   });
 
 
@@ -20,8 +20,8 @@ describe('Addin a middleware', () => {
     addMiddleware(middleware1, middleware2);
     publishModel(example, 'final');
 
-    expect(middleware1.mock.calls.length).toBe(1);
-    expect(middleware2.mock.calls.length).toBe(1);
+    expect(middleware1).toBeCalledTimes(1);
+    expect(middleware2).toBeCalledTimes(1);
   });
 
   test('middleware must run before subscribe callback fires', () => {
@@ -34,7 +34,7 @@ describe('Addin a middleware', () => {
     example.subscribe(callback);
     addMiddleware(middleware);
     publishModel(example, 'final');
-    expect(middleware.mock.calls.length).toBe(1);
+    expect(middleware).toBeCalledTimes(1);
   });
 
   test('arguments must match', () => {
