@@ -62,9 +62,9 @@ describe('Creating a Model', () => {
     expect(callback.mock.calls.length).toBe(0);
   });
 
-  test('Subscribe must not fire on same value published, when second parameter is true', () => {
+  test('Subscribe must fire on same value published, when second parameter is true', () => {
     const initialValue = [];
-    const model = createModel(initialValue, true);
+    const model = createModel(initialValue, { fireDuplicates: true });
     const callback = jest.fn();
 
     model.subscribe(callback);
