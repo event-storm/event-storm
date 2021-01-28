@@ -1,6 +1,6 @@
 import { generateId  } from './utils';
 
-import { isEqual, defaultEventData } from '../utils';
+import { isEqual, createDefault } from '../utils';
 import { register, subscribe, publish } from '../pubsub';
 
 const createModel = (defaultData, options) => {
@@ -18,7 +18,7 @@ const createModel = (defaultData, options) => {
 const createVirtualModel = (...models) => {
   return (handler, options) => {
 
-    const virtualEvent = defaultEventData(handler(...models.map(model => model.getState())), options);
+    const virtualEvent = createDefault(handler(...models.map(model => model.getState())), options);
 
     models.map(model =>
       model.subscribe(() => {

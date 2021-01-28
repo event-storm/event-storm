@@ -1,4 +1,6 @@
-import { defaultEventData, needLogs } from '../utils';
+import { needLogs } from './utils';
+
+import { createDefault } from '../utils';
 
 // Using Map as consumer storage, as getting any key from Map is O(1)
 const events = new Map();
@@ -6,7 +8,7 @@ const events = new Map();
 const doesEventExist = event => events.has(event);
 
 const createEvent = (event, inital, options) => {
-  events.set(event, defaultEventData(inital, options));
+  events.set(event, createDefault(inital, options));
   needLogs && console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }
