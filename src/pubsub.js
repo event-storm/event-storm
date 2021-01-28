@@ -16,11 +16,6 @@ const applyMiddlewares = (eventName, event, prev, next, options, middlewares) =>
   }
 }
 
-/**
- * Publish
- * @param {string} event The event name that need to be published
- * @param {any} valueSetter The value, that need to be delivered to subscribers
- */
 const publish = (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
 
@@ -37,13 +32,6 @@ const publish = (event, valueSetter, options) => {
   }
 }
 
-/**
- * Subscribe
- * @param  {string} event Event name to be, on which need to register a subscription
- * @param  {Function} callback The function will be called on each next value
- * @param  {boolean} needPrevious Passing the value as true will deliver the last published state for this event
- * @return {Function} call of this function will destroy the subscription
- */
 const subscribe = (event, callback, needPrevious) => {
   const neededEvent = getEvent(event);
 
@@ -55,50 +43,22 @@ const subscribe = (event, callback, needPrevious) => {
   }
 }
 
-/**
- * Register
- * @param {string} event The event name to be registered
- * @param {any} initial Initial value of the event
- * @return {object} Event The stored object
- * @return {any} Event.lastState The last published or the initial value
- * @return {Function[]} Event.subscribers The subscriber functions list
- */
 const register = (event, initial, options) =>
   doesEventExist(event)
     ? log(`Event already exists: ${event}.`)
     : createEvent(event, initial, options);
 
-/**
- * DoesEventExist
- * @param {string} event The event name to be checked
- * @return {boolean} The boolean value that describes does the event is registered or not.
- */
 const doesEventExist = event => events.has(event);
 
-/**
- * CreateEvent
- * @param {string} event The event name to be created
- */
 const createEvent = (event, inital, options) => {
   events.set(event, defaultEventData(inital, options));
   needLogs && console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }
 
-/**
- * GetEvent
- * @param {string} event The event name to get from storage
- * @return {object} Event returns the event object(creates new if not exist)
- */
 const getEvent = event => events.get(event);
 
-/**
- * Log - tracing the stack, as this will help to find the code segment that propagates the change
- * @param {string} message Message to log
- */
-const log = message => {
-  needLogs && console.trace(message);
-}
+const log = message => needLogs && console.trace(message);
 
 export {
   publish,

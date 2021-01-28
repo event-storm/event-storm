@@ -1,15 +1,6 @@
 import { register, subscribe, publish } from './pubsub';
 import { generateId, isEqual, defaultEventData } from './utils';
 
-/**
- * createModel
- * @param {any} defaultData Models default value
- * @param {any} fireDuplcates fires subscribers on duplicate changes if set to true
- * @return {object} Model
- * @return {string} Model.event
- * @return {Function} Model.getState
- * @return {Function} Model.subscribe
- */
 const createModel = (defaultData, options) => {
   const event = generateId();
 
@@ -22,11 +13,6 @@ const createModel = (defaultData, options) => {
   };
 }
 
-/**
- * createVirutalModel
- * @param {Model[]} models [description]
- * @return {Function}
- */
 const createVirtualModel = (...models) => {
   return (handler, options) => {
 

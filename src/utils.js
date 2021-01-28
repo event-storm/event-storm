@@ -1,4 +1,4 @@
-// NOTE:: more relevant comparison needed
+// TODO: provide an option for changin comparizon logic
 export const isEqual = (next, prev) => Object.is(next, prev);
 
 export const needLogs = process.env.NODE_ENV === 'development';
