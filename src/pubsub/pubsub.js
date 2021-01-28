@@ -4,13 +4,14 @@ import { doesEventExist, createEvent, getEvent } from './events';
 
 import { isEqual } from '../utils';
 
-const publish = (event, valueSetter, options) => {
+const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
 
   if (neededEvent.options.fireDuplicates || !isEqual(valueSetter, neededEvent.lastState)) {
 
     const isFunction = typeof valueSetter === 'function';
-    const nextValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
+    const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
+    const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
 
     applyMiddlewares(event, neededEvent, neededEvent.lastState, nextValue, options);
     neededEvent.lastState = nextValue;
