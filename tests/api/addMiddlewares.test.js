@@ -1,11 +1,11 @@
-import { addMiddleware, createModel, publishModel } from '../../src';
+import { addMiddlewares, createModel, publishModel } from '../../src';
 
 describe('Addin a middleware', () => {
   test('middleware must be fired on model change', () => {
     const middleware = jest.fn();
     const example = createModel('start');
 
-    addMiddleware(middleware);
+    addMiddlewares(middleware);
     publishModel(example, 'final');
 
     expect(middleware).toBeCalledTimes(1);
@@ -17,7 +17,7 @@ describe('Addin a middleware', () => {
     const middleware2 = jest.fn();
     const example = createModel('start');
 
-    addMiddleware(middleware1, middleware2);
+    addMiddlewares(middleware1, middleware2);
     publishModel(example, 'final');
 
     expect(middleware1).toBeCalledTimes(1);
@@ -32,7 +32,7 @@ describe('Addin a middleware', () => {
     const example = createModel('start');
 
     example.subscribe(callback);
-    addMiddleware(middleware);
+    addMiddlewares(middleware);
     publishModel(example, 'final');
     expect(middleware).toBeCalledTimes(1);
   });
@@ -44,12 +44,11 @@ describe('Addin a middleware', () => {
     const middleware = jest.fn();
     const example = createModel(initialValue);
 
-    addMiddleware(middleware);
+    addMiddlewares(middleware);
     publishModel(example, finalValue);
 
-    expect(middleware.mock.calls[0][0]).toBe(example.event);
-    expect(middleware.mock.calls[0][2]).toBe(initialValue);
-    expect(middleware.mock.calls[0][3]).toBe(finalValue);
-    expect(middleware.mock.calls[0][4]).toBe(undefined);
+    expect(middleware.mock.calls[0][0]).toBe(initialValue);
+    expect(middleware.mock.calls[0][1]).toBe(finalValue);
+    expect(middleware.mock.calls[0][2]).toEqual({ model: example });
   });
 });

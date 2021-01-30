@@ -1,8 +1,8 @@
+import { isEqual } from '../utils';
+
 import { log } from './logger';
 import { applyMiddlewares } from './middlewares';
 import { doesEventExist, createEvent, getEvent } from './events';
-
-import { isEqual } from '../utils';
 
 const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
@@ -13,8 +13,9 @@ const publish = async (event, valueSetter, options) => {
     const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
     const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
 
-    applyMiddlewares(event, neededEvent, neededEvent.lastState, nextValue, options);
+    const { lastState } = neededEvent;
     neededEvent.lastState = nextValue;
+    applyMiddlewares(lastState, nextValue, options);
     neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
   } else {
     log(`There is no need for update: ${event}.`);

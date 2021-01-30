@@ -1,6 +1,6 @@
-import { needLogs } from './utils';
-
 import { createDefault } from '../utils';
+
+import { needLogs } from './utils';
 
 // Using Map as consumer storage, as getting any key from Map is O(1)
 const events = new Map();
