@@ -1,8 +1,8 @@
+import { isEqual } from '../utils';
+
 import { log } from './logger';
 import { applyMiddlewares } from './middlewares';
 import { doesEventExist, createEvent, getEvent } from './events';
-
-import { isEqual } from '../utils';
 
 const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
@@ -13,7 +13,7 @@ const publish = async (event, valueSetter, options) => {
     const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
     const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
 
-    applyMiddlewares(event, neededEvent, neededEvent.lastState, nextValue, options);
+    applyMiddlewares(neededEvent.lastState, nextValue, options);
     neededEvent.lastState = nextValue;
     neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
   } else {

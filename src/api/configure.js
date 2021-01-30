@@ -1,7 +1,7 @@
-import { generateId  } from './utils';
-
 import { isEqual, createDefault } from '../utils';
 import { register, subscribe, publish } from '../pubsub';
+
+import { generateId  } from './utils';
 
 const createModel = (defaultData, options) => {
   const event = generateId();
@@ -45,7 +45,7 @@ const createVirtualModel = (...models) => {
 }
 
 const publishModel = (model, data) => {
-  publish(model.event, data);
+  publish(model.event, data, { model });
 }
 
 export {

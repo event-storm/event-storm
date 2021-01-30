@@ -1,6 +1,6 @@
 const middlewares = [];
 
-const addMiddleware = (...args) => {
+const addMiddlewares = (...args) => {
   middlewares.push(...args);
 }
 
@@ -15,4 +15,4 @@ const runMiddlewares = (eventName, event, prev, next, options, callbacks) => {
 const applyMiddlewares = (eventName, event, prev, next, options) =>
   runMiddlewares(eventName, event, prev, next, options, middlewares);
 
-export { addMiddleware, applyMiddlewares };
+export { addMiddlewares, applyMiddlewares };

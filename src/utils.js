@@ -1,4 +1,4 @@
-// TODO: provide an option for changin comparizon logic
+// TODO: provide an option for changing comparison logic
 const isEqual = (next, prev) => Object.is(next, prev);
 
 const createDefault = (lastState, options = {}) => ({ lastState, options, subscribers: [] });
