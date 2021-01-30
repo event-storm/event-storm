@@ -10,14 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Use NodeJS, check with linter and  run tests
+      - name: Use NodeJS
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
