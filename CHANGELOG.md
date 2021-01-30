@@ -1,3 +1,13 @@
+# [0.6.0](https://github.com/event-store/event-store/compare/v0.5.0...v0.6.0) (2021-01-30)
+
+
+### Features
+
+* **api:** create history ([edef680](https://github.com/event-store/event-store/commit/edef680eadaf05dfb5710e4f091b76a7e441b781))
+* **publishmodel:** async callback handling ([c8d88ac](https://github.com/event-store/event-store/commit/c8d88ac03d264d49c72b039f9903ffff4bde4485))
+
+
+
 # [0.5.0](https://github.com/event-store/event-store/compare/v0.4.0...v0.5.0) (2021-01-28)
 
 
