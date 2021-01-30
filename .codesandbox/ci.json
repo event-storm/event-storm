@@ -1,3 +1,4 @@
 {
-  "publishDirectory": "dist"
+  "publishDirectory": "dist",
+  "sandboxes": ["vanilla", "typescript"]
 }
