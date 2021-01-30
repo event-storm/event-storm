@@ -1,3 +1,12 @@
+## [0.6.1](https://github.com/event-store/event-store/compare/v0.6.0...v0.6.1) (2021-01-30)
+
+
+### Bug Fixes
+
+* **types:** addMiddleware type was incorrect(any[]) ([ef4aed8](https://github.com/event-store/event-store/commit/ef4aed8a08fb475445cc06e8377d0ae93ff2958c))
+
+
+
 # [0.6.0](https://github.com/event-store/event-store/compare/v0.5.0...v0.6.0) (2021-01-30)
 
 
