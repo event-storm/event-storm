@@ -35,8 +35,8 @@ The library consists of 2 parts: event store implementation and data model absra
   - event registration
   - publishing the same data twice
 - :star: not propagates on duplicate changes
-- :boom: history object (n.i.)
-- :zap: time travel (n.i.)
+- :boom: middlewares support
+- :zap: time travel
 
 Data model abstraction represents pubsub implementation. The data models are of 2 types, one that are attached to a single peace of information(e.g. accelaration `V`, time `T`) and one that are combined via multiple peaces of information(e.g. road `S = f(V, T)`).
 This will give following benefits:
@@ -152,6 +152,43 @@ This will give following benefits:
   const getTheLastState = true;
 
   userModel.subscribe(newInfo => console.log(newInfo, 'update receives'), getTheLastState);
+  ```
+
+- Middlewares
+
+  Middlewares are needed to intercept to publishing process, capture some values
+    ```js
+    import { addMiddlewares } from 'event-storm';
+
+    addMiddlewares((prevValue, nextValue, model) => {
+      // some stuff
+    });
+    ```
+  Also, the method supports multiples middlewares addition at once.
+
+- Time travel(Undo/redo)
+
+  There is a built-in middleware for creating history for any subset of models. It will allow going and forward between the history steps.
+
+  ```js
+  import { createModel, createHistory, publishModel } from 'event-storm';
+
+  const grossSalary = createModel(100_000);
+  const taxes = createModel(20);
+  const history = createHistory([grossSalary]);
+
+  publishModel(grossSalary, 200_000);
+
+  console.log(history.hasPrevious()) // true;
+  console.log(history.hasNext()) // false;
+
+  history.goBack();
+
+  console.log(grossSalary.getState()) // 100_000
+
+  history.goForward();
+
+  console.log(grossSalary.getState()) // 200_000
   ```
 
 ## Playground
