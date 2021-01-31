@@ -1,3 +1,20 @@
+# [0.7.0](https://github.com/event-store/event-store/compare/v0.6.1...v0.7.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* **history:** collectState util to local api ([2c65ed9](https://github.com/event-store/event-store/commit/2c65ed9a14c698af2b77cddd1d1bc72c7b5acfb1))
+* **types:** change virtual model method's types ([af7dbfd](https://github.com/event-store/event-store/commit/af7dbfd46772b84c6e696dbb46baa084edf71e99))
+* **virtual model:** model handler is out of any parameter ([27521c6](https://github.com/event-store/event-store/commit/27521c6c82a76ee609f8b988527ca3099f91c727))
+
+
+### Features
+
+* **createstore:** adding a createStore method ([ebcbcf0](https://github.com/event-store/event-store/commit/ebcbcf0db9ac91bab5320060a81ebadd226919e0))
+* **pubsub:** add ability to change the event configs in runtime ([2a48612](https://github.com/event-store/event-store/commit/2a48612542f9732b4e41a75f3037514225103a27))
+
+
+
 ## [0.6.1](https://github.com/event-store/event-store/compare/v0.6.0...v0.6.1) (2021-01-30)
 
 
