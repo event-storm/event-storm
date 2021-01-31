@@ -17,10 +17,10 @@ const createModel = (defaultData, options) => {
 }
 
 const createVirtualModel = (handler, { models = [], ...options } = {}) => {
-  const virtualEvent = createDefault(handler(...collectState(models)), options);
+  const virtualEvent = createDefault(handler(), options);
 
   const updateHandler = neededModels => {
-    const nextState = handler(...collectState(neededModels));
+    const nextState = handler();
     if (virtualEvent.options.fireDuplcates || !isEqual(nextState, virtualEvent.lastState)) {
       virtualEvent.lastState = nextState;
       virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));

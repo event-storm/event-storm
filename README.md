@@ -80,8 +80,8 @@ This will give following benefits:
   const velocity = createModel(10);
 
   // virtual model
-  const road = createVirtualModel((timeValue, velocityValue) => {
-    return timeValue * velocityValue;
+  const road = createVirtualModel(() => {
+    return time.getState() * velocity.getState();
   }, { models: [time, velocity] });
   ```
 

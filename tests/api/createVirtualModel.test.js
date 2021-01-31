@@ -9,7 +9,6 @@ describe('Creating a Virtual Model', () => {
     const virtualModel = createVirtualModel(processor, { models: [first, second] });
 
     expect(processor).toBeCalledTimes(1);
-    expect(processor).lastCalledWith(first.getState(), second.getState());
     expect(typeof virtualModel).toBe('object');
     expect(typeof virtualModel.getState).toBe('function');
     expect(typeof virtualModel.subscribe).toBe('function');
@@ -19,7 +18,7 @@ describe('Creating a Virtual Model', () => {
     const name = createModel('Foo');
     const surname = createModel('Bar');
     const fullname = createVirtualModel(
-      (nameValue, surnameValue) => `${nameValue} ${surnameValue}`,
+      () => `${name.getState()} ${surname.getState()}`,
       {
         models: [name, surname],
       },
@@ -32,7 +31,7 @@ describe('Creating a Virtual Model', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
     const netSalary = createVirtualModel(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100,
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
       { models: [grossSalary, taxes] }
     );
 
@@ -47,7 +46,7 @@ describe('Creating a Virtual Model', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
     const netSalary = createVirtualModel(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100,
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
       { models: [grossSalary, taxes] }
     );
 
@@ -66,7 +65,7 @@ describe('Creating a Virtual Model', () => {
     const value3 = { city: 'New York' };
     const model3 = createModel(value3);
     const virtual = createVirtualModel(
-      (name, age, country) => `${name} is alone in ${country.city} at his ${age}`,
+      () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
       { models: [model1, model2, model3] }
     );
     const callback = jest.fn();
@@ -89,12 +88,12 @@ describe('Creating a Virtual Model', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
     const netSalary = createVirtualModel(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100,
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
       { models: [grossSalary, taxes] }
     );
     const euroRate = createModel(0.8);
     const netSalaryInEuros = createVirtualModel(
-      (salary, rate) => rate * salary,
+      () => euroRate.getState() * netSalary.getState(),
       { models: [netSalary, euroRate] }
     );
     const callback = jest.fn();
