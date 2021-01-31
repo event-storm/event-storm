@@ -1,7 +1,6 @@
 import copy from 'rollup-plugin-copy';
 import gzipPlugin from 'rollup-plugin-gzip';
-import uglify from 'rollup-plugin-uglify-es';
-import minify from 'rollup-plugin-babel-minify';
+import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
 
 const config = {
@@ -16,9 +15,13 @@ const config = {
   ],
   plugins: [
     resolve(),
-    uglify(),
-    minify({
-      comments: false,
+    terser({
+      toplevel: true,
+      compress: {
+        passes: 5,
+        unsafe: true,
+        pure_getters: true
+      },
     }),
     gzipPlugin(),
     copy({
