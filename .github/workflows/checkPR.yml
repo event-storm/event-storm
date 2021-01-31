@@ -1,0 +1,21 @@
+name: Publish
+on:
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to repository
+        uses: actions/checkout@v2
+      - name: Use NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Linting
+        run: yarn run lint
+      - name: Testing
+        run: yarn run jest
