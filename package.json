@@ -50,7 +50,7 @@
   },
   "lint-staged": {
     "src/*.js": [
-      "npm run lint"
+      "yarn run lint"
     ]
   },
   "husky": {
