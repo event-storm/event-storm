@@ -14,7 +14,7 @@ describe('Publishing a Model', () => {
     publishModel(model, nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(nextValue);
+    expect(callback).lastCalledWith(nextValue);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -32,9 +32,9 @@ describe('Publishing a Model', () => {
     publishModel(model, publisher);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(nextValue);
+    expect(callback).lastCalledWith(nextValue);
     expect(publisher).toBeCalledTimes(1);
-    expect(publisher.mock.results[0].value).toBe(nextValue);
+    expect(publisher).toReturnWith(nextValue);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -47,7 +47,7 @@ describe('Publishing a Model', () => {
     publishModel(model, callback);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(initialValue);
+    expect(callback).lastCalledWith(initialValue);
   });
 
   test('update state with async function', async () => {

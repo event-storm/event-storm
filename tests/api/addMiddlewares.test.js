@@ -1,6 +1,6 @@
 import { addMiddlewares, createModel, publishModel } from '../../src';
 
-describe('Addin a middleware', () => {
+describe('Adding a middleware', () => {
   test('middleware must be fired on model change', () => {
     const middleware = jest.fn();
     const example = createModel('start');
@@ -47,8 +47,6 @@ describe('Addin a middleware', () => {
     addMiddlewares(middleware);
     publishModel(example, finalValue);
 
-    expect(middleware.mock.calls[0][0]).toBe(initialValue);
-    expect(middleware.mock.calls[0][1]).toBe(finalValue);
-    expect(middleware.mock.calls[0][2]).toEqual({ model: example });
+    expect(middleware).lastCalledWith(initialValue, finalValue, { model: example });
   });
 });

@@ -9,15 +9,9 @@ const config = {
   output: [
     {
       dir: 'dist',
-      format: 'esm',
-      sourcemap: true,
-      entryFileNames: 'index.js',
-    },
-    {
-      dir: 'dist',
       format: 'cjs',
       sourcemap: true,
-      entryFileNames: 'index-cjs.js',
+      entryFileNames: 'index.js',
     },
   ],
   plugins: [

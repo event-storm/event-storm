@@ -1,2 +1,8 @@
-export { createModel, createVirtualModel, publishModel, createHistory } from './api';
+export {
+  createStore,
+  createModel,
+  publishModel,
+  createHistory,
+  createVirtualModel,
+} from './api';
 export { addMiddlewares } from './pubsub';

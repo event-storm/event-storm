@@ -48,7 +48,7 @@ describe('Creating a Model', () => {
     publishModel(model, nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(nextValue);
+    expect(callback).lastCalledWith(nextValue);
   });
 
   test('Subscribe must not fire on same value published', () => {
@@ -81,6 +81,6 @@ describe('Creating a Model', () => {
     model.subscribe(callback, true);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(initialValue);
+    expect(callback).lastCalledWith(initialValue);
   });
 });

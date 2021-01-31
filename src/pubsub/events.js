@@ -2,17 +2,31 @@ import { createDefault } from '../utils';
 
 import { needLogs } from './utils';
 
-// Using Map as consumer storage, as getting any key from Map is O(1)
-const events = new Map();
+// https://stackoverflow.com/questions/18541940/map-vs-object-in-javascript/43305977
+const events = {};
 
-const doesEventExist = event => events.has(event);
+const doesEventExist = event => !!events[event];
 
 const createEvent = (event, inital, options) => {
-  events.set(event, createDefault(inital, options));
+  events[event] = createDefault(inital, options);
   needLogs && console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }
 
-const getEvent = event => events.get(event);
+const getEvent = event => events[event];
 
-export { doesEventExist, createEvent, getEvent };
+const updateEvent = (event, options) => {
+  const needed = getEvent(event);
+  needed.options = { ...needed.options, ...options };
+}
+
+const registerEvent = (event, initial, options) =>
+  doesEventExist(event)
+    ? log(`Event already exists: ${event}.`)
+    : createEvent(event, initial, options);
+
+export {
+  getEvent,
+  updateEvent,
+  registerEvent,
+};

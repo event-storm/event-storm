@@ -4,16 +4,11 @@ describe('Creating a Virtual Model', () => {
   test('model object pass match pattern', () => {
     const first = createModel('first');
     const second = createModel('second');
-    const combinedModel = createVirtualModel(first, second);
     const processor = jest.fn(() => {});
 
-    expect(typeof combinedModel).toBe('function');
-
-    const virtualModel = combinedModel(processor);
+    const virtualModel = createVirtualModel(processor, { models: [first, second] });
 
     expect(processor).toBeCalledTimes(1);
-    expect(processor.mock.calls[0][0]).toBe(first.getState());
-    expect(processor.mock.calls[0][1]).toBe(second.getState());
     expect(typeof virtualModel).toBe('object');
     expect(typeof virtualModel.getState).toBe('function');
     expect(typeof virtualModel.subscribe).toBe('function');
@@ -22,7 +17,12 @@ describe('Creating a Virtual Model', () => {
   test('Get state must give the default state, when nothing published', () => {
     const name = createModel('Foo');
     const surname = createModel('Bar');
-    const fullname = createVirtualModel(name, surname)((nameValue, surnameValue) => `${nameValue} ${surnameValue}`);
+    const fullname = createVirtualModel(
+      () => `${name.getState()} ${surname.getState()}`,
+      {
+        models: [name, surname],
+      },
+    );
 
     expect(fullname.getState()).toBe('Foo Bar');
   });
@@ -30,8 +30,9 @@ describe('Creating a Virtual Model', () => {
   test('State must be updated after publishment(primitive value)', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
-    const netSalary = createVirtualModel(grossSalary, taxes)(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100
+    const netSalary = createVirtualModel(
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      { models: [grossSalary, taxes] }
     );
 
     expect(netSalary.getState()).toBe(80_000);
@@ -44,8 +45,9 @@ describe('Creating a Virtual Model', () => {
   test('State must be updated after publishment(by function)', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
-    const netSalary = createVirtualModel(grossSalary, taxes)(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100
+    const netSalary = createVirtualModel(
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      { models: [grossSalary, taxes] }
     );
 
     expect(netSalary.getState()).toBe(80_000);
@@ -62,8 +64,9 @@ describe('Creating a Virtual Model', () => {
     const model2 = createModel(value2);
     const value3 = { city: 'New York' };
     const model3 = createModel(value3);
-    const virtual = createVirtualModel(model1, model2, model3)(
-      (name, age, country) => `${name} is alone in ${country.city} at his ${age}`
+    const virtual = createVirtualModel(
+      () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+      { models: [model1, model2, model3] }
     );
     const callback = jest.fn();
     const nextValue2 = 80;
@@ -73,33 +76,71 @@ describe('Creating a Virtual Model', () => {
     publishModel(model2, nextValue2);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(`${value1} is alone in ${value3.city} at his ${nextValue2}`);
+    expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${nextValue2}`);
 
     publishModel(model3, nextValue3);
 
     expect(callback).toBeCalledTimes(2);
-    expect(callback.mock.calls[1][0]).toBe(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`);
+    expect(callback).lastCalledWith(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`);
   });
 
   test('It must be possible to create virtualModel over virtual model', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
-    const netSalary = createVirtualModel(grossSalary, taxes)(
-      (grossSalaryValue, taxesValue) => grossSalaryValue * (100 - taxesValue) / 100
+    const netSalary = createVirtualModel(
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      { models: [grossSalary, taxes] }
     );
     const euroRate = createModel(0.8);
-    const netSalaryInEuros = createVirtualModel(netSalary, euroRate)((salary, rate) => rate * salary);
+    const netSalaryInEuros = createVirtualModel(
+      () => euroRate.getState() * netSalary.getState(),
+      { models: [netSalary, euroRate] }
+    );
     const callback = jest.fn();
 
     netSalaryInEuros.subscribe(callback);
     publishModel(taxes, 40);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback.mock.calls[0][0]).toBe(48_000);
+    expect(callback).lastCalledWith(48_000);
 
     publishModel(euroRate, 0.5);
 
     expect(callback).toBeCalledTimes(2);
-    expect(callback.mock.calls[1][0]).toBe(30_000);
+    expect(callback).lastCalledWith(30_000);
+  });
+
+  test('changing virtual models dependency models', () => {
+    const grossSalary = createModel(100_000);
+    const taxes = createModel(20);
+    const netSalary = createVirtualModel(
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+    );
+
+    expect(netSalary.getState()).toBe(80_000);
+
+    netSalary.setOptions({ models: [grossSalary] });
+    publishModel(grossSalary, 200_000);
+
+    expect(netSalary.getState()).toBe(160_000);
+  });
+
+  test('virtual models must not be updated if the model is not in the dependencies', () => {
+    const grossSalary = createModel(100_000);
+    const taxes = createModel(20);
+    const netSalary = createVirtualModel(
+      () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+    );
+
+    expect(netSalary.getState()).toBe(80_000);
+
+    netSalary.setOptions({ models: [grossSalary] });
+    publishModel(grossSalary, 200_000);
+
+    expect(netSalary.getState()).toBe(160_000);
+
+    publishModel(taxes, 50);
+
+    expect(netSalary.getState()).toBe(160_000);
   });
 });

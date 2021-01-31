@@ -1,8 +1,8 @@
 import { isEqual } from '../utils';
 
 import { log } from './logger';
+import { getEvent } from './events';
 import { applyMiddlewares } from './middlewares';
-import { doesEventExist, createEvent, getEvent } from './events';
 
 const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
@@ -33,9 +33,4 @@ const subscribe = (event, callback, needPrevious) => {
   }
 }
 
-const register = (event, initial, options) =>
-  doesEventExist(event)
-    ? log(`Event already exists: ${event}.`)
-    : createEvent(event, initial, options);
-
-export { publish, register, subscribe };
+export { publish, subscribe };

@@ -65,14 +65,13 @@ This will give following benefits:
   instead of firing the same event twice.
 
   ```js
-  const fireDuplicates = true;
-  const clientModel = createModel({}, fireDuplicates);
+  const clientModel = createModel({}, { fireDuplicates: true });
   ```
 - createVirtualModel
   The example above will show how to create a new model based on existing models.
   **Creating a model from existing ones will allow you to create some shared state which you want also to
-  listen**. Both functions `createModel` and `createVirtualModel` will return you same result a virtual model,
-  which you can be a subject to publish and of course subscribe. NOTE, for both cases the API remains exactly the same.
+  listen**. Both functions `createModel` and `createVirtualModel` will return you same result(a model),
+  which you can be a subject to subscribe. NOTE, for both cases the API remains exactly the same.
 
   ```js
   import { createModel, createVirtualModel } from 'event-storm';
@@ -81,20 +80,19 @@ This will give following benefits:
   const velocity = createModel(10);
 
   // virtual model
-  const road = createVirtualModel(time, velocity)((timeValue, velocityValue) => {
-    return timeValue * velocityValue;
-  });
+  const road = createVirtualModel(() => {
+    return time.getState() * velocity.getState();
+  }, { models: [time, velocity] });
   ```
 
   <details>
     <summary>Addvanced!</summary>
 
-    Pay attention on virtual model's declaration. It is done by 2 phases:
-    1. Creating an intermediate state for virtual model. **This is a data provider,
-      which can be reused with different handlers**.
-    2. Passing the processor function. The function will be fired each time any of the
-      models(registered in the first phase) is changed.NOTE even for multiple subscribers
-      the processor(computing) function will be fired once.
+    Pay attention on virtual model's declaration. The 2nd argument is the configuration,
+    which can be skipped initially:.
+    This is done for cases when you want to propagate changes depend on some condition.
+    You can always change the models that it is listening on by calling:
+    <code>virtualModel.setOptions({ models: [/* any models here */] })</code>
   </details>
 
 - publishModel
@@ -189,6 +187,19 @@ This will give following benefits:
   history.goForward();
 
   console.log(grossSalary.getState()) // 200_000
+  ```
+
+- Creating a store
+
+  ```js
+  improt { createStore } from 'event-storm';
+
+  const store = createStore({
+    taxes: 20,
+    grossSalary: 100_000,
+    netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
+  });
+
   ```
 
 ## Playground
