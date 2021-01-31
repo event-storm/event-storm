@@ -1,2 +1,3 @@
+export { publish, subscribe } from './pubsub';
 export { addMiddlewares } from './middlewares';
-export { publish, subscribe, register } from './pubsub';
+export { registerEvent, updateEvent } from './events';
