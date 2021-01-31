@@ -1,5 +1,8 @@
 import { publish, addMiddlewares } from '../../pubsub';
-import { historyOptions, collectState, findDiff } from './utils';
+
+import { collectState } from '../utils';
+
+import { historyOptions, findDiff } from './utils';
 
 const createHistory = (models, { captureExisting } = {}) => {
   let history = [collectState(models)];
