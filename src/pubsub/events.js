@@ -1,4 +1,4 @@
-import { createDefault } from '../utils';
+import { createDefault } from 'utils';
 
 import { needLogs } from './utils';
 

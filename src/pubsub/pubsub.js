@@ -1,4 +1,4 @@
-import { isEqual } from '../utils';
+import { isEqual } from 'utils';
 
 import { log } from './logger';
 import { getEvent } from './events';

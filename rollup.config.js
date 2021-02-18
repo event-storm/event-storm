@@ -1,4 +1,6 @@
+import path from 'path';
 import copy from 'rollup-plugin-copy';
+import alias from 'rollup-plugin-alias';
 import gzipPlugin from 'rollup-plugin-gzip';
 import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
@@ -14,6 +16,13 @@ const config = {
     },
   ],
   plugins: [
+    alias({
+      entries: [
+        { find: 'api', replacement: path.resolve('src/api') },
+        { find: 'utils', replacement: path.resolve('src/utils') },
+        { find: 'pubsub', replacement: path.resolve('src/pubsub') },
+      ],
+    }),
     resolve(),
     terser({
       toplevel: true,

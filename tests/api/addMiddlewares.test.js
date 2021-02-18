@@ -1,4 +1,4 @@
-import { addMiddlewares, createModel, publishModel } from '../../src';
+import { addMiddlewares, createModel, publishModel } from 'src';
 
 describe('Adding a middleware', () => {
   test('middleware must be fired on model change', () => {

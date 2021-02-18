@@ -1,5 +1,5 @@
-import { isEqual, createDefault } from '../utils';
-import { registerEvent, updateEvent, subscribe, publish } from '../pubsub';
+import { isEqual, createDefault } from 'utils';
+import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId, collectState  } from './utils';
 

@@ -1,4 +1,4 @@
-import { createModel, publishModel, createVirtualModel } from '../../src';
+import { createModel, publishModel, createVirtualModel } from 'src';
 
 describe('Creating a Virtual Model', () => {
   test('model object pass match pattern', () => {

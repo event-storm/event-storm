@@ -1,4 +1,4 @@
-import { publishModel, createModel } from '../../src';
+import { publishModel, createModel } from 'src';
 
 describe('Publishing a Model', () => {
 

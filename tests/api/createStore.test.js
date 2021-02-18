@@ -1,4 +1,4 @@
-import { createStore, publishModel } from '../../src';
+import { createStore, publishModel } from 'src';
 
 describe('Creating a store', () => {
   test('store object matches pattern', () => {

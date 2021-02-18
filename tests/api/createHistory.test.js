@@ -1,4 +1,4 @@
-import { createHistory, createModel, publishModel } from '../../src';
+import { createHistory, createModel, publishModel } from 'src';
 
 describe('Create history for models', () => {
   test('history object must match the pattern', () => {

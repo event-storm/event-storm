@@ -1,4 +1,4 @@
-import { createModel, createVirtualModel } from '../configure';
+import { createModel, createVirtualModel } from 'api/configure';
 
 import { createProxy } from './utils';
 

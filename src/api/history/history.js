@@ -1,6 +1,6 @@
-import { publish, addMiddlewares } from '../../pubsub';
+import { publish, addMiddlewares } from 'pubsub';
 
-import { collectState } from '../utils';
+import { collectState } from 'api/utils';
 
 import { historyOptions, findDiff } from './utils';
 
