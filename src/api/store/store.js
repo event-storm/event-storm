@@ -29,7 +29,7 @@ function createStore(options) {
     }
   });
 
-  const subscribers = [];
+  let subscribers = [];
   keys.map(key => {
     const model = result[key];
     model.subscribe(nextValue => {
