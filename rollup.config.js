@@ -1,6 +1,6 @@
 import path from 'path';
 import copy from 'rollup-plugin-copy';
-import alias from 'rollup-plugin-alias';
+import alias from '@rollup/plugin-alias';
 import gzipPlugin from 'rollup-plugin-gzip';
 import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
