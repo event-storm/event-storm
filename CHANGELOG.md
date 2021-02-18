@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/event-store/event-store/compare/v0.7.0...v0.7.1) (2021-02-18)
+
+
+### Bug Fixes
+
+* **store:** subscribers reassignment must be allowed ([f364a05](https://github.com/event-store/event-store/commit/f364a054478fecf9be637a62152e56483bf0e8e1))
+
+
+
 # [0.7.0](https://github.com/event-store/event-store/compare/v0.6.1...v0.7.0) (2021-01-31)
 
 
