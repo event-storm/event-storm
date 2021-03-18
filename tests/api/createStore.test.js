@@ -117,6 +117,20 @@ describe('Creating a store', () => {
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
 
+  test('publish method must update the store with async function', async () => {
+    const initialValue = { type: 'sync' };
+    const finalValue = { type: 'async' };
+    const store = createStore(initialValue);
+    const waitTime = 1000;
+    const callback = () => {
+      return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
+    }
+
+    store.publish(callback);
+    await callback();
+
+    expect(store.getState()).toEqual(finalValue);
+  });
 
   test('publish method must update the store by multiple values', () => {
     const initialState = {
