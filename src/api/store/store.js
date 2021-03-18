@@ -1,4 +1,4 @@
-import { createModel, createVirtualModel } from 'api/configure';
+import { createModel, createVirtualModel, publishModel } from 'api/configure';
 
 import { createProxy } from './utils';
 
@@ -49,6 +49,11 @@ function createStore(options) {
       return () => {
         subscribers = subscribers.filter(subscriber => subscriber !== callback);
       }
+    },
+    publish: (segments, options) => {
+      Object.entries(segments).forEach(([key, value]) => {
+        result[key].publish(value, options);
+      });
     },
   };
 };

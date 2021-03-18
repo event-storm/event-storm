@@ -2,7 +2,6 @@ import { createDefault } from 'utils';
 
 import { needLogs } from './utils';
 
-// https://stackoverflow.com/questions/18541940/map-vs-object-in-javascript/43305977
 const events = {};
 
 const doesEventExist = event => !!events[event];

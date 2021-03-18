@@ -1,4 +1,4 @@
-import { publishModel, createModel } from 'src';
+import { createModel } from 'src';
 
 describe('Publishing a Model', () => {
 
@@ -11,7 +11,7 @@ describe('Publishing a Model', () => {
     expect(model.getState()).toBe(initalValue);
 
     model.subscribe(callback);
-    publishModel(model, nextValue);
+    model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(nextValue);
@@ -29,7 +29,7 @@ describe('Publishing a Model', () => {
     expect(model.getState()).toBe(initalValue);
 
     model.subscribe(callback);
-    publishModel(model, publisher);
+    model.publish(publisher);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(nextValue);
@@ -44,7 +44,7 @@ describe('Publishing a Model', () => {
     const model = createModel(initialValue);
     const callback = jest.fn();
 
-    publishModel(model, callback);
+    model.publish(callback);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(initialValue);
@@ -59,7 +59,7 @@ describe('Publishing a Model', () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
     }
 
-    publishModel(model, callback);
+    model.publish(callback);
     await callback();
 
     expect(model.getState()).toBe(finalValue);

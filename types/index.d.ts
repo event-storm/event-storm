@@ -1,6 +1,9 @@
+type AnyObject = { [key: string]: any };
+
 export interface IModel<T> {
   getState: () => T;
   event: string | string[];
+  publish: (value: T, options: AnyObject) => void;
   subscribe: (callback: () => void, needPrevious?: boolean) => () => void;
 }
 
@@ -13,7 +16,6 @@ export interface IModelsHistory {
 
 export function createModel<T>(value: T): IModel<T>;
 export function createVirtualModel<T>(callback: () => T, options?: { models?: IModel<any>[] }) => IModel<T>;
-export function publishModel<T>(model: IModel<T>, value: T | ((nextValue: T) => T)): void;
 
 export function addMiddlewares(
   ...middlewares: Array<(previousValue: any, nextValue: any, options: { model: IModel<any> }) => void>
@@ -21,8 +23,9 @@ export function addMiddlewares(
 
 export function createHistory(models: IModel<any>[], options?: { captureExisting: boolean }): IModelsHistory;
 
-export function createStore(options: { [key: string]: any} ): {
+export function createStore(options: AnyObject ): {
   getState: () => object;
   subscribe: ((key: string, value: any, model: IModel<any>) => void) => void;
   model: { [key: string]: IModel<any> };
+  publish: (segments: AnyObject, options: AnyObject) => void;
 };

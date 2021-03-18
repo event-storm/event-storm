@@ -1,4 +1,4 @@
-import { createModel, publishModel, createVirtualModel } from 'src';
+import { createModel, createVirtualModel } from 'src';
 
 describe('Creating a Virtual Model', () => {
   test('model object pass match pattern', () => {
@@ -37,7 +37,7 @@ describe('Creating a Virtual Model', () => {
 
     expect(netSalary.getState()).toBe(80_000);
 
-    publishModel(grossSalary, 200_000);
+    grossSalary.publish(200_000);
 
     expect(netSalary.getState()).toBe(160_000);
   });
@@ -52,7 +52,7 @@ describe('Creating a Virtual Model', () => {
 
     expect(netSalary.getState()).toBe(80_000);
 
-    publishModel(taxes, () => 40);
+    taxes.publish(() => 40);
 
     expect(netSalary.getState()).toBe(60_000);
   });
@@ -73,12 +73,12 @@ describe('Creating a Virtual Model', () => {
     const nextValue3 = { city: 'Tokio' };
 
     virtual.subscribe(callback);
-    publishModel(model2, nextValue2);
+    model2.publish(nextValue2);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${nextValue2}`);
 
-    publishModel(model3, nextValue3);
+    model3.publish(nextValue3);
 
     expect(callback).toBeCalledTimes(2);
     expect(callback).lastCalledWith(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`);
@@ -99,12 +99,12 @@ describe('Creating a Virtual Model', () => {
     const callback = jest.fn();
 
     netSalaryInEuros.subscribe(callback);
-    publishModel(taxes, 40);
+    taxes.publish(40);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(48_000);
 
-    publishModel(euroRate, 0.5);
+    euroRate.publish(0.5);
 
     expect(callback).toBeCalledTimes(2);
     expect(callback).lastCalledWith(30_000);
@@ -120,7 +120,7 @@ describe('Creating a Virtual Model', () => {
     expect(netSalary.getState()).toBe(80_000);
 
     netSalary.setOptions({ models: [grossSalary] });
-    publishModel(grossSalary, 200_000);
+    grossSalary.publish(200_000);
 
     expect(netSalary.getState()).toBe(160_000);
   });
@@ -135,11 +135,11 @@ describe('Creating a Virtual Model', () => {
     expect(netSalary.getState()).toBe(80_000);
 
     netSalary.setOptions({ models: [grossSalary] });
-    publishModel(grossSalary, 200_000);
+    grossSalary.publish(200_000);
 
     expect(netSalary.getState()).toBe(160_000);
 
-    publishModel(taxes, 50);
+    taxes.publish(50);
 
     expect(netSalary.getState()).toBe(160_000);
   });

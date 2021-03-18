@@ -1,7 +1,6 @@
 export {
   createStore,
   createModel,
-  publishModel,
   createHistory,
   createVirtualModel,
 } from 'api';

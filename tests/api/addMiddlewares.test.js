@@ -1,4 +1,4 @@
-import { addMiddlewares, createModel, publishModel } from 'src';
+import { addMiddlewares, createModel } from 'src';
 
 describe('Adding a middleware', () => {
   test('middleware must be fired on model change', () => {
@@ -6,19 +6,19 @@ describe('Adding a middleware', () => {
     const example = createModel('start');
 
     addMiddlewares(middleware);
-    publishModel(example, 'final');
+    example.publish('final');
 
     expect(middleware).toBeCalledTimes(1);
   });
 
 
-  test('middleware must be fired on model change', () => {
+  test('middlewares must be fired on model change', () => {
     const middleware1 = jest.fn();
     const middleware2 = jest.fn();
     const example = createModel('start');
 
     addMiddlewares(middleware1, middleware2);
-    publishModel(example, 'final');
+    example.publish('final');
 
     expect(middleware1).toBeCalledTimes(1);
     expect(middleware2).toBeCalledTimes(1);
@@ -33,7 +33,7 @@ describe('Adding a middleware', () => {
 
     example.subscribe(callback);
     addMiddlewares(middleware);
-    publishModel(example, 'final');
+    example.publish('final');
     expect(middleware).toBeCalledTimes(1);
   });
 
@@ -45,7 +45,7 @@ describe('Adding a middleware', () => {
     const example = createModel(initialValue);
 
     addMiddlewares(middleware);
-    publishModel(example, finalValue);
+    example.publish(finalValue);
 
     expect(middleware).lastCalledWith(initialValue, finalValue, { model: example });
   });

@@ -1,4 +1,4 @@
-import { publish, addMiddlewares } from 'pubsub';
+import { addMiddlewares } from 'pubsub';
 
 import { collectState } from 'api/utils';
 
@@ -24,14 +24,14 @@ const createHistory = (models, { captureExisting } = {}) => {
     goBack: () => {
       if (pointer > 1) {
         const { index, next } = findDiff(history[pointer - 1], history[pointer - 2]);
-        publish(models[index].event, next, historyOptions);
+        models[index].publish(next, historyOptions);
         pointer--;
       }
     },
     goForward: () => {
       if (pointer < history.length) {
         const { index, previous } = findDiff(history[pointer], history[pointer - 1]);
-        publish(models[index].event, previous, historyOptions);
+        models[index].publish(previous, historyOptions);
         pointer++;
       }
     },
