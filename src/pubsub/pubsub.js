@@ -7,6 +7,8 @@ import { applyMiddlewares } from './middlewares';
 const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
 
+  if (!neededEvent) return log(`No event named ${event}`);
+
   if (neededEvent.options.fireDuplicates || !isEqual(valueSetter, neededEvent.lastState)) {
 
     const isFunction = typeof valueSetter === 'function';

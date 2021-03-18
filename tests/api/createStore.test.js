@@ -1,4 +1,4 @@
-import { createStore, publishModel } from 'src';
+import { createStore } from 'src';
 
 describe('Creating a store', () => {
   test('store object matches pattern', () => {
@@ -8,6 +8,7 @@ describe('Creating a store', () => {
     });
 
     expect(typeof store.models).toBe('object');
+    expect(typeof store.publish).toBe('function');
     expect(typeof store.getState).toBe('function');
     expect(typeof store.subscribe).toBe('function');
   });
@@ -21,7 +22,7 @@ describe('Creating a store', () => {
 
     expect(store.getState()).toEqual(initialState);
 
-    publishModel(store.models.name, 'Jain');
+    store.models.name.publish('Jain');
 
     expect(store.getState()).toEqual({
       name: 'Jain',
@@ -38,7 +39,7 @@ describe('Creating a store', () => {
     const callback = jest.fn();
 
     store.subscribe(callback);
-    publishModel(store.models.name, 'Jain');
+    store.models.name.publish('Jain');
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith('name', 'Jain', store.models.name);
@@ -65,7 +66,7 @@ describe('Creating a store', () => {
       netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
     });
 
-    publishModel(store.models.taxes, 30);
+    store.models.taxes.publish(30);
 
     expect(store.getState()).toEqual({
       taxes: 30,
@@ -82,7 +83,7 @@ describe('Creating a store', () => {
       isEnough: ({ netSalary }) => netSalary > 100_000,
     });
 
-    publishModel(store.models.taxes, 30);
+    store.models.taxes.publish(30);
 
     expect(store.getState()).toEqual({
       taxes: 30,
@@ -91,7 +92,7 @@ describe('Creating a store', () => {
       isEnough: false
     });
 
-    publishModel(store.models.grossSalary, 200_000);
+    store.models.grossSalary.publish(200_000);
 
     expect(store.getState()).toEqual({
       taxes: 30,
@@ -99,5 +100,38 @@ describe('Creating a store', () => {
       grossSalary: 200_000,
       isEnough: true
     });
+  });
+
+  test('publish method must update the store by single value', () => {
+    const initialState = {
+      name: 'John',
+      surname: 'Doe',
+    };
+    const fragment = {
+      name: 'Jane',
+    }
+
+    const store = createStore(initialState);
+    store.publish(fragment);
+
+    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+  });
+
+
+  test('publish method must update the store by multiple values', () => {
+    const initialState = {
+      age: 21,
+      name: 'John',
+      surname: 'Doe',
+    };
+    const fragment = {
+      name: 'Jane',
+      age: 35,
+    }
+
+    const store = createStore(initialState);
+    store.publish(fragment);
+
+    expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
 });

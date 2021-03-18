@@ -50,6 +50,11 @@ function createStore(options) {
         subscribers = subscribers.filter(subscriber => subscriber !== callback);
       }
     },
+    publish: (segments, options) => {
+      Object.entries(segments).forEach(([key, value]) => {
+        result[key].publish(value, options);
+      });
+    },
   };
 };
 

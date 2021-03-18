@@ -3,4 +3,6 @@ const isEqual = (next, prev) => Object.is(next, prev);
 
 const createDefault = (lastState, options = {}) => ({ lastState, options, subscribers: [] });
 
-export { isEqual, createDefault };
+const noop = () => {};
+
+export { isEqual, createDefault, noop };

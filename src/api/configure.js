@@ -1,7 +1,7 @@
-import { isEqual, createDefault } from 'utils';
+import { isEqual, createDefault, noop } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
-import { generateId, collectState  } from './utils';
+import { generateId, collectState } from './utils';
 
 const createModel = (defaultData, options) => {
   const event = generateId();
@@ -9,8 +9,10 @@ const createModel = (defaultData, options) => {
   const model = registerEvent(event, defaultData, options);
 
   return {
-    event,
     getState: () => model.lastState,
+    publish(data, options) {
+      publish(event, data, { ...options, model: this });
+    },
     setOptions: options => updateEvent(event, options),
     subscribe: (callback, needPrevious) => subscribe(event, callback, needPrevious),
   };
@@ -30,7 +32,7 @@ const createVirtualModel = (handler, { models = [], ...options } = {}) => {
   let subscriptions = models.map(model => model.subscribe(() => updateHandler(models)));
 
   return ({
-    event: models.map(({ event }) => event),
+    publish: noop,
     getState: () => virtualEvent.lastState,
     subscribe: (callback, needPrevious) => {
       needPrevious && callback(virtualEvent.lastState);
@@ -52,10 +54,7 @@ const createVirtualModel = (handler, { models = [], ...options } = {}) => {
   });
 }
 
-const publishModel = (model, data) => publish(model.event, data, { model });
-
 export {
   createModel,
-  publishModel,
   createVirtualModel,
 }

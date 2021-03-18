@@ -1,4 +1,4 @@
-import { createModel, publishModel } from 'src';
+import { createModel } from 'src';
 
 describe('Creating a Model', () => {
   test('model object matches pattern', () => {
@@ -22,7 +22,7 @@ describe('Creating a Model', () => {
 
     expect(model.getState()).toBe(initialValue);
 
-    publishModel(model, nextValue);
+    model.publish(nextValue);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -34,7 +34,7 @@ describe('Creating a Model', () => {
 
     expect(model.getState()).toBe(initialValue);
 
-    publishModel(model, () => nextValue);
+    model.publish(() => nextValue);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -45,7 +45,7 @@ describe('Creating a Model', () => {
     const callback = jest.fn();
 
     model.subscribe(callback);
-    publishModel(model, nextValue);
+    model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(nextValue);
@@ -57,7 +57,7 @@ describe('Creating a Model', () => {
     const callback = jest.fn();
 
     model.subscribe(callback);
-    publishModel(model, initialValue);
+    model.publish(initialValue);
 
     expect(callback).toBeCalledTimes(0);
   });
@@ -68,7 +68,7 @@ describe('Creating a Model', () => {
     const callback = jest.fn();
 
     model.subscribe(callback);
-    publishModel(model, initialValue);
+    model.publish(initialValue);
 
     expect(callback).toBeCalledTimes(1);
   });
