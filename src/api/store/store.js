@@ -37,21 +37,27 @@ function createStore(options) {
         subscriber(key, nextValue, model);
       });
     });
-  })
+  });
+
+  const getState = () => keys.reduce((store, key) => {
+    store[key] = result[key].getState();
+    return store;
+  }, {});
+
   return {
+    getState,
     models: result,
-    getState: () => keys.reduce((store, key) => {
-      store[key] = result[key].getState();
-      return store;
-    }, {}),
     subscribe: callback => {
       subscribers.push(callback);
       return () => {
         subscribers = subscribers.filter(subscriber => subscriber !== callback);
       }
     },
-    publish: (segments, options) => {
-      Object.entries(segments).forEach(([key, value]) => {
+    publish: async (fragments, options) => {
+      const isFunction = typeof fragments === 'function';
+      const possiblePromise = isFunction ? fragments(getState()) : fragments;
+      const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
+      Object.entries(snapshot).forEach(([key, value]) => {
         result[key].publish(value, options);
       });
     },
