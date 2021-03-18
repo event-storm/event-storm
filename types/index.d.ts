@@ -3,7 +3,7 @@ type AnyObject = { [key: string]: any };
 export interface IModel<T> {
   getState: () => T;
   event: string | string[];
-  publish: (value: T, options: AnyObject) => void;
+  publish: (value: T, options?: AnyObject) => void;
   subscribe: (callback: () => void, needPrevious?: boolean) => () => void;
 }
 
@@ -27,5 +27,5 @@ export function createStore(options: AnyObject ): {
   getState: () => object;
   subscribe: ((key: string, value: any, model: IModel<any>) => void) => void;
   model: { [key: string]: IModel<any> };
-  publish: (segments: AnyObject, options: AnyObject) => void;
+  publish: (segments: AnyObject, options?: AnyObject) => void;
 };
