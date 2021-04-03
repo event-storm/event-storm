@@ -1,3 +1,12 @@
+## [0.8.1](https://github.com/event-store/event-store/compare/v0.8.0...v0.8.1) (2021-04-03)
+
+
+### Bug Fixes
+
+* **virtual event:** unsubscribe from virtual event was not working ([25ce555](https://github.com/event-store/event-store/commit/25ce555e9150bd52f7469879f7dabf77fae1ea9b))
+
+
+
 # [0.8.0](https://github.com/event-store/event-store/compare/v0.7.2...v0.8.0) (2021-03-18)
 
 
