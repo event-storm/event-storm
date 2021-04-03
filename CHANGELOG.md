@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/event-store/event-store/compare/v0.7.2...v0.8.0) (2021-03-18)
+
+
+### Features
+
+* **store:** adding async publish support ([c012b93](https://github.com/event-store/event-store/commit/c012b93894311541e2931e0938b20af8ea459f05))
+
+
+
 ## [0.7.2](https://github.com/event-store/event-store/compare/v0.7.0...v0.7.2) (2021-03-18)
 
 

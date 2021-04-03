@@ -206,4 +206,4 @@ This will give following benefits:
 
 Examples:
  - [**PureJs**](https://codesandbox.io/s/serene-wood-cjvem)
- - [**React**](https://codesandbox.io/s/nameless-bash-8e2o4)
+ - [**React**](https://codesandbox.io/s/intelligent-http-iupz5)
