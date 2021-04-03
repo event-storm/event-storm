@@ -38,7 +38,7 @@ const createVirtualModel = (handler, { models = [], ...options } = {}) => {
       needPrevious && callback(virtualEvent.lastState);
       virtualEvent.subscribers.push(callback);
       return () => {
-        virtualEvent.subscribers = virtualEvent.subscribers(subscriber => subscriber !== callback);
+        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscriber => subscriber !== callback);
       }
     },
     setOptions: ({
