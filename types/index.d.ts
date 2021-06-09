@@ -23,9 +23,11 @@ export function addMiddlewares(
 
 export function createHistory(models: IModel<any>[], options?: { captureExisting: boolean }): IModelsHistory;
 
-export function createStore(options: AnyObject ): {
+export interface IStore {
   getState: () => object;
   subscribe: ((key: string, value: any, model: IModel<any>) => void) => void;
   model: { [key: string]: IModel<any> };
   publish: (segments: AnyObject, options?: AnyObject) => void | Promise<any>;
-};
+}
+
+export function createStore(options: AnyObject ): IStore;
