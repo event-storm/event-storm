@@ -1,3 +1,12 @@
+## [0.8.2](https://github.com/event-store/event-store/compare/v0.8.1...v0.8.2) (2021-06-09)
+
+
+### Bug Fixes
+
+* **types:** store type defined as IStore and exported ([56580a4](https://github.com/event-store/event-store/commit/56580a4d4fa071fe2fcc50e89735e8135c05efbb))
+
+
+
 ## [0.8.1](https://github.com/event-store/event-store/compare/v0.8.0...v0.8.1) (2021-04-03)
 
 
