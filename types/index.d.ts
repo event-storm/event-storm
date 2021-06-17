@@ -1,4 +1,6 @@
-type AnyObject = { [key: string]: any };
+interface AnyObject {
+  [key: string]: any;
+};
 
 export interface IModel<T> {
   getState: () => T;
@@ -23,11 +25,11 @@ export function addMiddlewares(
 
 export function createHistory(models: IModel<any>[], options?: { captureExisting: boolean }): IModelsHistory;
 
-export interface IStore {
-  getState: () => object;
+export interface IStore<T> {
+  getState: () => T;
   subscribe: ((key: string, value: any, model: IModel<any>) => void) => void;
   model: { [key: string]: IModel<any> };
-  publish: (segments: AnyObject, options?: AnyObject) => void | Promise<any>;
+  publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
 
-export function createStore(options: AnyObject ): IStore;
+export function createStore<T extends AnyObject>(options: T): IStore<T>;
