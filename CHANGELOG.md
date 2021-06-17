@@ -1,3 +1,12 @@
+## [0.8.3](https://github.com/event-store/event-store/compare/v0.8.2...v0.8.3) (2021-06-17)
+
+
+### Bug Fixes
+
+* **types:** createStore type to receive generic ([78a90d4](https://github.com/event-store/event-store/commit/78a90d47682fb7f93bccd15dfc6d338292814401))
+
+
+
 ## [0.8.2](https://github.com/event-store/event-store/compare/v0.8.1...v0.8.2) (2021-06-09)
 
 
