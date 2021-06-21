@@ -17,7 +17,7 @@ export interface IModelsHistory {
 }
 
 export function createModel<T>(value: T): IModel<T>;
-export function createVirtualModel<T>(callback: () => T, options?: { models?: IModel<any>[] }) => IModel<T>;
+export function createVirtualModel<T>(callback: () => T, options?: { models?: IModel<any>[] }) : IModel<T>;
 
 export function addMiddlewares(
   ...middlewares: Array<(previousValue: any, nextValue: any, options: { model: IModel<any> }) => void>
@@ -27,7 +27,7 @@ export function createHistory(models: IModel<any>[], options?: { captureExisting
 
 export interface IStore<T> {
   getState: () => T;
-  subscribe: ((key: string, value: any, model: IModel<any>) => void) => void;
+  subscribe: (callback: (key: string, value: any, model: IModel<any>) => void) => () => void;
   model: { [key: string]: IModel<any> };
   publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
