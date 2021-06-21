@@ -10,11 +10,13 @@ type OptionsFlags<Type> = {
     : Type[Property];
 };
 
+type Values<T> = T[keyof T];
+
 export interface IModel<T> {
   getState: () => T;
   event: string | string[];
   publish: (value: T, options?: AnyObject) => void | Promise<T>;
-  subscribe: (callback: () => void, needPrevious?: boolean) => () => void;
+  subscribe: (callback: (nextValue: T) => void, needPrevious?: boolean) => () => void;
 }
 
 export interface IModelsHistory {
@@ -48,9 +50,9 @@ export function createHistory(
 export interface IStore<T> {
   getState: () => OptionsFlags<T>;
   subscribe: (
-    callback: (key: string, value: any, model: IModel<any>) => void
+    callback: (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void
   ) => () => void;
-  model: { [key: string]: IModel<any> };
+  model: { [Property in keyof T]: IModel<T[Property]> };
   publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
 
