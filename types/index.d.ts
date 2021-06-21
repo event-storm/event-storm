@@ -30,7 +30,7 @@ export function createModel<T>(value: T): IModel<T>;
 export function createVirtualModel<T>(
   callback: () => T,
   options?: { models?: IModel<any>[] }
-): IModel<OptionsFlags<T>>;
+): IModel<T extends AnyFunction ? ReturnType<T> : T>;
 
 export function addMiddlewares(
   ...middlewares: Array<
