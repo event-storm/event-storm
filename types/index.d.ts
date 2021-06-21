@@ -30,7 +30,7 @@ export function createModel<T>(value: T): IModel<T>;
 export function createVirtualModel<T>(
   callback: () => T,
   options?: { models?: IModel<any>[] }
-): IModel<T extends AnyFunction ? ReturnType<T> : T>;
+): IModel<T>;
 
 export function addMiddlewares(
   ...middlewares: Array<
@@ -52,7 +52,7 @@ export interface IStore<T> {
   subscribe: (
     callback: (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void
   ) => () => void;
-  models: { [Property in keyof T]: IModel<T[Property]> };
+  models: { [Property in keyof T]: IModel<T[Property] extends AnyFunction ? ReturnType<T[Property]> : T[Property] };
   publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
 
