@@ -1,3 +1,23 @@
+# [0.9.0](https://github.com/event-store/event-store/compare/v0.8.4...v0.9.0) (2021-06-21)
+
+
+### Bug Fixes
+
+* **types:** add specific type for virtual model ([7da6faf](https://github.com/event-store/event-store/commit/7da6faf93c1dbf2ab1449d1a31db9e64bfde1358))
+* **types:** change virtual model type changes to store declaration part ([0ba896b](https://github.com/event-store/event-store/commit/0ba896b85abd8f5db944789e0f3c630ba4a28739))
+* **types:** createStore return types ([0227e1b](https://github.com/event-store/event-store/commit/0227e1bfae0e91b75b8a278a9b89d650dc4e02a9))
+* **types:** more specific types ([6b93ab9](https://github.com/event-store/event-store/commit/6b93ab97547c45d77749c0dc43f504f30985c3b8))
+* **types:** more specific types ([c37539a](https://github.com/event-store/event-store/commit/c37539ab9f7e7df8ea45a6323cba63135f756782))
+* **types:** virtual model return type is wrong ([52f7824](https://github.com/event-store/event-store/commit/52f78243e67352904ae5b0d51d1c09a5fbfa9e29))
+
+
+### Features
+
+* **types:** exporting all the utils from types ([510a390](https://github.com/event-store/event-store/commit/510a3901d3dc3753a4373080ca9bcb19e5294b57))
+* **types:** exporting all the utils from types ([342af08](https://github.com/event-store/event-store/commit/342af08e40a95b947b5a1a6740e5e895a591d7c8))
+
+
+
 ## [0.8.4](https://github.com/event-store/event-store/compare/v0.8.3...v0.8.4) (2021-06-21)
 
 
