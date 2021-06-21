@@ -1,5 +1,13 @@
 interface AnyObject {
   [key: string]: any;
+}
+
+type AnyFunction = (...args: any) => any;
+
+type OptionsFlags<Type> = {
+  [Property in keyof Type]: Type[Property] extends AnyFunction
+    ? ReturnType<Type[Property]>
+    : Type[Property];
 };
 
 export interface IModel<T> {
@@ -17,17 +25,31 @@ export interface IModelsHistory {
 }
 
 export function createModel<T>(value: T): IModel<T>;
-export function createVirtualModel<T>(callback: () => T, options?: { models?: IModel<any>[] }) : IModel<T>;
+export function createVirtualModel<T>(
+  callback: () => T,
+  options?: { models?: IModel<any>[] }
+): IModel<T>;
 
 export function addMiddlewares(
-  ...middlewares: Array<(previousValue: any, nextValue: any, options: { model: IModel<any> }) => void>
+  ...middlewares: Array<
+    (
+      previousValue: any,
+      nextValue: any,
+      options: { model: IModel<any> }
+    ) => void
+  >
 ): void;
 
-export function createHistory(models: IModel<any>[], options?: { captureExisting: boolean }): IModelsHistory;
+export function createHistory(
+  models: IModel<any>[],
+  options?: { captureExisting: boolean }
+): IModelsHistory;
 
 export interface IStore<T> {
-  getState: () => T;
-  subscribe: (callback: (key: string, value: any, model: IModel<any>) => void) => () => void;
+  getState: () => OptionsFlags<T>;
+  subscribe: (
+    callback: (key: string, value: any, model: IModel<any>) => void
+  ) => () => void;
   model: { [key: string]: IModel<any> };
   publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
