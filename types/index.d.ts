@@ -1,16 +1,16 @@
-interface AnyObject {
+export interface AnyObject {
   [key: string]: any;
 }
 
-type AnyFunction = (...args: any) => any;
+export type AnyFunction = (...args: any) => any;
 
-type OptionsFlags<Type> = {
+export type OptionsFlags<Type> = {
   [Property in keyof Type]: Type[Property] extends AnyFunction
     ? ReturnType<Type[Property]>
     : Type[Property];
 };
 
-type Values<T> = T[keyof T];
+export type Values<T> = T[keyof T];
 
 export interface IModel<T> {
   getState: () => T;
@@ -47,12 +47,12 @@ export function createHistory(
   options?: { captureExisting: boolean }
 ): IModelsHistory;
 
+export type IStoreSubcription<T> = (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void;
+
 export interface IStore<T> {
   getState: () => OptionsFlags<T>;
-  subscribe: (
-    callback: (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void
-  ) => () => void;
-  models: { [Property in keyof T]: IModel<T[Property] extends AnyFunction ? ReturnType<T[Property]> : T[Property] };
+  subscribe: (callback: IStoreSubcription<T>) => () => void;
+  models: { [Property in keyof T]: IModel<T[Property] extends AnyFunction ? ReturnType<T[Property]> : T[Property]> };
   publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
 }
 
