@@ -1,3 +1,12 @@
+## [0.8.4](https://github.com/event-store/event-store/compare/v0.8.3...v0.8.4) (2021-06-21)
+
+
+### Bug Fixes
+
+* **types:** store types fixed: invalid signature ([033f1cd](https://github.com/event-store/event-store/commit/033f1cd2655ad236690dcf7f8b8e262475af33c7))
+
+
+
 ## [0.8.3](https://github.com/event-store/event-store/compare/v0.8.2...v0.8.3) (2021-06-17)
 
 
