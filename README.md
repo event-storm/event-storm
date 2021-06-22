@@ -205,5 +205,5 @@ This will give following benefits:
 ## Playground
 
 Examples:
- - [**PureJs**](https://codesandbox.io/s/serene-wood-cjvem)
+ - [**Typescript**](https://codesandbox.io/s/beautiful-currying-bl9dv)
  - [**React**](https://codesandbox.io/s/intelligent-http-iupz5)
