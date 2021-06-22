@@ -53,7 +53,7 @@ export interface IStore<T> {
   getState: () => IStoreState<T>;
   subscribe: (callback: IStoreSubcription<T>) => () => void;
   models: { [Property in keyof T]: IModel<T[Property] extends AnyFunction ? ReturnType<T[Property]> : T[Property]> };
-  publish: (segments: Partial<T>, options?: AnyObject) => void | Promise<any>;
+  publish: (segments: Partial<T> | (params: IStoreState<T>) => Partial<T> | Promise<Partial<T>>, options?: AnyObject) => void | Promise<any>;
 }
 
 export function createStore<T extends AnyObject>(options: T): IStore<T>;
