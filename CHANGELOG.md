@@ -1,3 +1,12 @@
+## [0.9.1](https://github.com/event-store/event-store/compare/v0.9.0...v0.9.1) (2021-06-22)
+
+
+### Bug Fixes
+
+* **types:** types for store publish: functional publish is not type correct ([0a69a7d](https://github.com/event-store/event-store/commit/0a69a7d55d0a839deaf74f5863947e32d4b46299))
+
+
+
 # [0.9.0](https://github.com/event-store/event-store/compare/v0.8.4...v0.9.0) (2021-06-21)
 
 

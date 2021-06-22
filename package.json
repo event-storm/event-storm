@@ -1,6 +1,6 @@
 {
   "name": "event-storm",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "In memory event store",
   "main": "./index.js",
   "license": "MIT",
