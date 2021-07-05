@@ -1,37 +1,37 @@
-import { addMiddlewares } from 'pubsub';
+import addMiddlewares from 'api/middlewares';
 
-import { collectState } from 'api/utils';
+import { collectMiddlewareState } from 'api/utils';
 
 import { historyOptions, findDiff } from './utils';
 
 const createHistory = (models, { captureExisting } = {}) => {
-  let history = [collectState(models)];
+  let history = [collectMiddlewareState(models).values];
   let pointer = 1;
 
-  const historyMiddleware = (previous, next, { fromHistory, model }) => {
-    if (!fromHistory && models.includes(model)) {
+  const historyMiddleware = (previous, next, { fromHistory }) => {
+    if (!fromHistory) {
       if (history.length > pointer) {
         history = history.filter((_, index) => index < pointer);
       }
-      history.push(collectState(models));
+      history.push(collectMiddlewareState(models).values);
       pointer++;
     }
   }
 
-  addMiddlewares(historyMiddleware);
+  addMiddlewares(models)(historyMiddleware);
 
   return {
     goBack: () => {
       if (pointer > 1) {
-        const { index, next } = findDiff(history[pointer - 1], history[pointer - 2]);
-        models[index].publish(next, historyOptions);
+        const { key, next } = findDiff(history[pointer - 1], history[pointer - 2]);
+        models[key].publish(next, historyOptions);
         pointer--;
       }
     },
     goForward: () => {
       if (pointer < history.length) {
-        const { index, previous } = findDiff(history[pointer], history[pointer - 1]);
-        models[index].publish(previous, historyOptions);
+        const { key, previous } = findDiff(history[pointer], history[pointer - 1]);
+        models[key].publish(previous, historyOptions);
         pointer++;
       }
     },

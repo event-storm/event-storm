@@ -48,7 +48,7 @@ describe('Creating a Model', () => {
     model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue);
+    expect(callback).lastCalledWith(nextValue, {});
   });
 
   test('Subscribe must not fire on same value published', () => {

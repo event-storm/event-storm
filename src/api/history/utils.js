@@ -1,11 +1,11 @@
 const historyOptions = { fromHistory: true };
 
 const findDiff = (previous, next) => {
-  for(let index = 0; index < previous.length; index++) {
-    if (previous[index] !== next[index]) {
-      return { index, previous: previous[index], next: next[index] };
-    }
-  }
+  for (let key in previous) {
+    if (previous[key] !== next[key]) {
+      return { key, previous: previous[key], next: next[key] };
+    };
+  };
 }
 
 export { historyOptions, findDiff };

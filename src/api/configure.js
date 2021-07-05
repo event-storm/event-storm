@@ -10,9 +10,7 @@ const createModel = (defaultData, options) => {
 
   return {
     getState: () => model.lastState,
-    publish(data, options) {
-      publish(event, data, { ...options, model: this });
-    },
+    publish: (data, options) => publish(event, data, { ...options }),
     setOptions: options => updateEvent(event, options),
     subscribe: (callback, needPrevious) => subscribe(event, callback, needPrevious),
   };
