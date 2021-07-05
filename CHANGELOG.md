@@ -1,3 +1,22 @@
+# [1.0.0](https://github.com/event-store/event-store/compare/v0.9.2...v1.0.0) (2021-07-05)
+
+
+### Bug Fixes
+
+* **types:** update middleware related types ([6fa1a99](https://github.com/event-store/event-store/commit/6fa1a9995fce613d7713fd58c5ef83bcf3396c58))
+
+
+### Features
+
+* **middlewares:** change middlewares to become stateless ([78b8d21](https://github.com/event-store/event-store/commit/78b8d212fcfd33203df20811e285598082df1ecb))
+
+
+### BREAKING CHANGES
+
+* **middlewares:** The middlewares api is totally changed
+
+
+
 ## [0.9.2](https://github.com/event-store/event-store/compare/v0.9.1...v0.9.2) (2021-06-22)
 
 
