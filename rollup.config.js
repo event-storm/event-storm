@@ -11,7 +11,7 @@ const config = {
     {
       dir: 'dist',
       format: 'cjs',
-      sourcemap: true,
+      sourcemap: false,
       entryFileNames: 'index.js',
     },
   ],
