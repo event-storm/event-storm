@@ -3,7 +3,7 @@ import { createHistory, createModel } from 'src';
 describe('Create history for models', () => {
   test('history object must match the pattern', () => {
     const grossSalary = createModel(100_000);
-    const history = createHistory([grossSalary]);
+    const history = createHistory({ grossSalary });
 
     expect(typeof history.goBack).toBe('function');
     expect(typeof history.hasNext).toBe('function');
@@ -14,7 +14,7 @@ describe('Create history for models', () => {
   test('history must be updated when model published', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
-    const history = createHistory([grossSalary]);
+    const history = createHistory({ grossSalary });
 
     expect(history.hasPrevious()).toBe(false);
     expect(history.hasNext()).toBe(false);
@@ -28,7 +28,7 @@ describe('Create history for models', () => {
   test('history must not be updated when other model published', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
-    const history = createHistory([grossSalary]);
+    const history = createHistory({ grossSalary });
 
     expect(history.hasPrevious()).toBe(false);
     expect(history.hasNext()).toBe(false);
@@ -44,7 +44,7 @@ describe('Create history for models', () => {
     const finalStateGrossSalary = 150_000;
     const grossSalary = createModel(initialGrossSalary);
     const taxes = createModel(20);
-    const history = createHistory([grossSalary, taxes]);
+    const history = createHistory({ grossSalary, taxes });
 
     taxes.publish(40);
     grossSalary.publish(finalStateGrossSalary);
@@ -63,7 +63,7 @@ describe('Create history for models', () => {
     const finalStateGrossSalary = 150_000;
     const grossSalary = createModel(initialGrossSalary);
     const taxes = createModel(20);
-    const history = createHistory([grossSalary, taxes]);
+    const history = createHistory({ grossSalary, taxes });
 
     taxes.publish(40);
     grossSalary.publish(finalStateGrossSalary);

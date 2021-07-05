@@ -14,7 +14,7 @@ describe('Publishing a Model', () => {
     model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue);
+    expect(callback).lastCalledWith(nextValue, {});
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -32,7 +32,7 @@ describe('Publishing a Model', () => {
     model.publish(publisher);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue);
+    expect(callback).lastCalledWith(nextValue, {});
     expect(publisher).toBeCalledTimes(1);
     expect(publisher).toReturnWith(nextValue);
 

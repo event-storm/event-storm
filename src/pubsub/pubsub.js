@@ -2,7 +2,6 @@ import { isEqual } from 'utils';
 
 import { log } from './logger';
 import { getEvent } from './events';
-import { applyMiddlewares } from './middlewares';
 
 const publish = async (event, valueSetter, options) => {
   const neededEvent = getEvent(event);
@@ -17,8 +16,7 @@ const publish = async (event, valueSetter, options) => {
 
     const { lastState } = neededEvent;
     neededEvent.lastState = nextValue;
-    applyMiddlewares(lastState, nextValue, options);
-    neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState));
+    neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState, options));
   } else {
     log(`There is no need for update: ${event}.`);
   }

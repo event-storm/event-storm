@@ -2,6 +2,6 @@ export {
   createStore,
   createModel,
   createHistory,
+  addMiddlewares,
   createVirtualModel,
 } from 'api';
-export { addMiddlewares } from 'pubsub';

@@ -5,7 +5,7 @@ describe('Adding a middleware', () => {
     const middleware = jest.fn();
     const example = createModel('start');
 
-    addMiddlewares(middleware);
+    addMiddlewares({ example })(middleware);
     example.publish('final');
 
     expect(middleware).toBeCalledTimes(1);
@@ -17,7 +17,7 @@ describe('Adding a middleware', () => {
     const middleware2 = jest.fn();
     const example = createModel('start');
 
-    addMiddlewares(middleware1, middleware2);
+    addMiddlewares({ example })(middleware1, middleware2);
     example.publish('final');
 
     expect(middleware1).toBeCalledTimes(1);
@@ -32,7 +32,7 @@ describe('Adding a middleware', () => {
     const example = createModel('start');
 
     example.subscribe(callback);
-    addMiddlewares(middleware);
+    addMiddlewares({ example })(middleware);
     example.publish('final');
     expect(middleware).toBeCalledTimes(1);
   });
@@ -44,9 +44,9 @@ describe('Adding a middleware', () => {
     const middleware = jest.fn();
     const example = createModel(initialValue);
 
-    addMiddlewares(middleware);
+    addMiddlewares({ example })(middleware);
     example.publish(finalValue);
 
-    expect(middleware).lastCalledWith(initialValue, finalValue, { model: example });
+    expect(middleware).lastCalledWith({ example: initialValue }, { example: finalValue }, modelOptions);
   });
 });
