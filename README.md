@@ -207,6 +207,8 @@ With the store you can:
 - Creating a model manually(source of truth)
   **createModel**
   ```js
+  import { createModel } from 'event-storm';
+
   const userModel = createModel();
   // When defining a model it is often usefull to have a **default value**:
   const clientModel = createModel({});
