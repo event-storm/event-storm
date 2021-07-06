@@ -16,9 +16,9 @@ It is called to create an in memory event sourcing database conceptually near to
 The above mentioned libraries(and not only them) are using a **centralized concept of keeping the information**.
 What does this mean?
 When creating a store it is described as an object and also it corresponds a single tree in the memory.
-The main way to acheive an update in by changing a reference in the in-memory tree. For listening the events you need to
+The main way to acheive an update is by changing a reference in the in-memory tree. For listening the events you need to
 subscribe to some node which is basically not a subscription. You can take a look at this [simple example](https://codesandbox.io/s/redux-update-81zjv?file=/src/store/index.js). "anyway updated" is loggin at any time something in the store changes. The main problem here is the centralized data store. To determine whether the change is needed for one or another consumer a centralized store needs to calculate the exact usage, then prevent the update.
-The library is suggesting decentralized store with single usage interface as before. This means, you will describe and act with the store like usual. Under the hood it will kept each node separate. This will allow to not calculate each time whether or not prevent the update.
+The library is suggesting decentralized store with single usage interface as before. This means, you will describe and act with the store like usual. Under the hood it will keep each node separate. This will allow to not calculate each time whether or not prevent the update.
 
 <details>
   <summary>Deep look at the concept</summary>
@@ -38,7 +38,7 @@ The library is suggesting decentralized store with single usage interface as bef
 
 ## Basic concepts
 
-The library consists of 2 parts: event store implementation and data model absraction. The event store supports:
+The library consists of 2 parts: event store implementation and data model abstraction. The event store supports:
 - :star: publish/subscribe of events
 - :star: log for development
   - event registration
@@ -121,7 +121,7 @@ With the store you can:
   ```
 
   **Advanced store usage**
-  As mentioned above the store is decentralizes. Any peace of information can be also used independently from store. The peace of information is called "model". When creating a store, under the hood it creates "models".
+  As mentioned above the store is decentralized. Any peace of information can be also used independently from store. The peace of information is called "model". When creating a store, under the hood it creates "models".
 
   **Accessing the models**
   ```js
@@ -141,7 +141,7 @@ With the store you can:
   As mentioned above you can use the models independently. Each model will give:
   - an access to last state
   - a subscription
-  - own publish method
+  - own publishment method
   ```js
   import { createStore } from 'event-storm';
 
@@ -164,7 +164,7 @@ With the store you can:
   ```
 
   **Functional publish**.
-  Updating the store may require to have the store's previous state. For that purpose you can use the following
+  Updating the store may require to have the store's previous state. For that purpose you can use the following:
   ```js
   import { createStore } from 'event-storm';
 
@@ -181,8 +181,8 @@ With the store you can:
   console.log(store.getState()); // { taxes: 30, grossSalary: 100_000 }
   ```
 
-  **Asynchronus publish**
-  For asynchronus events, it's also possible to `await` the publish process
+  **Asynchronous publish**
+  For asynchronous events, it's also possible to `await` the publish process
   ```js
   import { createStore } from 'event-storm';
 
@@ -231,7 +231,7 @@ With the store you can:
 
 
   /* As mentioned above the API is the same.
-   It's possible to make a functional and asynhronus publish process for single model.
+   It's possible to make a functional and asynchronous publish process for single model.
    */
   popupModel.publish(false);
 
@@ -245,8 +245,8 @@ With the store you can:
   **createVirtualModel**
   The example above will show how to create a new model based on existing models.
   **Creating a model from existing ones will allow you to create some shared state which you want also to
-  listen**. Both functions `createModel` and `createVirtualModel` will return you same result(a model),
-  which you can be a subject to subscribe. NOTE, for both cases the API remains exactly the same.
+  listen**. Both functions `createModel` and `createVirtualModel` will return you the same result(a model),
+  which will be a subject to subscribe. NOTE, for both cases the API remains exactly the same.
   ```js
   import { createModel, createVirtualModel } from 'event-storm';
   // real models
@@ -264,19 +264,19 @@ With the store you can:
 
   time.publish(1);
   ```
-  The second argument is responsible for updates. Whenever any model provided is updated the handler function will be triggered.
+  The second argument is responsible for updates. Whenever any provided model is updated, the handler function will be triggered.
   This will also cause the subscribers update.
   <details>
-    <summary>Addvanced!</summary>
+    <summary>Advanced!</summary>
 
     Pay attention on virtual model's declaration. The 2nd argument is the configuration,
-    which can be skipped initially:.
+    which can be skipped initially.
     This is done for cases when you want to propagate changes depend on some condition.
-    You can always change the models that it is listening on by calling:
+    You can always change the models which you want to listen. Just call:
     <code>virtualModel.setOptions({ models: [/* any models here */] })</code>
   </details>
 - Middlewares
-  **Middlewares are needed to intercept to publishing process, capture some values**
+  **Middlewares are needed to intercept to publishing process, to capture some values**
     ```js
     import { addMiddlewares, createStore } from 'event-storm';
 
@@ -294,7 +294,7 @@ With the store you can:
     ```
 - Time travel(Undo/redo)
 
-  There is a built-in middleware for creating history for any subset of models. It will allow going and forward between the history steps.
+  There is a built-in middleware for creating history for any subset of models. It will allow going back and forward between the history steps.
 
   ```js
   import { createModel, createHistory, publishModel } from 'event-storm';
