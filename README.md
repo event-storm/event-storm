@@ -62,7 +62,7 @@ With the store you can:
     grossSalary: 100_000,
   });
 
-  console.log(store.getState()) // { taxes: 20, grossSalary: 200_000 }
+  console.log(store.getState()) // { taxes: 20, grossSalary: 100_000 }
 
   ```
   **Updating the store information**
