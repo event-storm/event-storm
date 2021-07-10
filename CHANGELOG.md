@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/event-store/event-store/compare/v1.0.0...v1.1.0) (2021-07-10)
+
+
+### Features
+
+* **internals:** add library internals ([baf7cb7](https://github.com/event-store/event-store/commit/baf7cb7dd7d63c15616cbea6c3762a39fbfd0d48))
+
+
+
 # [1.0.0](https://github.com/event-store/event-store/compare/v0.9.2...v1.0.0) (2021-07-05)
 
 
