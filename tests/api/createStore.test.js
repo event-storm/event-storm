@@ -148,4 +148,22 @@ describe('Creating a store', () => {
 
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
+
+  test('None predifined state key must be created after publish', () => {
+    const initialState = {
+      age: 21,
+      name: 'John',
+      surname: 'Doe',
+    };
+
+    const fragment = {
+      anotherName: 'Jane',
+      age: 35,
+    }
+
+    const store = createStore(initialState);
+    store.publish(fragment);
+
+    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+  });
 });

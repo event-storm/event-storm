@@ -58,6 +58,10 @@ function createStore(options) {
       const possiblePromise = isFunction ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
       Object.entries(snapshot).forEach(([key, value]) => {
+        if (!result[key]) {
+          keys.push(key);
+          result[key] = createModel(value, options);
+        }
         result[key].publish(value, options);
       });
     },
