@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/event-store/event-store/compare/v1.1.0...v1.1.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* **store:** missing defualt state fragment crashes on publish ([07d1dbc](https://github.com/event-store/event-store/commit/07d1dbc891a21ff89d7353d8e8a580ac9c891895))
+
+
+
 # [1.1.0](https://github.com/event-store/event-store/compare/v1.0.0...v1.1.0) (2021-07-10)
 
 
