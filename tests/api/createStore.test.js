@@ -149,7 +149,7 @@ describe('Creating a store', () => {
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
 
-  test('None predifined state key must be created after publish', () => {
+  test('None predifined state key must give an error on publish', () => {
     const initialState = {
       age: 21,
       name: 'John',
@@ -158,12 +158,10 @@ describe('Creating a store', () => {
 
     const fragment = {
       anotherName: 'Jane',
-      age: 35,
     }
 
     const store = createStore(initialState);
-    store.publish(fragment);
 
-    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+    expect(store.publish(fragment)).rejects.toThrow('You need to specify default value before publishing');
   });
 });
