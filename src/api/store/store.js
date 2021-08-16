@@ -11,15 +11,14 @@ function createStore(options) {
       const models = [];
       const proxy = createProxy(options, {
         getter: key => {
-          if (!result[key]) {
-            result[key] = createStore({ key: value })[key];
-          }
+          if (!result[key]) return;
+
           const model = result[key];
 
           if (!models.includes(model)) {
             models.push(model);
           }
-          return result[key].getState();
+          return model.getState();
         }
       });
       result[key] = createVirtualModel(() => value(proxy));
@@ -58,10 +57,7 @@ function createStore(options) {
       const possiblePromise = isFunction ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
       Object.entries(snapshot).forEach(([key, value]) => {
-        if (!result[key]) {
-          keys.push(key);
-          result[key] = createModel(value, options);
-        }
+        if (!result[key]) throw new Error('You need to specify default value before publishing');
         result[key].publish(value, options);
       });
     },
