@@ -1,6 +1,6 @@
 import { createDefault } from 'utils';
 
-import { needLogs } from './utils';
+import { log } from './logger';
 
 const events = {};
 
@@ -8,7 +8,7 @@ const doesEventExist = event => !!events[event];
 
 const createEvent = (event, inital, options) => {
   events[event] = createDefault({ lastState: inital, options });
-  needLogs && console.log(`Event has been created: ${event}.`);
+  log(`Event has been created: ${event}.`, false);
   return getEvent(event);
 }
 
