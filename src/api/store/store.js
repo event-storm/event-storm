@@ -8,7 +8,7 @@ function createStore(options) {
   keys.map(key => {
     const value = options[key];
     if (typeof value === 'function') {
-      const models = [];
+      let models = [];
       const proxy = createProxy(options, {
         getter: key => {
           if (!result[key]) return;
@@ -21,8 +21,12 @@ function createStore(options) {
           return model.getState();
         }
       });
-      result[key] = createVirtualModel(() => value(proxy));
-      result[key].setOptions({ models });
+      result[key] = createVirtualModel(() => {
+        models = [];
+        const state = value(proxy);
+        result[key].setOptions({ models });
+        return state;
+      });
     } else {
       result[key] = createModel(value);
     }
