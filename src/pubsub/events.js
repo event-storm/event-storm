@@ -7,7 +7,7 @@ const events = {};
 const doesEventExist = event => !!events[event];
 
 const createEvent = (event, inital, options) => {
-  events[event] = createDefault(inital, options);
+  events[event] = createDefault({ lastState: inital, options });
   needLogs && console.log(`Event has been created: ${event}.`);
   return getEvent(event);
 }

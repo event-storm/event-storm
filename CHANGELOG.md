@@ -1,3 +1,12 @@
+## [1.1.3](https://github.com/event-store/event-store/compare/v1.1.2...v1.1.3) (2021-08-19)
+
+
+### Bug Fixes
+
+* **pubsub:** not fire on duplicates ([4ea54a8](https://github.com/event-store/event-store/commit/4ea54a8c2ba80719fa53e128b72fee3b97bc304d))
+
+
+
 ## [1.1.2](https://github.com/event-store/event-store/compare/v1.1.1...v1.1.2) (2021-08-15)
 
 

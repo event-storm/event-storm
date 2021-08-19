@@ -8,13 +8,11 @@ const publish = async (event, valueSetter, options) => {
 
   if (!neededEvent) return log(`No event named ${event}`);
 
-  if (neededEvent.options.fireDuplicates || !isEqual(valueSetter, neededEvent.lastState)) {
+  const isFunction = typeof valueSetter === 'function';
+  const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
+  const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
 
-    const isFunction = typeof valueSetter === 'function';
-    const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
-    const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
-
-    const { lastState } = neededEvent;
+  if (neededEvent.options.fireDuplicates || !isEqual(nextValue, neededEvent.lastState)) {
     neededEvent.lastState = nextValue;
     neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState, options));
   } else {

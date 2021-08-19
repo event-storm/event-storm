@@ -22,7 +22,7 @@ describe('Creating a store', () => {
 
     expect(store.getState()).toEqual(initialState);
 
-    store.models.name.publish('Jain');
+    store.publish({ name: 'Jain' });
 
     expect(store.getState()).toEqual({
       name: 'Jain',
@@ -39,7 +39,7 @@ describe('Creating a store', () => {
     const callback = jest.fn();
 
     store.subscribe(callback);
-    store.models.name.publish('Jain');
+    store.publish({ name: 'Jain' });
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith('name', 'Jain', store.models.name);
@@ -66,7 +66,7 @@ describe('Creating a store', () => {
       netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
     });
 
-    store.models.taxes.publish(30);
+    store.publish({ taxes: 30 });
 
     expect(store.getState()).toEqual({
       taxes: 30,
@@ -83,22 +83,22 @@ describe('Creating a store', () => {
       isEnough: ({ netSalary }) => netSalary > 100_000,
     });
 
-    store.models.taxes.publish(30);
+    store.publish({ taxes: 30 });
 
     expect(store.getState()).toEqual({
       taxes: 30,
+      isEnough: false,
       netSalary: 70_000,
       grossSalary: 100_000,
-      isEnough: false
     });
 
-    store.models.grossSalary.publish(200_000);
+    store.publish({ grossSalary: 200_000 });
 
     expect(store.getState()).toEqual({
       taxes: 30,
+      isEnough: true,
       netSalary: 140_000,
       grossSalary: 200_000,
-      isEnough: true
     });
   });
 
