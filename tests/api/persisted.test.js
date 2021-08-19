@@ -22,7 +22,7 @@ describe('Creating a persisted store', () => {
 
     const store = persisted(createStore)({
       storageKey: 'event_storm',
-      beforeunlaod: state => ({ name: state.name }),
+      beforeunload: state => ({ name: state.name }),
     })(initialState);
 
     store.publish(fragment);
@@ -31,10 +31,10 @@ describe('Creating a persisted store', () => {
 
     const storeAfterUnload = persisted(createStore)({
       storageKey: 'event_storm',
-      beforeunlaod: state => ({ name: state.name }),
+      beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    // expect(storeAfterUnload.getState()).toEqual({ ...initialState, ...fragment });
+    expect(storeAfterUnload.getState()).toEqual({ ...initialState, ...fragment });
   });
 
   it('store not persisted fragments must be restored as initial', () => {
@@ -51,7 +51,7 @@ describe('Creating a persisted store', () => {
 
     const store = persisted(createStore)({
       storageKey: 'event_storm',
-      beforeunlaod: state => ({ name: state.name }),
+      beforeunload: state => ({ name: state.name }),
     })(initialState);
 
     store.publish(fragment);
@@ -62,9 +62,9 @@ describe('Creating a persisted store', () => {
 
     const storeAfterUnload = persisted(createStore)({
       storageKey: 'event_storm',
-      beforeunlaod: state => ({ name: state.name }),
+      beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    // expect(storeAfterUnload.getState()).toEqual({ ...initialState, name: 'Jane' });
+    expect(storeAfterUnload.getState()).toEqual({ ...initialState, name: 'Jane' });
   });
 });
