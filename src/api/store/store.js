@@ -1,13 +1,18 @@
 import { createModel, createVirtualModel } from 'api/configure';
 
-import { createProxy } from './utils';
+import { createProxy, isFunction, isPrimitive, isObject } from './utils';
 
 function createStore(options) {
-  const result = {};
-  const keys = Object.keys(options);
+  if (isFunction(options)) throw new Error('Argument can\'t be a function');
+
+  if (isPrimitive(options)) return createModel(options);
+
+  const isOptionsArray = Array.isArray(options);
+  let result = isOptionsArray ? [] : {};
+  let keys = isOptionsArray ? options.map((_, order) => order) : Object.keys(options);
   keys.map(key => {
     const value = options[key];
-    if (typeof value === 'function') {
+    if (isFunction(value)) {
       let models = [];
       const proxy = createProxy(options, {
         getter: key => {
@@ -28,7 +33,7 @@ function createStore(options) {
         return state;
       });
     } else {
-      result[key] = createModel(value);
+      result[key] = isObject(value) ?  createStore(value) : createModel(value);
     }
   });
 
@@ -45,7 +50,7 @@ function createStore(options) {
   const getState = () => keys.reduce((store, key) => {
     store[key] = result[key].getState();
     return store;
-  }, {});
+  }, isOptionsArray ? [] : {});
 
   return {
     getState,
@@ -57,13 +62,22 @@ function createStore(options) {
       }
     },
     publish: async (fragments, options) => {
-      const isFunction = typeof fragments === 'function';
-      const possiblePromise = isFunction ? fragments(getState()) : fragments;
+      const possiblePromise = isFunction(fragments) ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
-      Object.entries(snapshot).forEach(([key, value]) => {
-        if (!result[key]) throw new Error('You need to specify default value before publishing');
-        result[key].publish(value, options);
-      });
+      if (isOptionsArray) {
+        // losing old subscriptions here
+        keys = fragments.map((_, order) => order);
+        result = createStore(snapshot);
+      } else {
+        Object.entries(snapshot).forEach(([key, value]) => {
+          if (!result.hasOwnProperty(key)) {
+            result[key] = createStore(value);
+            keys.push(key);
+            return;
+          }
+          result[key].publish(value, options);
+        });
+      }
     },
   };
 };

@@ -17,7 +17,7 @@ describe('Creating a store', () => {
     const initialState = {
       name: 'John',
       surname: 'Doe',
-    }
+    };
     const store = createStore(initialState);
 
     expect(store.getState()).toEqual(initialState);
@@ -34,7 +34,7 @@ describe('Creating a store', () => {
     const initialState = {
       name: 'John',
       surname: 'Doe',
-    }
+    };
     const store = createStore(initialState);
     const callback = jest.fn();
 
@@ -109,7 +109,7 @@ describe('Creating a store', () => {
     };
     const fragment = {
       name: 'Jane',
-    }
+    };
 
     const store = createStore(initialState);
     store.publish(fragment);
@@ -124,7 +124,7 @@ describe('Creating a store', () => {
     const waitTime = 1000;
     const callback = () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
-    }
+    };
 
     store.publish(callback);
     await callback();
@@ -141,7 +141,7 @@ describe('Creating a store', () => {
     const fragment = {
       name: 'Jane',
       age: 35,
-    }
+    };
 
     const store = createStore(initialState);
     store.publish(fragment);
@@ -158,10 +158,80 @@ describe('Creating a store', () => {
 
     const fragment = {
       anotherName: 'Jane',
-    }
+    };
 
     const store = createStore(initialState);
 
     expect(store.publish(fragment)).rejects.toThrow('You need to specify default value before publishing');
+  });
+
+  test('Defining nested object as store must result in deep merging the state', () => {
+    const initialState = {
+      user: {
+        name: 'John',
+        age: 45
+      },
+      cards: {
+        id: 'some_id',
+        isPresent: false,
+      },
+    };
+
+    const store = createStore(initialState);
+
+    const fragment = {
+      user: {
+        name: 'Bob',
+      },
+    };
+
+    store.publish(fragment);
+    // deepmerge
+    expect(store.getState()).toEqual({
+      ...initialState,
+      user: {
+        ...initialState.user,
+        ...fragment.user,
+      },
+    });
+  });
+
+  test('The nested property update must trigger parents subscibe', () => {
+    const initialState = {
+      user: {
+        name: 'John',
+        age: 45
+      },
+      cards: {
+        id: 'some_id',
+        isPresent: false,
+      },
+    };
+    const fragment = {
+      user: {
+        name: 'Bob',
+      },
+    };
+    const callbackChild = jest.fn();
+    const callbackGlobal = jest.fn();
+
+    const store = createStore(initialState);
+    store.models.user.subscribe(callbackChild);
+    store.subscribe(callbackGlobal);
+
+    store.publish(fragment);
+
+    expect(callbackChild).toBeCalledTimes(1);
+    expect(callbackGlobal).toBeCalledTimes(1);
+  });
+
+  test('Array properties must stay arrays', () => {
+    // const initialState = [1,2,3,4];
+
+    // const store = createStore(initialState);
+
+    // store.publish(state => state.map(number => number * 3));
+
+    // expect(store.getState()).toEqual([1,2]);
   });
 });

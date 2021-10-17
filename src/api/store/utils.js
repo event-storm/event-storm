@@ -9,4 +9,8 @@ const createProxy = (target, options) => {
   return proxy;
 }
 
-export { createProxy };
+const isFunction = value => typeof value === 'function';
+const isObject = value => typeof value === 'object';
+const isPrimitive = value => !isObject(value) && !isFunction(value);
+
+export { createProxy, isPrimitive, isObject, isFunction };
