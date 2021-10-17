@@ -8,7 +8,7 @@ describe('Creating a Virtual Model', () => {
 
     const virtualModel = createVirtualModel(processor, { models: [first, second] });
 
-    expect(processor).toBeCalledTimes(1);
+    expect(processor).toBeCalledTimes(0);
     expect(typeof virtualModel).toBe('object');
     expect(typeof virtualModel.getState).toBe('function');
     expect(typeof virtualModel.subscribe).toBe('function');

@@ -1,4 +1,5 @@
 export {
+  persisted,
   createStore,
   createModel,
   createHistory,

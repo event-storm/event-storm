@@ -1,4 +1,4 @@
-import { isEqual, createDefault, noop } from 'utils';
+import { isEqual, createDefault, noop, isDefault } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId, collectState } from './utils';
@@ -17,7 +17,7 @@ const createModel = (defaultData, options) => {
 }
 
 const createVirtualModel = (handler, { models = [], ...options } = {}) => {
-  const virtualEvent = createDefault(handler(), options);
+  const virtualEvent = createDefault({ options });
 
   const updateHandler = neededModels => {
     const nextState = handler();
@@ -31,7 +31,12 @@ const createVirtualModel = (handler, { models = [], ...options } = {}) => {
 
   return ({
     publish: noop,
-    getState: () => virtualEvent.lastState,
+    getState: () => {
+      if (isDefault(virtualEvent.lastState)) {
+        virtualEvent.lastState = handler();
+      }
+      return virtualEvent.lastState;
+    },
     subscribe: (callback, needPrevious) => {
       needPrevious && callback(virtualEvent.lastState);
       virtualEvent.subscribers.push(callback);

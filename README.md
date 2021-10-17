@@ -42,6 +42,7 @@ The library consists of 2 parts: event store implementation and data model abstr
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
 - :zap: time travel
+- :zap: store persistence
 
 With the store you can:
 - :pill: get the last state of the store at any time
@@ -287,7 +288,7 @@ With the store you can:
       addMiddlewares(store)(handler1, handler2, ..., handlerN);
     */
     ```
-- Time travel(Undo/redo)
+- Time Travel(Undo/redo)
 
   There is a built-in middleware for creating history for any subset of models. It will allow going back and forward between the history steps.
 
@@ -311,6 +312,53 @@ With the store you can:
 
   console.log(grossSalary.getState()) // 200_000
   ```
+- Store Persistence
+You can easly make your store any segment to be persisted by `persisted` function.
+```js
+import { createStore, persisted } from 'event-storm';
+
+const createPersistedStore = persisted(createStore)({
+  storageKey: 'some_store_key',
+  beforeunload: state => ({
+    users: state.users,
+  }),
+});
+
+const defaultState = {
+  users: [],
+  age: 15,
+  loading: false,
+};
+
+const store = createPersistedStore(defaultState);
+```
+
+`storageKey` is **required property**. It will specify where to keep the persisted data in the storage.
+`beforeunload` method is called right before the browser unload event. It will receive the current store state as an argument.
+It can return any store fragment as a return value. The return value will be persisted.
+
+By default the `sessionStorage` is used to store the persisted data. To change the storage to `localStorage` you can set the
+`permanent` property to `true`:
+
+```js
+import { createStore, persisted } from 'event-storm';
+
+const createPersistedStore = persisted(createStore)({
+  permanent: true,
+  storageKey: 'some_store_key',
+  beforeunload: state => ({
+    users: state.users,
+  }),
+});
+
+const defaultState = {
+  users: [],
+  age: 15,
+  loading: false,
+};
+
+const store = createPersistedStore(defaultState);
+```
 
 ## Playground
 
