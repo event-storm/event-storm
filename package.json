@@ -38,11 +38,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/event-store/event-store.git"
+    "url": "git+https://github.com/event-storm/event-storm.git"
   },
-  "homepage": "https://github.com/event-store/event-store#readme",
+  "homepage": "https://github.com/event-storm/event-storm#readme",
   "bugs": {
-    "url": "https://github.com/event-store/event-store/issues"
+    "url": "https://github.com/event-storm/event-storm/issues"
   },
   "config": {
     "commitizen": {
