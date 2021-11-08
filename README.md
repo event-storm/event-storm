@@ -281,7 +281,7 @@ With the store you can:
       grossSalary: 100_000,
     });
 
-    addMiddlewares(store)((prevValue, nextValue, model) => {
+    addMiddlewares(store.models)((prevValue, nextValue, model) => {
       // some stuff
     });
     /* Also, the method supports multiples middlewares addition at once.
