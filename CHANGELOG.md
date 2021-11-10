@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/event-storm/event-storm/compare/v1.2.1...v1.2.2) (2021-11-10)
+
+
+### Bug Fixes
+
+* **types:** addMiddleware typing has syntax error ([8370e02](https://github.com/event-storm/event-storm/commit/8370e02444b09cec78ef576e2b064562ef25ed84))
+
+
+
 ## [1.2.1](https://github.com/event-storm/event-storm/compare/v1.2.0...v1.2.1) (2021-10-25)
 
 
