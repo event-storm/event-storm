@@ -32,7 +32,7 @@ export function createVirtualModel<T>(
   options?: { models?: IModel<any>[] }
 ): IModel<T>;
 
-export function addMiddlewares({ [key: string]: IModel<any> }): (...callbacks: Array<(prevValue: any, nextValue: any) => void>) => void;
+export function addMiddlewares(modelsObject: Record<string, IModel<any>>): (...callbacks: Array<(prevValue: any, nextValue: any) => void>) => void;
 
 export function createHistory(
   models: { [key: string]: IModel<any> },
