@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/event-storm/event-storm/compare/v1.2.2...v1.3.0) (2021-11-15)
+
+
+### Features
+
+* **store:** nested store create ([aba42e2](https://github.com/event-storm/event-storm/commit/aba42e28554b2ad38e8b845e7fb52799e196fd95))
+
+
+
 ## [1.2.2](https://github.com/event-storm/event-storm/compare/v1.2.1...v1.2.2) (2021-11-10)
 
 
