@@ -6,3 +6,4 @@ export {
   addMiddlewares,
   createVirtualModel,
 } from 'api';
+export { configure } from 'pubsub';
