@@ -44,6 +44,7 @@ function createStore(options) {
 
   keys.map(key => generateStoreFragment(key, options[key]));
 
+  let subscribers = [];
   const establishSubscription = key => {
     const model = result[key];
     model.subscribe(nextValue => {
@@ -54,7 +55,6 @@ function createStore(options) {
     });
   };
 
-  let subscribers = [];
   keys.map(key => establishSubscription(key));
 
   const getState = () => {
@@ -77,16 +77,18 @@ function createStore(options) {
         subscribers = subscribers.filter(subscriber => subscriber !== callback);
       }
     },
-    publish: async (fragments, options) => {
+    publish: async (fragments, publishOptions = {}) => {
       const isFunction = typeof fragments === 'function';
       const possiblePromise = isFunction ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
+
       Object.entries(snapshot).forEach(([key, value]) => {
         if (!result[key]) {
           generateStoreFragment(key, value);
           establishSubscription(key);
+          publishOptions.fireDuplicates = true;
         }
-        result[key].publish(value, options);
+        result[key].publish(value, publishOptions);
       });
     },
   };
