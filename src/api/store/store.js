@@ -3,12 +3,14 @@ import { createModel, createVirtualModel } from 'api/configure';
 import { createProxy } from './utils';
 
 function createStore(options) {
-  const result = {};
+  const isArray = Array.isArray(options);
+  const result = isArray ? [] : {};
   const keys = Object.keys(options);
-  keys.map(key => {
-    const value = options[key];
+
+  const generateStoreFragment = (key, value) => {
     if (typeof value === 'function') {
       let models = [];
+
       const proxy = createProxy(options, {
         getter: key => {
           if (!result[key]) return;
@@ -21,31 +23,50 @@ function createStore(options) {
           return model.getState();
         }
       });
-      result[key] = createVirtualModel(() => {
+
+      const virtualModel = createVirtualModel(() => {
         models = [];
+
         const state = value(proxy);
         result[key].setOptions({ models });
+
         return state;
       });
+
+      isArray ? result.push(virtualModel) : (result[key] = virtualModel);
+
+    } else if (typeof value === 'object') {
+      isArray ? result.push(createStore(value)) : (result[key] = createStore(value));
     } else {
-      result[key] = createModel(value);
+      isArray ? result.push(createModel(value)) : (result[key] = createModel(value));
     }
-  });
+  };
+
+  keys.map(key => generateStoreFragment(key, options[key]));
 
   let subscribers = [];
-  keys.map(key => {
+  const establishSubscription = key => {
     const model = result[key];
     model.subscribe(nextValue => {
       subscribers.forEach(subscriber => {
+        // TODO:: maybe we need numbered key here
         subscriber(key, nextValue, model);
       });
     });
-  });
+  };
 
-  const getState = () => keys.reduce((store, key) => {
-    store[key] = result[key].getState();
-    return store;
-  }, {});
+  keys.map(key => establishSubscription(key));
+
+  const getState = () => {
+    if (isArray) {
+      return result.map(item => item.getState());
+    }
+
+    return keys.reduce((store, key) => {
+      store[key] = result[key].getState();
+      return store;
+    }, {});
+  }
 
   return {
     getState,
@@ -56,13 +77,18 @@ function createStore(options) {
         subscribers = subscribers.filter(subscriber => subscriber !== callback);
       }
     },
-    publish: async (fragments, options) => {
+    publish: async (fragments, publishOptions = {}) => {
       const isFunction = typeof fragments === 'function';
       const possiblePromise = isFunction ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
+
       Object.entries(snapshot).forEach(([key, value]) => {
-        if (!result[key]) throw new Error('You need to specify default value before publishing');
-        result[key].publish(value, options);
+        if (!result[key]) {
+          generateStoreFragment(key, value);
+          establishSubscription(key);
+          publishOptions.fireDuplicates = true;
+        }
+        result[key].publish(value, publishOptions);
       });
     },
   };

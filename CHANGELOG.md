@@ -1,3 +1,35 @@
+## [1.4.1](https://github.com/event-storm/event-storm/compare/v1.4.0...v1.4.1) (2021-11-15)
+
+
+### Bug Fixes
+
+* **store:** update arrays ([93466ad](https://github.com/event-storm/event-storm/commit/93466adabce75c8fcd6f480afc844dddf3605d85))
+
+
+
+# [1.4.0](https://github.com/event-storm/event-storm/compare/v1.3.0...v1.4.0) (2021-11-15)
+
+
+### Bug Fixes
+
+* **store:** updating non existing key must be allowed ([9361bbf](https://github.com/event-storm/event-storm/commit/9361bbf9ac337301353af2a9067684d12841df06))
+
+
+### Features
+
+* **logger:** ability  to configure logger manually ([cd537fb](https://github.com/event-storm/event-storm/commit/cd537fb591b6e694259d20f6cd98f151e772bdb4))
+
+
+
+# [1.3.0](https://github.com/event-storm/event-storm/compare/v1.2.2...v1.3.0) (2021-11-15)
+
+
+### Features
+
+* **store:** nested store create ([aba42e2](https://github.com/event-storm/event-storm/commit/aba42e28554b2ad38e8b845e7fb52799e196fd95))
+
+
+
 ## [1.2.2](https://github.com/event-storm/event-storm/compare/v1.2.1...v1.2.2) (2021-11-10)
 
 
