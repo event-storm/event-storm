@@ -2,7 +2,7 @@
 
 # In memory event store
 
-**A tiny(`1.4kb` :boom:) event store implementation with pure javascript. The library has no dependencies(`Zero Dependencies`). It works for Javascript's hoist environment(browser, backend, desktop).**
+**A tiny event store implementation with pure javascript. The library has no dependencies(`Zero Dependencies`). It works for Javascript's hoist environment(browser, backend, desktop).**
 The library has a wrapper for:
 - [React](https://github.com/event-storm/react-event-storm)
 
