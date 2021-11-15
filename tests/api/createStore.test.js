@@ -412,4 +412,25 @@ describe('Creating a store', () => {
     expect(paidSubscriber).toBeCalledTimes(0);
     expect(selecterFn).toBeCalledTimes(0);
   });
+
+  test('updating arrays', () => {
+    const initialState = {
+      users: [],
+    };
+    const finalState = {
+      users: [{
+        name: 'Alice',
+      }],
+    };
+
+    const store = createStore(initialState);
+
+    store.publish({
+      users: [{
+        name: 'Alice',
+      }],
+    });
+
+    expect(store.getState()).toEqual(finalState);
+  });
 });

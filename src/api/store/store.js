@@ -7,9 +7,7 @@ function createStore(options) {
   const result = isArray ? [] : {};
   const keys = Object.keys(options);
 
-  keys.map(key => {
-    const value = options[key];
-
+  const generateStoreFragment = (key, value) => {
     if (typeof value === 'function') {
       let models = [];
 
@@ -42,10 +40,11 @@ function createStore(options) {
     } else {
       isArray ? result.push(createModel(value)) : (result[key] = createModel(value));
     }
-  });
+  };
 
-  let subscribers = [];
-  keys.map(key => {
+  keys.map(key => generateStoreFragment(key, options[key]));
+
+  const establishSubscription = key => {
     const model = result[key];
     model.subscribe(nextValue => {
       subscribers.forEach(subscriber => {
@@ -53,7 +52,10 @@ function createStore(options) {
         subscriber(key, nextValue, model);
       });
     });
-  });
+  };
+
+  let subscribers = [];
+  keys.map(key => establishSubscription(key));
 
   const getState = () => {
     if (isArray) {
@@ -80,7 +82,10 @@ function createStore(options) {
       const possiblePromise = isFunction ? fragments(getState()) : fragments;
       const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
       Object.entries(snapshot).forEach(([key, value]) => {
-        if (!result[key]) throw new Error('You need to specify default value before publishing');
+        if (!result[key]) {
+          generateStoreFragment(key, value);
+          establishSubscription(key);
+        }
         result[key].publish(value, options);
       });
     },
