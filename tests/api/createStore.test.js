@@ -149,22 +149,6 @@ describe('Creating a store', () => {
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
 
-  test('None predifined state key must give an error on publish', () => {
-    const initialState = {
-      age: 21,
-      name: 'John',
-      surname: 'Doe',
-    };
-
-    const fragment = {
-      anotherName: 'Jane',
-    }
-
-    const store = createStore(initialState);
-
-    expect(store.publish(fragment)).rejects.toThrow('You need to specify default value before publishing');
-  });
-
   test('Nested state must support nested state', () => {
     const initialState = {
       user: {
@@ -422,15 +406,13 @@ describe('Creating a store', () => {
         name: 'Alice',
       }],
     };
+    const subscriptionCallback = jest.fn();
 
     const store = createStore(initialState);
+    store.models.users.subscribe(subscriptionCallback);
 
-    store.publish({
-      users: [{
-        name: 'Alice',
-      }],
-    });
+    store.publish(finalState);
 
-    expect(store.getState()).toEqual(finalState);
+    expect(subscriptionCallback).toBeCalledTimes(1);
   });
 });

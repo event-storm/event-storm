@@ -12,7 +12,7 @@ const publish = async (event, valueSetter, options) => {
   const intermediateValue = isFunction ? valueSetter(neededEvent.lastState) : valueSetter;
   const nextValue = intermediateValue instanceof Promise ? await intermediateValue : intermediateValue;
 
-  if (neededEvent.options.fireDuplicates || !isEqual(nextValue, neededEvent.lastState)) {
+  if (options.fireDuplicates || neededEvent.options.fireDuplicates || !isEqual(nextValue, neededEvent.lastState)) {
     neededEvent.lastState = nextValue;
     neededEvent.subscribers.forEach(callback => callback(neededEvent.lastState, options));
   } else {
