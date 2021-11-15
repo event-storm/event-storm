@@ -1,3 +1,12 @@
+## [1.4.1](https://github.com/event-storm/event-storm/compare/v1.4.0...v1.4.1) (2021-11-15)
+
+
+### Bug Fixes
+
+* **store:** update arrays ([93466ad](https://github.com/event-storm/event-storm/commit/93466adabce75c8fcd6f480afc844dddf3605d85))
+
+
+
 # [1.4.0](https://github.com/event-storm/event-storm/compare/v1.3.0...v1.4.0) (2021-11-15)
 
 
