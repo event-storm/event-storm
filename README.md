@@ -41,7 +41,6 @@ The library consists of 2 parts: event store implementation and data model abstr
   - publishing the same data twice
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
-- :zap: time travel
 - :zap: store persistence
 
 With the store you can:
@@ -288,30 +287,6 @@ With the store you can:
       addMiddlewares(store)(handler1, handler2, ..., handlerN);
     */
     ```
-- Time Travel(Undo/redo)
-
-  There is a built-in middleware for creating history for any subset of models. It will allow going back and forward between the history steps.
-
-  ```js
-  import { createModel, createHistory, publishModel } from 'event-storm';
-
-  const grossSalary = createModel(100_000);
-  const taxes = createModel(20);
-  const history = createHistory({ grossSalary });
-
-  publishModel(grossSalary, 200_000);
-
-  console.log(history.hasPrevious()) // true;
-  console.log(history.hasNext()) // false;
-
-  history.goBack();
-
-  console.log(grossSalary.getState()) // 100_000
-
-  history.goForward();
-
-  console.log(grossSalary.getState()) // 200_000
-  ```
 - Store Persistence
 You can easly make your store any segment to be persisted by `persisted` function.
 ```js
