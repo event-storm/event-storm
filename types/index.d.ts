@@ -26,19 +26,6 @@ export interface IModelsHistory {
   hasPrevious: () => boolean;
 }
 
-export function createModel<T>(value: T): IModel<T>;
-export function createVirtualModel<T>(
-  callback: () => T,
-  options?: { models?: IModel<any>[] }
-): IModel<T>;
-
-export function addMiddlewares(modelsObject: Record<string, IModel<any>>): (...callbacks: Array<(prevValue: any, nextValue: any) => void>) => void;
-
-export function createHistory(
-  models: { [key: string]: IModel<any> },
-  options?: { captureExisting: boolean }
-): IModelsHistory;
-
 export type IStoreSubcription<T> = (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void;
 
 export interface IStore<T> {
@@ -48,4 +35,23 @@ export interface IStore<T> {
   publish: (segments: Partial<T> | ((params: IStoreState<T>) => Partial<T> | Promise<Partial<T>>), options?: AnyObject) => void | Promise<any>;
 }
 
+interface IConfigureOptions {
+  needLogs?: boolean;
+}
+
+export function createModel<T>(value: T): IModel<T>;
+export function createVirtualModel<T>(
+  callback: () => T,
+  options?: { models?: IModel<any>[] }
+): IModel<T>;
+
+export function addMiddlewares(modelsObject: Record<string, IModel<any>>): (...callbacks: Array<(prevValue: any, nextValue: any, options?: Record<string, any>) => void>) => void;
+
+export function createHistory(
+  models: { [key: string]: IModel<any> },
+  options?: { captureExisting: boolean }
+): IModelsHistory;
+
 export function createStore<T extends AnyObject>(options: T): IStore<T>;
+
+export function configure(options: IConfigureOptions): void;
