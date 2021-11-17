@@ -13,4 +13,8 @@ const isDefault = state => state === defaultState;
 
 const noop = () => {};
 
-export { isEqual, createDefault, noop, isDefault };
+const isFunction = fn => typeof fn === 'function';
+
+const isPromise = possiblePromise => possiblePromise instanceof Promise;
+
+export { isEqual, isPromise, createDefault, noop, isDefault, isFunction };
