@@ -335,6 +335,14 @@ const defaultState = {
 const store = createPersistedStore(defaultState);
 ```
 
+- Log for development
+The library is outputing logs when **NODE_ENV** is set to `'development'`. To disable this log you can simply do this:
+```js
+import { configure } from 'event-storm';
+
+configure({ needLogs: false });
+```
+
 ## Playground
 
 Examples:
