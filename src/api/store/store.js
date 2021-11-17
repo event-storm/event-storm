@@ -35,7 +35,7 @@ function createStore(options) {
 
       isArray ? result.push(virtualModel) : (result[key] = virtualModel);
 
-    } else if (typeof value === 'object') {
+    } else if (typeof value === 'object' && value !== null) {
       isArray ? result.push(createStore(value)) : (result[key] = createStore(value));
     } else {
       isArray ? result.push(createModel(value)) : (result[key] = createModel(value));
