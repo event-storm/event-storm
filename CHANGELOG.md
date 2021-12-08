@@ -1,3 +1,28 @@
+# [2.0.0](https://github.com/event-storm/event-storm/compare/v1.4.1...v2.0.0) (2021-12-08)
+
+
+### Bug Fixes
+
+* **store:** defaultValues null|undefined were causing errors ([a362add](https://github.com/event-storm/event-storm/commit/a362add4b55790a4828548b87e2cb9597d92c54e))
+* **types:** add missing types ([fea683f](https://github.com/event-storm/event-storm/commit/fea683fb6c249b5489e35359b488b11506d80e79))
+
+
+### Code Refactoring
+
+* **history:** remove history middleware ([57dee82](https://github.com/event-storm/event-storm/commit/57dee82d57647d0db6dbeb3fa316e0db72ce9256))
+
+
+### Performance Improvements
+
+* **cleanup:** code cleanup mainly about code reusability and reducing string usage ([d5694f8](https://github.com/event-storm/event-storm/commit/d5694f80ddb85c69595df831d25dcb8e1a7078ed))
+
+
+### BREAKING CHANGES
+
+* **history:** History implementation is removed(createHistory is removed from API)
+
+
+
 ## [1.4.1](https://github.com/event-storm/event-storm/compare/v1.4.0...v1.4.1) (2021-11-15)
 
 
