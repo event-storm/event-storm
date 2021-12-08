@@ -3,10 +3,18 @@ const isEqual = (next, prev) => Object.is(next, prev);
 
 const defaultState = {};
 
-const createDefault = ({ lastState = defaultState, options = {} }) => ({ lastState, options, subscribers: [] });
+const createDefault = ({ options = {}, ...rest }) => {
+  const lastState = 'lastState' in rest ? rest.lastState : defaultState;
+
+  return { lastState, options, subscribers: [] };
+}
 
 const isDefault = state => state === defaultState;
 
 const noop = () => {};
 
-export { isEqual, createDefault, noop, isDefault };
+const isFunction = fn => typeof fn === 'function';
+
+const isPromise = possiblePromise => possiblePromise instanceof Promise;
+
+export { isEqual, isPromise, createDefault, noop, isDefault, isFunction };

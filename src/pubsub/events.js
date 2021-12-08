@@ -1,14 +1,11 @@
 import { createDefault } from 'utils';
 
-import { log } from './logger';
-
 const events = {};
 
 const doesEventExist = event => !!events[event];
 
 const createEvent = (event, inital, options) => {
   events[event] = createDefault({ lastState: inital, options });
-  log(`Event has been created: ${event}.`, false);
   return getEvent(event);
 }
 
@@ -19,10 +16,7 @@ const updateEvent = (event, options) => {
   needed.options = { ...needed.options, ...options };
 }
 
-const registerEvent = (event, initial, options) =>
-  doesEventExist(event)
-    ? log(`Event already exists: ${event}.`)
-    : createEvent(event, initial, options);
+const registerEvent = (event, initial, options) => !doesEventExist(event) && createEvent(event, initial, options);
 
 export {
   getEvent,

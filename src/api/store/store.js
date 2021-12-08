@@ -1,4 +1,5 @@
 import { createModel, createVirtualModel } from 'api/configure';
+import { isPromise, isFunction } from 'utils';
 
 import { createProxy } from './utils';
 
@@ -8,7 +9,7 @@ function createStore(options) {
   const keys = Object.keys(options);
 
   const generateStoreFragment = (key, value) => {
-    if (typeof value === 'function') {
+    if (isFunction(value)) {
       let models = [];
 
       const proxy = createProxy(options, {
@@ -35,7 +36,7 @@ function createStore(options) {
 
       isArray ? result.push(virtualModel) : (result[key] = virtualModel);
 
-    } else if (typeof value === 'object') {
+    } else if (typeof value === 'object' && value !== null) {
       isArray ? result.push(createStore(value)) : (result[key] = createStore(value));
     } else {
       isArray ? result.push(createModel(value)) : (result[key] = createModel(value));
@@ -78,9 +79,8 @@ function createStore(options) {
       }
     },
     publish: async (fragments, publishOptions = {}) => {
-      const isFunction = typeof fragments === 'function';
-      const possiblePromise = isFunction ? fragments(getState()) : fragments;
-      const snapshot = possiblePromise instanceof Promise ? await possiblePromise : possiblePromise;
+      const possiblePromise = isFunction(fragments) ? fragments(getState()) : fragments;
+      const snapshot = isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
 
       Object.entries(snapshot).forEach(([key, value]) => {
         if (!result[key]) {
