@@ -36,9 +36,6 @@ The library is suggesting a decentralized store with a single user interface as 
 
 The library consists of 2 parts: event store implementation and data model abstraction. The event store supports:
 - :star: publish/subscribe of events
-- :star: log for development
-  - event registration
-  - publishing the same data twice
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
 - :zap: store persistence
