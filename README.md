@@ -2,17 +2,25 @@
 
 # In memory event store
 
-**A tiny event store implementation with pure javascript. The library has no dependencies(`Zero Dependencies`). It works for Javascript's hoist environment(browser, backend, desktop).**
+**A tiny event store implementation with pure javascript. The library has no dependencies(`Zero Dependencies`).**
 The library has a wrapper for:
 - [React](https://github.com/event-storm/react-event-storm)
 
 ## Motivation :blue_book:
 
 Mainly in modern applications, developers are facing problems to store data. Currently the community is using [Redux](https://redux.js.org/), [MobX](https://mobx.js.org/README.html), [overmind](https://overmindjs.org/), etc for this purpose. **As web-based applications are natively event-based, it'll be nice
-to have an event base store for the data**.
-The library is inspired by [Event store](https://en.wikipedia.org/wiki/Event_store) :bulb:.
-It is called to create an in-memory event sourcing database conceptually near to the existing database.
+to have an event-based store for the data**. This library is an implementation of event-based data storage inspired by [Event store](https://en.wikipedia.org/wiki/Event_store) :bulb:.
+It is called to create an in-memory event sourcing storage.
 
+## What is the library focus?
+
+The main focus areas of the library are
+- performance
+- runtime optimizations
+- simple API
+- better development experience
+
+### Performance
 The above-mentioned libraries(and not only them) are using a **centralized concept of keeping the information**.
 What does this mean?
 When creating a store it is described as an object and also it corresponds to a single tree in the memory.
@@ -35,7 +43,7 @@ The library is suggesting a decentralized store with a single user interface as 
 ## Basic concepts
 
 The library consists of 2 parts: event store implementation and data model abstraction. The event store supports:
-- :star: publish/subscribe of events
+- :star: publish/subscribe of models
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
 - :zap: store persistence
