@@ -105,10 +105,10 @@ describe('Creating a store', () => {
   test('publish method must update the store by single value', () => {
     const initialState = {
       name: 'John',
-      surname: 'Doe',
+      surname: null,
     };
     const fragment = {
-      name: 'Jane',
+      surname: 'Jane',
     }
 
     const store = createStore(initialState);
@@ -136,7 +136,7 @@ describe('Creating a store', () => {
     const initialState = {
       age: 21,
       name: 'John',
-      surname: 'Doe',
+      surname: undefined,
     };
     const fragment = {
       name: 'Jane',

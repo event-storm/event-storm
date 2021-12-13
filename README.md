@@ -36,12 +36,8 @@ The library is suggesting a decentralized store with a single user interface as 
 
 The library consists of 2 parts: event store implementation and data model abstraction. The event store supports:
 - :star: publish/subscribe of events
-- :star: log for development
-  - event registration
-  - publishing the same data twice
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
-- :zap: time travel
 - :zap: store persistence
 
 With the store you can:
@@ -288,30 +284,6 @@ With the store you can:
       addMiddlewares(store)(handler1, handler2, ..., handlerN);
     */
     ```
-- Time Travel(Undo/redo)
-
-  There is a built-in middleware for creating history for any subset of models. It will allow going back and forward between the history steps.
-
-  ```js
-  import { createModel, createHistory, publishModel } from 'event-storm';
-
-  const grossSalary = createModel(100_000);
-  const taxes = createModel(20);
-  const history = createHistory({ grossSalary });
-
-  publishModel(grossSalary, 200_000);
-
-  console.log(history.hasPrevious()) // true;
-  console.log(history.hasNext()) // false;
-
-  history.goBack();
-
-  console.log(grossSalary.getState()) // 100_000
-
-  history.goForward();
-
-  console.log(grossSalary.getState()) // 200_000
-  ```
 - Store Persistence
 You can easly make your store any segment to be persisted by `persisted` function.
 ```js
@@ -358,6 +330,14 @@ const defaultState = {
 };
 
 const store = createPersistedStore(defaultState);
+```
+
+- Log for development
+The library is outputing logs when **NODE_ENV** is set to `'development'`. To disable this log you can simply do this:
+```js
+import { configure } from 'event-storm';
+
+configure({ needLogs: false });
 ```
 
 ## Playground
