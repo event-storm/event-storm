@@ -11,5 +11,6 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
+    "no-prototype-builtins": 0,
   }
 };
