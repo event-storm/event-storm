@@ -1,6 +1,5 @@
 import { isEqual, isPromise, isFunction } from 'utils';
 
-import { log } from './logger';
 import { getEvent } from './events';
 
 const publish = async (event, valueSetter, options) => {
@@ -24,7 +23,7 @@ const subscribe = (event, callback, needPrevious) => {
   const neededEvent = getEvent(event);
 
   needPrevious && callback(neededEvent.lastState);
-  neededEvent.subscribers.push(callback);
+  !neededEvent.subscribers.includes(callback) && neededEvent.subscribers.push(callback);
 
   return () => {
     neededEvent.subscribers = neededEvent.subscribers.filter(subscription => subscription !== callback);
