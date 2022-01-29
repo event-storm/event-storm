@@ -20,7 +20,7 @@ The main focus areas of the library are
 - simple API
 - better development experience
 
-### Performance
+### Performance (TODO:: state management ownership, Context.Provider)
 The above-mentioned libraries(and not only them) are using a **centralized concept of keeping the information**.
 What does this mean?
 When creating a store it is described as an object and also it corresponds to a single tree in the memory.
