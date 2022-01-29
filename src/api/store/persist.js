@@ -8,7 +8,7 @@ const persisted = createStore => ({
   const storage = permanent ? window.localStorage : window.sessionStorage;
   let fragment;
   try {
-   fragment = JSON.parse(storage.getItem(storageKey));
+    fragment = JSON.parse(storage.getItem(storageKey));
   } catch {
     fragment = {};
   }

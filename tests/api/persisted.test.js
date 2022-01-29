@@ -54,7 +54,7 @@ describe('Creating a persisted store', () => {
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    store.publish(fragment);
+    store.publish(prev => ({ ...prev, ...fragment }));
 
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
 

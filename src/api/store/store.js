@@ -1,97 +1,26 @@
-import { createModel, createVirtualModel } from 'api/configure';
-import { isPromise, isFunction } from 'utils';
+import { createModel } from 'api/configure';
 
-import { createProxy } from './utils';
+import { createVirtualObject, createVirtualArray } from './fragments';
+import { isArray, isObject } from './utils';
 
-function createStore(options) {
-  const isArray = Array.isArray(options);
-  const result = isArray ? [] : {};
-  const keys = Object.keys(options);
-
-  const generateStoreFragment = (key, value) => {
-    if (isFunction(value)) {
-      let models = [];
-
-      const proxy = createProxy(options, {
-        getter: key => {
-          if (!result[key]) return;
-
-          const model = result[key];
-
-          if (!models.includes(model)) {
-            models.push(model);
-          }
-          return model.getState();
-        }
-      });
-
-      const virtualModel = createVirtualModel(() => {
-        models = [];
-
-        const state = value(proxy);
-        result[key].setOptions({ models });
-
-        return state;
-      });
-
-      isArray ? result.push(virtualModel) : (result[key] = virtualModel);
-
-    } else if (typeof value === 'object' && value !== null) {
-      isArray ? result.push(createStore(value)) : (result[key] = createStore(value));
-    } else {
-      isArray ? result.push(createModel(value)) : (result[key] = createModel(value));
-    }
-  };
-
-  keys.map(key => generateStoreFragment(key, options[key]));
-
-  let subscribers = [];
-  const establishSubscription = key => {
-    const model = result[key];
-    model.subscribe(nextValue => {
-      subscribers.forEach(subscriber => {
-        // TODO:: maybe we need numbered key here
-        subscriber(key, nextValue, model);
-      });
-    });
-  };
-
-  keys.map(key => establishSubscription(key));
-
-  const getState = () => {
-    if (isArray) {
-      return result.map(item => item.getState());
-    }
-
-    return keys.reduce((store, key) => {
-      store[key] = result[key].getState();
-      return store;
-    }, {});
+function createStore(options, configuration) {
+  if (isArray(options)) {
+    const optionModels = options.map((option) =>
+      createStore(option, configuration)
+    );
+    return createVirtualArray(optionModels, createStore, configuration);
+  } else if (isObject(options)) {
+    const optionsModels = Object.entries(options).reduce(
+      (acc, [key, value]) => {
+        acc[key] = createStore(value, configuration);
+        return acc;
+      },
+      {}
+    );
+    return createVirtualObject(optionsModels, createStore, configuration);
+  } else {
+    return createModel(options, configuration);
   }
-
-  return {
-    getState,
-    models: result,
-    subscribe: callback => {
-      subscribers.push(callback);
-      return () => {
-        subscribers = subscribers.filter(subscriber => subscriber !== callback);
-      }
-    },
-    publish: async (fragments, publishOptions = {}) => {
-      const possiblePromise = isFunction(fragments) ? fragments(getState()) : fragments;
-      const snapshot = isPromise(possiblePromise) ? await possiblePromise : possiblePromise;
-
-      Object.entries(snapshot).forEach(([key, value]) => {
-        if (!result[key]) {
-          generateStoreFragment(key, value);
-          establishSubscription(key);
-          publishOptions.fireDuplicates = true;
-        }
-        result[key].publish(value, publishOptions);
-      });
-    },
-  };
-};
+}
 
 export default createStore;

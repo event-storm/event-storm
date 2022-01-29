@@ -22,7 +22,7 @@ describe('Creating a store', () => {
 
     expect(store.getState()).toEqual(initialState);
 
-    store.publish({ name: 'Jain' });
+    store.publish(prev => ({ ...prev, name: 'Jain' }));
 
     expect(store.getState()).toEqual({
       name: 'Jain',
@@ -30,79 +30,43 @@ describe('Creating a store', () => {
     });
   });
 
+  test('store indiviudal key subscribe', () => {
+    const initialState = {
+      changable: true,
+      nonChangable: true,
+    }
+
+    const store = createStore(initialState);
+
+    const changableSubscriptionCallback = jest.fn();
+    const nonChangableSubscriptionCallback = jest.fn();
+
+    store.models.changable.subscribe(changableSubscriptionCallback);
+    store.models.nonChangable.subscribe(nonChangableSubscriptionCallback);
+
+    store.publish(prev => ({ ...prev, changable: !prev.changable }));
+
+    expect(changableSubscriptionCallback).toBeCalledTimes(1);
+    expect(nonChangableSubscriptionCallback).toBeCalledTimes(0);
+  });
+
   test('subscribe must fire on any fragment change', () => {
     const initialState = {
       name: 'John',
       surname: 'Doe',
     }
+    const finalState = { name: 'Jain' };
     const store = createStore(initialState);
     const callback = jest.fn();
 
     store.subscribe(callback);
-    store.publish({ name: 'Jain' });
+    store.publish(prev => ({ ...prev, ...finalState }));
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith('name', 'Jain', store.models.name);
+    expect(callback).lastCalledWith({ ...initialState, ...finalState });
   });
 
-  test('creating virtual method is possible', () => {
-    const store = createStore({
-      taxes: 20,
-      grossSalary: 100_000,
-      netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
-    });
-
-    expect(store.getState()).toEqual({
-      taxes: 20,
-      netSalary: 80_000,
-      grossSalary: 100_000,
-    });
-  });
-
-  test('virtual method must update on dependency change', () => {
-    const store = createStore({
-      taxes: 20,
-      grossSalary: 100_000,
-      netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
-    });
-
-    store.publish({ taxes: 30 });
-
-    expect(store.getState()).toEqual({
-      taxes: 30,
-      netSalary: 70_000,
-      grossSalary: 100_000,
-    });
-  });
-
-  test('create virtual model over virtual model', () => {
-    const store = createStore({
-      taxes: 20,
-      grossSalary: 100_000,
-      netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
-      isEnough: ({ netSalary }) => netSalary > 100_000,
-    });
-
-    store.publish({ taxes: 30 });
-
-    expect(store.getState()).toEqual({
-      taxes: 30,
-      isEnough: false,
-      netSalary: 70_000,
-      grossSalary: 100_000,
-    });
-
-    store.publish({ grossSalary: 200_000 });
-
-    expect(store.getState()).toEqual({
-      taxes: 30,
-      isEnough: true,
-      netSalary: 140_000,
-      grossSalary: 200_000,
-    });
-  });
-
-  test('publish method must update the store by single value', () => {
+  test('publish method must update single information unit', () => {
     const initialState = {
       name: 'John',
       surname: null,
@@ -114,7 +78,7 @@ describe('Creating a store', () => {
     const store = createStore(initialState);
     store.publish(fragment);
 
-    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+    expect(store.getState()).toEqual(fragment);
   });
 
   test('publish method must update the store with async function', async () => {
@@ -126,8 +90,7 @@ describe('Creating a store', () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
     }
 
-    store.publish(callback);
-    await callback();
+    await store.publish(callback);
 
     expect(store.getState()).toEqual(finalValue);
   });
@@ -144,12 +107,12 @@ describe('Creating a store', () => {
     }
 
     const store = createStore(initialState);
-    store.publish(fragment);
+    store.publish(prev => ({ ...prev, ...fragment }));
 
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
   });
 
-  test('Nested state must support nested state', () => {
+  test('Store must support nested state', () => {
     const initialState = {
       user: {
         name: 'Bob',
@@ -198,7 +161,6 @@ describe('Creating a store', () => {
         }
       },
       message: 'Some message',
-      isPaid: ({ user: { info: { paid } } }) => paid,
     };
     const ageSubscriber = jest.fn();
     const nameSubscriber = jest.fn();
@@ -216,43 +178,43 @@ describe('Creating a store', () => {
     expect(ageSubscriber).toBeCalledTimes(0);
     expect(nameSubscriber).toBeCalledTimes(1);
   });
+  // TODO:: udpate after subscribeToFragment will be ready
+  // test('Nested state updates with array: virtual model', () => {
+  //   const initialSelectedId = '1';
+  //   const finalSelectedId = '2';
+  //   const initialState = {
+  //     layers: [{
+  //       name: 'Layer 1',
+  //       id: '1',
+  //     },{
+  //       name: 'Layer 2',
+  //       id: '2',
+  //     },{
+  //       name: 'Layer 3',
+  //       id: '3',
+  //     },{
+  //       name: 'Layer 4',
+  //       id: '4',
+  //     }],
+  //     selectedLayerId: initialSelectedId,
+  //     selectedLayer: ({ layers, selectedLayerId }) => {
+  //       return layers.find(layer => layer.id === selectedLayerId);
+  //     },
+  //   };
+  //   const subscriptionCallback = jest.fn();
 
-  test('Nested state updates with array: virtual model', () => {
-    const initialSelectedId = '1';
-    const finalSelectedId = '2';
-    const initialState = {
-      layers: [{
-        name: 'Layer 1',
-        id: '1',
-      },{
-        name: 'Layer 2',
-        id: '2',
-      },{
-        name: 'Layer 3',
-        id: '3',
-      },{
-        name: 'Layer 4',
-        id: '4',
-      }],
-      selectedLayerId: initialSelectedId,
-      selectedLayer: ({ layers, selectedLayerId }) => {
-        return layers.find(layer => layer.id === selectedLayerId);
-      },
-    };
-    const subscriptionCallback = jest.fn();
+  //   const store = createStore(initialState);
 
-    const store = createStore(initialState);
+  //   store.models.selectedLayer.subscribe(subscriptionCallback);
 
-    store.models.selectedLayer.subscribe(subscriptionCallback);
+  //   expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === initialSelectedId));
 
-    expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === initialSelectedId));
+  //   store.publish({
+  //     selectedLayerId: finalSelectedId,
+  //   });
 
-    store.publish({
-      selectedLayerId: finalSelectedId,
-    });
-
-    expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
-  });
+  //   expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
+  // });
 
   test('Nested state updates with array: publishing from store', () => {
     const initialState = {
@@ -265,18 +227,6 @@ describe('Creating a store', () => {
       },{
         name: 'Layer 2',
         id: '2',
-        settings: {
-          type: 'static',
-        },
-      },{
-        name: 'Layer 3',
-        id: '3',
-        settings: {
-          type: 'static',
-        },
-      },{
-        name: 'Layer 4',
-        id: '4',
         settings: {
           type: 'static',
         },
@@ -367,7 +317,7 @@ describe('Creating a store', () => {
     expect(subscriptionCallbackFor1Id).toBeCalledTimes(0);
     expect(subscriptionCallbackFor1Settings).toBeCalledTimes(1);
   });
-
+  // TODO:: change to subscribeToFragment
   test('Nested state updates must not fire additional subscription functions: virtualModel', () => {
     const selecterFn = jest.fn();
     const initialState = {
@@ -414,5 +364,48 @@ describe('Creating a store', () => {
     store.publish(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(1);
+  });
+});
+
+describe('Store array segment CRUD', () => {
+  test('Creating an array', () => {
+    const initialState = {
+      users: null,
+    };
+    const finalState = {
+      users: [],
+    }
+
+    const subscriptionCallback = jest.fn();
+    const store = createStore(initialState);
+    store.models.users.subscribe(subscriptionCallback);
+    store.publish(finalState);
+    expect(subscriptionCallback).toBeCalledTimes(1);
+    // emty object is the publish configuration
+    expect(subscriptionCallback).lastCalledWith([], {});
+  });
+
+  test('Reading an array', () => {
+
+  });
+
+  test('Updating an array', () => {
+
+    const initialState = {
+      users: [{ name: 'Alice' }],
+    };
+    const updateItem = { name: 'Bob' };
+
+    const subscriptionCallback = jest.fn();
+    const store = createStore(initialState);
+    store.models.users.subscribe(subscriptionCallback);
+    store.publish(prev => ({ users: [...prev.users, updateItem] }));
+
+    expect(subscriptionCallback).toBeCalledTimes(1);
+    expect(subscriptionCallback).lastCalledWith([...initialState.users, updateItem]);
+  });
+
+  test('Deleting an array', () => {
+
   });
 });
