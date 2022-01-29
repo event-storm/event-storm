@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { createStore, persisted } from 'src';
+import { createStorm, persisted } from 'src';
 
 describe('Creating a persisted store', () => {
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('Creating a persisted store', () => {
       name: 'Jane',
     }
 
-    const store = persisted(createStore)({
+    const store = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);
@@ -29,7 +29,7 @@ describe('Creating a persisted store', () => {
 
     window.dispatchEvent(new Event("beforeunload"));
 
-    const storeAfterUnload = persisted(createStore)({
+    const storeAfterUnload = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);
@@ -49,7 +49,7 @@ describe('Creating a persisted store', () => {
       age: 25,
     }
 
-    const store = persisted(createStore)({
+    const store = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);
@@ -60,7 +60,7 @@ describe('Creating a persisted store', () => {
 
     window.dispatchEvent(new Event("beforeunload"));
 
-    const storeAfterUnload = persisted(createStore)({
+    const storeAfterUnload = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);

@@ -1,8 +1,8 @@
-import { createStore } from 'src';
+import { createStorm } from 'src';
 
 describe('Creating a store', () => {
   test('store object matches pattern', () => {
-    const store = createStore({
+    const store = createStorm({
       name: 'John',
       surname: 'Doe',
     });
@@ -18,7 +18,7 @@ describe('Creating a store', () => {
       name: 'John',
       surname: 'Doe',
     }
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
 
     expect(store.getState()).toEqual(initialState);
 
@@ -36,7 +36,7 @@ describe('Creating a store', () => {
       nonChangable: true,
     }
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
 
     const changableSubscriptionCallback = jest.fn();
     const nonChangableSubscriptionCallback = jest.fn();
@@ -56,7 +56,7 @@ describe('Creating a store', () => {
       surname: 'Doe',
     }
     const finalState = { name: 'Jain' };
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     const callback = jest.fn();
 
     store.subscribe(callback);
@@ -75,7 +75,7 @@ describe('Creating a store', () => {
       surname: 'Jane',
     }
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.publish(fragment);
 
     expect(store.getState()).toEqual(fragment);
@@ -84,7 +84,7 @@ describe('Creating a store', () => {
   test('publish method must update the store with async function', async () => {
     const initialValue = { type: 'sync' };
     const finalValue = { type: 'async' };
-    const store = createStore(initialValue);
+    const store = createStorm(initialValue);
     const waitTime = 1000;
     const callback = () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
@@ -106,7 +106,7 @@ describe('Creating a store', () => {
       age: 35,
     }
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.publish(prev => ({ ...prev, ...fragment }));
 
     expect(store.getState()).toEqual({ ...initialState, ...fragment });
@@ -121,7 +121,7 @@ describe('Creating a store', () => {
       message: 'Some message',
     };
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
 
     expect(store.getState()).toEqual(initialState);
   });
@@ -137,7 +137,7 @@ describe('Creating a store', () => {
     const userSubscriber = jest.fn();
     const nameSubscriber = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.user.subscribe(userSubscriber);
     store.models.user.models.name.subscribe(nameSubscriber);
 
@@ -165,7 +165,7 @@ describe('Creating a store', () => {
     const ageSubscriber = jest.fn();
     const nameSubscriber = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.user.models.age.subscribe(ageSubscriber);
     store.models.user.models.name.subscribe(nameSubscriber);
 
@@ -203,7 +203,7 @@ describe('Creating a store', () => {
   //   };
   //   const subscriptionCallback = jest.fn();
 
-  //   const store = createStore(initialState);
+  //   const store = createStorm(initialState);
 
   //   store.models.selectedLayer.subscribe(subscriptionCallback);
 
@@ -238,7 +238,7 @@ describe('Creating a store', () => {
     const subscriptionCallbackFor1Id = jest.fn();
     const subscriptionCallbackFor1Settings = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
 
     store.models.layers.subscribe(subscriptionCallback);
     store.models.layers.models[0].subscribe(subscriptionCallbackFor0);
@@ -301,7 +301,7 @@ describe('Creating a store', () => {
     const subscriptionCallbackFor1Id = jest.fn();
     const subscriptionCallbackFor1Settings = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
 
     store.models.layers.subscribe(subscriptionCallback);
     store.models.layers.models[0].subscribe(subscriptionCallbackFor0);
@@ -334,7 +334,7 @@ describe('Creating a store', () => {
 
     const paidSubscriber = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.isPaid.subscribe(paidSubscriber);
 
     store.publish({
@@ -358,7 +358,7 @@ describe('Creating a store', () => {
     };
     const subscriptionCallback = jest.fn();
 
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.users.subscribe(subscriptionCallback);
 
     store.publish(finalState);
@@ -377,7 +377,7 @@ describe('Store array segment CRUD', () => {
     }
 
     const subscriptionCallback = jest.fn();
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.users.subscribe(subscriptionCallback);
     store.publish(finalState);
     expect(subscriptionCallback).toBeCalledTimes(1);
@@ -397,7 +397,7 @@ describe('Store array segment CRUD', () => {
     const updateItem = { name: 'Bob' };
 
     const subscriptionCallback = jest.fn();
-    const store = createStore(initialState);
+    const store = createStorm(initialState);
     store.models.users.subscribe(subscriptionCallback);
     store.publish(prev => ({ users: [...prev.users, updateItem] }));
 
