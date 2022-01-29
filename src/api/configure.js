@@ -1,7 +1,7 @@
-import { isEqual, createDefault, noop, isDefault } from 'utils';
+import { isEqual, createDefault, noop } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
-import { generateId, collectState } from './utils';
+import { generateId } from './utils';
 
 const createModel = (defaultData, options) => {
   const event = generateId();
@@ -16,43 +16,50 @@ const createModel = (defaultData, options) => {
   };
 }
 
-const createVirtualModel = (handler, { models = [], ...options } = {}) => {
+const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   const virtualEvent = createDefault({ options });
+  virtualEvent.options.handler = handler;
+  virtualEvent.options.models = models;
 
-  const updateHandler = neededModels => {
-    const nextState = handler();
-    if (virtualEvent.options.fireDuplcates || !isEqual(nextState, virtualEvent.lastState)) {
+  const updateHandler = () => {
+    const nextState = virtualEvent.options.handler();
+    if (virtualEvent.options.fireDuplicates || !isEqual(nextState, virtualEvent.lastState)) {
       virtualEvent.lastState = nextState;
-      virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));
+      virtualEvent.subscribers.forEach(subscriber => {
+        subscriber(virtualEvent.lastState);
+      });
     }
   }
 
-  let subscriptions = models.map(model => model.subscribe(() => updateHandler(models)));
+  let subscriptions = models.map(model => model.subscribe(updateHandler));
 
   return ({
     publish: noop,
     getState: () => {
-      if (isDefault(virtualEvent.lastState)) {
-        virtualEvent.lastState = handler();
-      }
+      virtualEvent.lastState = virtualEvent.options.handler();
       return virtualEvent.lastState;
     },
-    subscribe: (callback, needPrevious) => {
-      needPrevious && callback(virtualEvent.lastState);
+    subscribe: function(callback, needPrevious) {
+      needPrevious && callback(this.getState());
       virtualEvent.subscribers.push(callback);
       return () => {
         virtualEvent.subscribers = virtualEvent.subscribers.filter(subscriber => subscriber !== callback);
       }
     },
     setOptions: ({
-      models: newModels = [],
+      models: newModels,
       ...newOptions
     }) => {
+      const duplicateOptionChanged = typeof newOptions.fireDuplicates === 'boolean' && virtualEvent.options.fireDuplicates !== newOptions.fireDuplicates;
       virtualEvent.options = { ...virtualEvent.options, ...newOptions };
-      if (newModels.length) {
+      if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());
-        subscriptions = newModels.map(model => model.subscribe(() => updateHandler(newModels)));
+        virtualEvent.options.models = newModels;
+        subscriptions = newModels.map(model => model.subscribe(updateHandler));
       }
+      duplicateOptionChanged && virtualEvent.options.models.forEach(model => {
+        model.setOptions({ fireDuplicates: virtualEvent.options.fireDuplicates });
+      });
     }
   });
 }
