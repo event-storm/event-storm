@@ -54,7 +54,7 @@ With the store you can:
 - :pushpin: subscription to last event(even if it happens earlier)
 - :hammer: combine the existing information to derive(compute) some information
 
-## API
+## API (TODO:: update the API section)
 
 - Store
   **Creating a store**
