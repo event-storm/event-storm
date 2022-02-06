@@ -5,4 +5,5 @@ export {
   createModel,
   addMiddlewares,
   createVirtualModel,
+  subscribeToFragments,
 } from 'api';
