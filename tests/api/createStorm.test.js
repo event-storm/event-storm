@@ -1,5 +1,7 @@
 import { createStorm } from 'src';
 
+import { defaultPublishConfigs } from './constants';
+
 describe('Creating a storm', () => {
   test('store object matches pattern', () => {
     const store = createStorm({
@@ -63,7 +65,7 @@ describe('Creating a storm', () => {
     store.publish(prev => ({ ...prev, ...finalState }));
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith({ ...initialState, ...finalState });
+    expect(callback).lastCalledWith({ ...initialState, ...finalState }, defaultPublishConfigs);
   });
 
   test('publish method must update single information unit', () => {
@@ -386,12 +388,12 @@ describe('Store array segment CRUD', () => {
     store.publish(intermediateState);
 
     expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallback).lastCalledWith([]);
+    expect(subscriptionCallback).lastCalledWith([], defaultPublishConfigs);
 
     store.publish(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(2);
-    expect(subscriptionCallback).lastCalledWith([1, 2]);
+    expect(subscriptionCallback).lastCalledWith([1, 2], defaultPublishConfigs);
 
     const firstItemSubscriptionCallback = jest.fn();
     const secondItemSubscriptionCallback = jest.fn();
@@ -423,7 +425,7 @@ describe('Store array segment CRUD', () => {
     store.publish(prev => ({ users: [...prev.users, updateItem] }));
 
     expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallback).lastCalledWith([...initialState.users, updateItem]);
+    expect(subscriptionCallback).lastCalledWith([...initialState.users, updateItem], defaultPublishConfigs);
   });
 
   test('Deleting an array', () => {

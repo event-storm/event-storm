@@ -1,9 +1,12 @@
-import { collectMiddlewareState } from 'api/utils';
-
-const addMiddlewares = models => {
+const addMiddlewares = modelsObject => {
   const middlewares = [];
+  const entries = Object.entries(modelsObject);
 
-  let { entries, values } = collectMiddlewareState(models);
+  let values = entries.reduce((result, [key, model]) => {
+    result[key] = model.getState();
+    return result;
+  }, {});
+
   entries.forEach(([key, model]) => {
     model.subscribe((nextValue, options) => {
       const nextValues = { ...values, [key]: nextValue };

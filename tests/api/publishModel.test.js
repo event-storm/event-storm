@@ -1,5 +1,7 @@
 import { createModel } from 'src';
 
+import { defaultPublishConfigs } from './constants';
+
 describe('Publishing a Model', () => {
 
   test('model must be updated(simple value)', () => {
@@ -14,7 +16,7 @@ describe('Publishing a Model', () => {
     model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue, {});
+    expect(callback).lastCalledWith(nextValue, defaultPublishConfigs);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -32,7 +34,7 @@ describe('Publishing a Model', () => {
     model.publish(publisher);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue, {});
+    expect(callback).lastCalledWith(nextValue, defaultPublishConfigs);
     expect(publisher).toBeCalledTimes(1);
     expect(publisher).toReturnWith(nextValue);
 

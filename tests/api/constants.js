@@ -1,0 +1,3 @@
+const defaultPublishConfigs = {};
+
+export { defaultPublishConfigs };

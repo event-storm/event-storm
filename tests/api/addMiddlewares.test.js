@@ -1,4 +1,4 @@
-import { addMiddlewares, createModel } from 'src';
+import { addMiddlewares, createModel, createStorm } from 'src';
 
 describe('Adding a middleware', () => {
   test('middleware must be fired on model change', () => {
@@ -48,5 +48,30 @@ describe('Adding a middleware', () => {
     example.publish(finalValue);
 
     expect(middleware).lastCalledWith({ example: initialValue }, { example: finalValue }, modelOptions);
+  });
+});
+
+describe('Using middlewares with store', () => {
+  test('store basic usage', () => {
+    const initialState = {
+      age: 30,
+      name: 'Bob',
+    };
+    const finalState = {
+      age: 30,
+      name: 'Jane',
+    };
+
+    const publishConfigs = {
+      fromMiddleware: true,
+    }
+    const storm = createStorm(initialState);
+    const middleware = jest.fn();
+
+    addMiddlewares(storm.models)(middleware);
+    storm.publish(finalState, publishConfigs);
+    
+    expect(middleware).toBeCalledTimes(1);
+    expect(middleware).lastCalledWith(initialState, finalState, publishConfigs);
   });
 });

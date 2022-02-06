@@ -1,5 +1,7 @@
 import { createModel } from 'src';
 
+import { defaultPublishConfigs } from './constants';
+
 describe('Creating a Model', () => {
   test('model object matches pattern', () => {
     const model = createModel(true);
@@ -48,7 +50,7 @@ describe('Creating a Model', () => {
     model.publish(nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue, {});
+    expect(callback).lastCalledWith(nextValue, defaultPublishConfigs);
   });
 
   test('Subscribe must not fire on same value published', () => {

@@ -3,15 +3,15 @@ import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId } from './utils';
 
-const createModel = (defaultData, options) => {
+const createModel = (defaultData, configuration) => {
   const event = generateId();
 
-  const model = registerEvent(event, defaultData, options);
+  const model = registerEvent(event, defaultData, configuration);
 
   return {
     getState: () => model.lastState,
     publish: (data, options) => publish(event, data, { ...options }),
-    setOptions: options => updateEvent(event, options),
+    setOptions: configs => updateEvent(event, configs),
     subscribe: (callback, needPrevious) => subscribe(event, callback, needPrevious),
   };
 }
@@ -21,17 +21,17 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   virtualEvent.options.handler = handler;
   virtualEvent.options.models = models;
 
-  const updateHandler = () => {
+  const updateHandler = publishConfigs => {
     const nextState = virtualEvent.options.handler();
     if (virtualEvent.options.fireDuplicates || !isEqual(nextState, virtualEvent.lastState)) {
       virtualEvent.lastState = nextState;
       virtualEvent.subscribers.forEach(subscriber => {
-        subscriber(virtualEvent.lastState);
+        subscriber(virtualEvent.lastState, publishConfigs);
       });
     }
   }
 
-  let subscriptions = models.map(model => model.subscribe(updateHandler));
+  let subscriptions = models.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
 
   return ({
     publish: noop,
@@ -55,7 +55,7 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
       if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());
         virtualEvent.options.models = newModels;
-        subscriptions = newModels.map(model => model.subscribe(updateHandler));
+        subscriptions = newModels.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
       }
       duplicateOptionChanged && virtualEvent.options.models.forEach(model => {
         model.setOptions({ fireDuplicates: virtualEvent.options.fireDuplicates });

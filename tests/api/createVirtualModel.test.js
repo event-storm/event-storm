@@ -1,5 +1,7 @@
 import { createModel, createVirtualModel } from 'src';
 
+import { defaultPublishConfigs } from './constants';
+
 describe('Creating a Virtual Model', () => {
   test('model object pass match pattern', () => {
     const first = createModel('first');
@@ -76,12 +78,12 @@ describe('Creating a Virtual Model', () => {
     model2.publish(nextValue2);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${nextValue2}`);
+    expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${nextValue2}`, defaultPublishConfigs);
 
     model3.publish(nextValue3);
 
     expect(callback).toBeCalledTimes(2);
-    expect(callback).lastCalledWith(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`);
+    expect(callback).lastCalledWith(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`, defaultPublishConfigs);
   });
 
   test('It must be possible to create virtualModel over virtual model', () => {
@@ -102,16 +104,15 @@ describe('Creating a Virtual Model', () => {
     taxes.publish(40);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(48_000);
+    expect(callback).lastCalledWith(48_000, defaultPublishConfigs);
 
     euroRate.publish(0.5);
 
     expect(callback).toBeCalledTimes(2);
-    expect(callback).lastCalledWith(30_000);
+    expect(callback).lastCalledWith(30_000, defaultPublishConfigs);
   });
 
   test('changing virtual models dependency models', () => {
-    // TODO:: wrong test case. manual call of model must always return the actual value
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
     const netSalary = createVirtualModel({
