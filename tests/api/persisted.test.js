@@ -9,7 +9,7 @@ describe('Creating a persisted storm', () => {
     window.sessionStorage.removeItem('event_storm');
   });
 
-  it('store persisted fragments must be kept up to date after reload', () => {
+  it('storm persisted fragments must be kept up to date after reload', () => {
     const initialState = {
       age: 21,
       name: 'John',
@@ -20,12 +20,12 @@ describe('Creating a persisted storm', () => {
       name: 'Jane',
     }
 
-    const store = persisted(createStorm)({
+    const storm = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    store.publish(fragment);
+    storm.publish(fragment);
 
     window.dispatchEvent(new Event("beforeunload"));
 
@@ -37,7 +37,7 @@ describe('Creating a persisted storm', () => {
     expect(storeAfterUnload.getState()).toEqual({ ...initialState, ...fragment });
   });
 
-  it('store not persisted fragments must be restored as initial', () => {
+  it('storm not persisted fragments must be restored as initial', () => {
     const initialState = {
       age: 21,
       name: 'John',
@@ -49,14 +49,14 @@ describe('Creating a persisted storm', () => {
       age: 25,
     }
 
-    const store = persisted(createStorm)({
+    const storm = persisted(createStorm)({
       storageKey: 'event_storm',
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    store.publish(prev => ({ ...prev, ...fragment }));
+    storm.publish(prev => ({ ...prev, ...fragment }));
 
-    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+    expect(storm.getState()).toEqual({ ...initialState, ...fragment });
 
     window.dispatchEvent(new Event("beforeunload"));
 

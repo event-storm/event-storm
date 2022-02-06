@@ -51,8 +51,8 @@ describe('Adding a middleware', () => {
   });
 });
 
-describe('Using middlewares with store', () => {
-  test('store basic usage', () => {
+describe('Using middlewares with storm', () => {
+  test('storm basic usage', () => {
     const initialState = {
       age: 30,
       name: 'Bob',

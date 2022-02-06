@@ -3,50 +3,50 @@ import { createStorm } from 'src';
 import { defaultPublishConfigs } from './constants';
 
 describe('Creating a storm', () => {
-  test('store object matches pattern', () => {
-    const store = createStorm({
+  test('storm object matches pattern', () => {
+    const storm = createStorm({
       name: 'John',
       surname: 'Doe',
     });
 
-    expect(typeof store.models).toBe('object');
-    expect(typeof store.publish).toBe('function');
-    expect(typeof store.getState).toBe('function');
-    expect(typeof store.subscribe).toBe('function');
+    expect(typeof storm.models).toBe('object');
+    expect(typeof storm.publish).toBe('function');
+    expect(typeof storm.getState).toBe('function');
+    expect(typeof storm.subscribe).toBe('function');
   });
 
-  test('getState must return the snapshot of the store tree', () => {
+  test('getState must return the snapshot of the storm tree', () => {
     const initialState = {
       name: 'John',
       surname: 'Doe',
     }
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
 
-    expect(store.getState()).toEqual(initialState);
+    expect(storm.getState()).toEqual(initialState);
 
-    store.publish(prev => ({ ...prev, name: 'Jain' }));
+    storm.publish(prev => ({ ...prev, name: 'Jain' }));
 
-    expect(store.getState()).toEqual({
+    expect(storm.getState()).toEqual({
       name: 'Jain',
       surname: 'Doe',
     });
   });
 
-  test('store indiviudal key subscribe', () => {
+  test('storm indiviudal key subscribe', () => {
     const initialState = {
       changable: true,
       nonChangable: true,
     }
 
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
 
     const changableSubscriptionCallback = jest.fn();
     const nonChangableSubscriptionCallback = jest.fn();
 
-    store.models.changable.subscribe(changableSubscriptionCallback);
-    store.models.nonChangable.subscribe(nonChangableSubscriptionCallback);
+    storm.models.changable.subscribe(changableSubscriptionCallback);
+    storm.models.nonChangable.subscribe(nonChangableSubscriptionCallback);
 
-    store.publish(prev => ({ ...prev, changable: !prev.changable }));
+    storm.publish(prev => ({ ...prev, changable: !prev.changable }));
 
     expect(changableSubscriptionCallback).toBeCalledTimes(1);
     expect(nonChangableSubscriptionCallback).toBeCalledTimes(0);
@@ -58,11 +58,11 @@ describe('Creating a storm', () => {
       surname: 'Doe',
     }
     const finalState = { name: 'Jain' };
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
     const callback = jest.fn();
 
-    store.subscribe(callback);
-    store.publish(prev => ({ ...prev, ...finalState }));
+    storm.subscribe(callback);
+    storm.publish(prev => ({ ...prev, ...finalState }));
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith({ ...initialState, ...finalState }, defaultPublishConfigs);
@@ -77,27 +77,27 @@ describe('Creating a storm', () => {
       surname: 'Jane',
     }
 
-    const store = createStorm(initialState);
-    store.publish(fragment);
+    const storm = createStorm(initialState);
+    storm.publish(fragment);
 
-    expect(store.getState()).toEqual(fragment);
+    expect(storm.getState()).toEqual(fragment);
   });
 
-  test('publish method must update the store with async function', async () => {
+  test('publish method must update the storm with async function', async () => {
     const initialValue = { type: 'sync' };
     const finalValue = { type: 'async' };
-    const store = createStorm(initialValue);
+    const storm = createStorm(initialValue);
     const waitTime = 1000;
     const callback = () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
     }
 
-    await store.publish(callback);
+    await storm.publish(callback);
 
-    expect(store.getState()).toEqual(finalValue);
+    expect(storm.getState()).toEqual(finalValue);
   });
 
-  test('publish method must update the store by multiple values', () => {
+  test('publish method must update the storm by multiple values', () => {
     const initialState = {
       age: 21,
       name: 'John',
@@ -108,13 +108,13 @@ describe('Creating a storm', () => {
       age: 35,
     }
 
-    const store = createStorm(initialState);
-    store.publish(prev => ({ ...prev, ...fragment }));
+    const storm = createStorm(initialState);
+    storm.publish(prev => ({ ...prev, ...fragment }));
 
-    expect(store.getState()).toEqual({ ...initialState, ...fragment });
+    expect(storm.getState()).toEqual({ ...initialState, ...fragment });
   });
 
-  test('Store must support nested state', () => {
+  test('storm must support nested state', () => {
     const initialState = {
       user: {
         name: 'Bob',
@@ -123,9 +123,9 @@ describe('Creating a storm', () => {
       message: 'Some message',
     };
 
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
 
-    expect(store.getState()).toEqual(initialState);
+    expect(storm.getState()).toEqual(initialState);
   });
 
   test('Nested state updates must be interconnected', () => {
@@ -139,11 +139,11 @@ describe('Creating a storm', () => {
     const userSubscriber = jest.fn();
     const nameSubscriber = jest.fn();
 
-    const store = createStorm(initialState);
-    store.models.user.subscribe(userSubscriber);
-    store.models.user.models.name.subscribe(nameSubscriber);
+    const storm = createStorm(initialState);
+    storm.models.user.subscribe(userSubscriber);
+    storm.models.user.models.name.subscribe(nameSubscriber);
 
-    store.publish({
+    storm.publish({
       user: {
         name: 'Alice',
       },
@@ -167,11 +167,11 @@ describe('Creating a storm', () => {
     const ageSubscriber = jest.fn();
     const nameSubscriber = jest.fn();
 
-    const store = createStorm(initialState);
-    store.models.user.models.age.subscribe(ageSubscriber);
-    store.models.user.models.name.subscribe(nameSubscriber);
+    const storm = createStorm(initialState);
+    storm.models.user.models.age.subscribe(ageSubscriber);
+    storm.models.user.models.name.subscribe(nameSubscriber);
 
-    store.publish({
+    storm.publish({
       user: {
         name: 'Alice',
       },
@@ -205,17 +205,17 @@ describe('Creating a storm', () => {
   //   };
   //   const subscriptionCallback = jest.fn();
 
-  //   const store = createStorm(initialState);
+  //   const storm = createStorm(initialState);
 
-  //   store.models.selectedLayer.subscribe(subscriptionCallback);
+  //   storm.models.selectedLayer.subscribe(subscriptionCallback);
 
-  //   expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === initialSelectedId));
+  //   expect(storm.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === initialSelectedId));
 
-  //   store.publish({
+  //   storm.publish({
   //     selectedLayerId: finalSelectedId,
   //   });
 
-  //   expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
+  //   expect(storm.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
   // });
 
   test('Nested state updates with array: publishing from storm', () => {
@@ -240,15 +240,15 @@ describe('Creating a storm', () => {
     const subscriptionCallbackFor1Id = jest.fn();
     const subscriptionCallbackFor1Settings = jest.fn();
 
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
 
-    store.models.layers.subscribe(subscriptionCallback);
-    store.models.layers.models[0].subscribe(subscriptionCallbackFor0);
-    store.models.layers.models[1].subscribe(subscriptionCallbackFor1);
-    store.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
-    store.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
+    storm.models.layers.subscribe(subscriptionCallback);
+    storm.models.layers.models[0].subscribe(subscriptionCallbackFor0);
+    storm.models.layers.models[1].subscribe(subscriptionCallbackFor1);
+    storm.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
+    storm.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
 
-    store.publish(prev => ({
+    storm.publish(prev => ({
       layers: prev.layers.map(layer =>
         layer.id === '2'
           ? {
@@ -303,15 +303,15 @@ describe('Creating a storm', () => {
     const subscriptionCallbackFor1Id = jest.fn();
     const subscriptionCallbackFor1Settings = jest.fn();
 
-    const store = createStorm(initialState);
+    const storm = createStorm(initialState);
 
-    store.models.layers.subscribe(subscriptionCallback);
-    store.models.layers.models[0].subscribe(subscriptionCallbackFor0);
-    store.models.layers.models[1].subscribe(subscriptionCallbackFor1);
-    store.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
-    store.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
+    storm.models.layers.subscribe(subscriptionCallback);
+    storm.models.layers.models[0].subscribe(subscriptionCallbackFor0);
+    storm.models.layers.models[1].subscribe(subscriptionCallbackFor1);
+    storm.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
+    storm.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
 
-    store.models.layers.models[1].models.settings.models.type.publish('dynamic');
+    storm.models.layers.models[1].models.settings.models.type.publish('dynamic');
 
     expect(subscriptionCallback).toBeCalledTimes(1);
     expect(subscriptionCallbackFor0).toBeCalledTimes(0);
@@ -336,10 +336,10 @@ describe('Creating a storm', () => {
 
   //   const paidSubscriber = jest.fn();
 
-  //   const store = createStorm(initialState);
-  //   store.models.isPaid.subscribe(paidSubscriber);
+  //   const storm = createStorm(initialState);
+  //   storm.models.isPaid.subscribe(paidSubscriber);
 
-  //   store.publish({
+  //   storm.publish({
   //     user: {
   //       name: 'Alice',
   //     },
@@ -360,16 +360,16 @@ describe('Creating a storm', () => {
     };
     const subscriptionCallback = jest.fn();
 
-    const store = createStorm(initialState);
-    store.models.users.subscribe(subscriptionCallback);
+    const storm = createStorm(initialState);
+    storm.models.users.subscribe(subscriptionCallback);
 
-    store.publish(finalState);
+    storm.publish(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(1);
   });
 });
 
-describe('Store array segment CRUD', () => {
+describe('storm array segment CRUD', () => {
   test('Creating an array', () => {
     const initialState = {
       users: null,
@@ -383,24 +383,24 @@ describe('Store array segment CRUD', () => {
     }
 
     const subscriptionCallback = jest.fn();
-    const store = createStorm(initialState);
-    store.models.users.subscribe(subscriptionCallback);
-    store.publish(intermediateState);
+    const storm = createStorm(initialState);
+    storm.models.users.subscribe(subscriptionCallback);
+    storm.publish(intermediateState);
 
     expect(subscriptionCallback).toBeCalledTimes(1);
     expect(subscriptionCallback).lastCalledWith([], defaultPublishConfigs);
 
-    store.publish(finalState);
+    storm.publish(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(2);
     expect(subscriptionCallback).lastCalledWith([1, 2], defaultPublishConfigs);
 
     const firstItemSubscriptionCallback = jest.fn();
     const secondItemSubscriptionCallback = jest.fn();
-    store.models.users.models[0].subscribe(firstItemSubscriptionCallback);
-    store.models.users.models[1].subscribe(secondItemSubscriptionCallback);
+    storm.models.users.models[0].subscribe(firstItemSubscriptionCallback);
+    storm.models.users.models[1].subscribe(secondItemSubscriptionCallback);
 
-    store.publish({
+    storm.publish({
       users: [110, 2]
     });
 
@@ -420,9 +420,9 @@ describe('Store array segment CRUD', () => {
     const updateItem = { name: 'Bob' };
 
     const subscriptionCallback = jest.fn();
-    const store = createStorm(initialState);
-    store.models.users.subscribe(subscriptionCallback);
-    store.publish(prev => ({ users: [...prev.users, updateItem] }));
+    const storm = createStorm(initialState);
+    storm.models.users.subscribe(subscriptionCallback);
+    storm.publish(prev => ({ users: [...prev.users, updateItem] }));
 
     expect(subscriptionCallback).toBeCalledTimes(1);
     expect(subscriptionCallback).lastCalledWith([...initialState.users, updateItem], defaultPublishConfigs);

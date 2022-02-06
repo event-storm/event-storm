@@ -1,6 +1,6 @@
 import { noop } from 'utils';
 
-const persisted = createStore => ({
+const persisted = createStorm => ({
   storageKey,
   beforeunload = noop,
   permanent = false,
@@ -13,14 +13,14 @@ const persisted = createStore => ({
     fragment = {};
   }
 
-  const store = createStore({
+  const storm = createStorm({
     ...defaultState,
     ...fragment,
   });
   window.addEventListener('beforeunload', () => {
-    storage.setItem(storageKey, JSON.stringify(beforeunload(store.getState())));
+    storage.setItem(storageKey, JSON.stringify(beforeunload(storm.getState())));
   });
-  return store;
+  return storm;
 };
 
 export default persisted;
