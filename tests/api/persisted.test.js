@@ -3,7 +3,7 @@
  */
 import { createStorm, persisted } from 'src';
 
-describe('Creating a persisted store', () => {
+describe('Creating a persisted storm', () => {
   beforeEach(() => {
     window.localStorage.removeItem('event_storm');
     window.sessionStorage.removeItem('event_storm');

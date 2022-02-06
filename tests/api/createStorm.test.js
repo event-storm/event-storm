@@ -1,6 +1,6 @@
 import { createStorm } from 'src';
 
-describe('Creating a store', () => {
+describe('Creating a storm', () => {
   test('store object matches pattern', () => {
     const store = createStorm({
       name: 'John',
@@ -216,7 +216,7 @@ describe('Creating a store', () => {
   //   expect(store.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
   // });
 
-  test('Nested state updates with array: publishing from store', () => {
+  test('Nested state updates with array: publishing from storm', () => {
     const initialState = {
       layers: [{
         name: 'Layer 1',
@@ -318,34 +318,34 @@ describe('Creating a store', () => {
     expect(subscriptionCallbackFor1Settings).toBeCalledTimes(1);
   });
   // TODO:: change to subscribeToFragment
-  test('Nested state updates must not fire additional subscription functions: virtualModel', () => {
-    const selecterFn = jest.fn();
-    const initialState = {
-      user: {
-        name: 'Bob',
-        age: 21,
-        info: {
-          paid: false,
-        }
-      },
-      message: 'Some message',
-      isPaid: selecterFn,
-    };
+  // test('Nested state updates must not fire additional subscription functions: virtualModel', () => {
+  //   const selecterFn = jest.fn();
+  //   const initialState = {
+  //     user: {
+  //       name: 'Bob',
+  //       age: 21,
+  //       info: {
+  //         paid: false,
+  //       }
+  //     },
+  //     message: 'Some message',
+  //     isPaid: selecterFn,
+  //   };
 
-    const paidSubscriber = jest.fn();
+  //   const paidSubscriber = jest.fn();
 
-    const store = createStorm(initialState);
-    store.models.isPaid.subscribe(paidSubscriber);
+  //   const store = createStorm(initialState);
+  //   store.models.isPaid.subscribe(paidSubscriber);
 
-    store.publish({
-      user: {
-        name: 'Alice',
-      },
-    });
+  //   store.publish({
+  //     user: {
+  //       name: 'Alice',
+  //     },
+  //   });
 
-    expect(paidSubscriber).toBeCalledTimes(0);
-    expect(selecterFn).toBeCalledTimes(0);
-  });
+  //   expect(paidSubscriber).toBeCalledTimes(0);
+  //   expect(selecterFn).toBeCalledTimes(0);
+  // });
 
   test('updating arrays', () => {
     const initialState = {
@@ -372,17 +372,38 @@ describe('Store array segment CRUD', () => {
     const initialState = {
       users: null,
     };
-    const finalState = {
+    const intermediateState = {
       users: [],
+    }
+
+    const finalState = {
+      users: [1, 2],
     }
 
     const subscriptionCallback = jest.fn();
     const store = createStorm(initialState);
     store.models.users.subscribe(subscriptionCallback);
-    store.publish(finalState);
+    store.publish(intermediateState);
+
     expect(subscriptionCallback).toBeCalledTimes(1);
-    // emty object is the publish configuration
-    expect(subscriptionCallback).lastCalledWith([], {});
+    expect(subscriptionCallback).lastCalledWith([]);
+
+    store.publish(finalState);
+
+    expect(subscriptionCallback).toBeCalledTimes(2);
+    expect(subscriptionCallback).lastCalledWith([1, 2]);
+
+    const firstItemSubscriptionCallback = jest.fn();
+    const secondItemSubscriptionCallback = jest.fn();
+    store.models.users.models[0].subscribe(firstItemSubscriptionCallback);
+    store.models.users.models[1].subscribe(secondItemSubscriptionCallback);
+
+    store.publish({
+      users: [110, 2]
+    });
+
+    expect(secondItemSubscriptionCallback).toBeCalledTimes(0);
+    expect(firstItemSubscriptionCallback).toBeCalledTimes(1);
   });
 
   test('Reading an array', () => {

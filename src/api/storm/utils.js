@@ -9,7 +9,4 @@ const createProxy = (target, options) => {
   return proxy;
 }
 
-const isArray = options => Array.isArray(options);
-const isObject = options => typeof options === 'object' && options !== null;
-
-export { createProxy, isArray, isObject };
+export { createProxy };

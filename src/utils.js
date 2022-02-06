@@ -15,5 +15,9 @@ const isFunction = fn => typeof fn === 'function';
 
 const isPromise = possiblePromise => possiblePromise instanceof Promise;
 
+const isArray = options => Array.isArray(options);
+
+const isObject = options => typeof options === 'object' && options !== null;
+
 export { default as isEqual } from 'fast-deep-equal';
-export { isPromise, createDefault, noop, isDefault, isFunction };
+export { isPromise, createDefault, noop, isDefault, isFunction, isArray, isObject };

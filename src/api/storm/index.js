@@ -1,2 +1,2 @@
-export { default as createStorm } from './store';
+export { default as createStorm } from './storm';
 export { default as persisted } from './persist';

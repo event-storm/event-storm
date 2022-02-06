@@ -29,10 +29,10 @@ export interface IPersistConfiguration<T> {
   permanent?: boolean,
 }
 
-export interface IModel<T> {
+export interface IModel<T, G extends IModelConfiguration = IModelConfiguration> {
   getState: () => T;
-  setOptions: (configuration: IModelConfiguration) => void;
-  publish: (value: T, configuration?: IModelConfiguration) => void | Promise<T>;
+  setOptions: (configuration: G) => void;
+  publish: (value: T, configuration?: G) => void | Promise<T>;
   subscribe: (callback: (nextValue: T) => void, needPrevious?: boolean) => () => void;
 }
 
@@ -53,7 +53,7 @@ export function createModel<T>(value: T, configuration: IModelConfiguration): IM
 export function createVirtualModel<T>(
   callback: () => T,
   configuration?: IVirtualModelConfiguration,
-): IModel<T>;
+): IModel<T, IVirtualModelConfiguration>;
 
 export function addMiddlewares(modelsObject: Record<string, IModel<any>>): (...callbacks: Array<(prevValue: any, nextValue: any, options?: Record<string, any>) => void>) => void;
 

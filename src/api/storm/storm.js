@@ -1,7 +1,7 @@
 import { createModel } from 'api/configure';
+import { isArray, isObject } from 'utils';
 
-import { createVirtualObject, createVirtualArray } from './fragments';
-import { isArray, isObject } from './utils';
+import { createVirtualObject, createVirtualArray, createVirtualValue } from './fragments';
 
 function createStorm(options, configuration) {
   if (isArray(options)) {
@@ -19,7 +19,7 @@ function createStorm(options, configuration) {
     );
     return createVirtualObject(optionsModels, createStorm, configuration);
   } else {
-    return createModel(options, configuration);
+    return createVirtualValue(createModel(options, configuration), createStorm, configuration);
   }
 }
 
