@@ -11,3 +11,6 @@ yarn-error.log
 
 # idea, editor
 .DS_Store
+
+# test reports
+coverage
