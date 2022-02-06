@@ -35,12 +35,12 @@ module.exports = {
   coverageProvider: "v8",
 
   // A list of reporter names that Jest uses when writing coverage reports
-  // coverageReporters: [
-  //   "json",
+  coverageReporters: [
+    "json",
   //   "text",
   //   "lcov",
   //   "clover"
-  // ],
+  ],
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
@@ -83,7 +83,7 @@ module.exports = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^utils$": "<rootDir>/src/utils.js",
+    "^utils(.*)$": "<rootDir>/src/utils$1",
     "^pubsub(.*)$": "<rootDir>/src/pubsub$1",
     "^api(.*)$": "<rootDir>/src/api$1",
     "^src(.*)$": "<rootDir>/src$1",
@@ -197,4 +197,12 @@ module.exports = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: -10,
+    },
+  },
 };

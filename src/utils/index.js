@@ -19,5 +19,5 @@ const isArray = options => Array.isArray(options);
 
 const isObject = options => typeof options === 'object' && options !== null;
 
-export { default as isEqual } from 'fast-deep-equal';
+export { default as isEqual } from './isEqual';
 export { isPromise, createDefault, noop, isDefault, isFunction, isArray, isObject };
