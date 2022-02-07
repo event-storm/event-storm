@@ -197,6 +197,9 @@ module.exports = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+  collectCoverageFrom: [
+    'src/**/*.js',
+  ],
   coverageThreshold: {
     global: {
       branches: 80,
