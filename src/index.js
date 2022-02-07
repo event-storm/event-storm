@@ -3,7 +3,7 @@ export {
   persisted,
   createStorm,
   createModel,
+  selectFragment,
   addMiddlewares,
   createVirtualModel,
-  subscribeToFragments,
 } from 'api';
