@@ -80,7 +80,7 @@ describe('Creating a Model', () => {
     const model = createModel(initialValue);
     const callback = jest.fn();
 
-    model.subscribe(callback, true);
+    model.subscribe(callback, { needPrevious: true });
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(initialValue);

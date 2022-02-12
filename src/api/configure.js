@@ -1,4 +1,4 @@
-import { isEqual, createDefault, noop } from 'utils';
+import { isEqual, isFunction, createDefault, noop, isBoolean } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId } from './utils';
@@ -12,7 +12,7 @@ const createModel = (defaultData, configuration) => {
     getState: () => model.lastState,
     publish: (data, options) => publish(event, data, { ...options }),
     setOptions: configs => updateEvent(event, configs),
-    subscribe: (callback, needPrevious) => subscribe(event, callback, needPrevious),
+    subscribe: (callback, options) => subscribe(event, callback, options),
   };
 }
 
@@ -23,12 +23,18 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
 
   const updateHandler = publishConfigs => {
     const nextState = virtualEvent.options.handler();
-    if (virtualEvent.options.fireDuplicates || !isEqual(nextState, virtualEvent.lastState)) {
-      virtualEvent.lastState = nextState;
-      virtualEvent.subscribers.forEach(subscriber => {
-        subscriber(virtualEvent.lastState, publishConfigs);
-      });
-    }
+
+    let skipUpdate;
+    const { lastState } = virtualEvent;
+    virtualEvent.lastState = nextState;
+    virtualEvent.subscribers.forEach(({ callback, equalityFn }) => {
+      if (virtualEvent.options.fireDuplicates) return callback(nextState, publishConfigs);
+
+      if (isFunction(equalityFn) && !equalityFn(nextState, lastState)) return callback(nextState, publishConfigs);
+
+      skipUpdate = isBoolean(skipUpdate) ? skipUpdate : isEqual(nextState, lastState);
+      if (!skipUpdate) return callback(nextState, publishConfigs);
+    });
   }
 
   let subscriptions = models.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
@@ -39,18 +45,21 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
       virtualEvent.lastState = virtualEvent.options.handler();
       return virtualEvent.lastState;
     },
-    subscribe: function(callback, needPrevious) {
-      needPrevious && callback(this.getState());
-      virtualEvent.subscribers.push(callback);
+    subscribe: function(callback, options = {}) {
+      options.needPrevious && callback(this.getState());
+      !virtualEvent.subscribers.some(subscription => subscription.callback === callback) && virtualEvent.subscribers.push({
+        equalityFn: options.equalityFn,
+        callback,
+      });
       return () => {
-        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscriber => subscriber !== callback);
+        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscription => subscription.callback !== callback);
       }
     },
     setOptions: ({
       models: newModels,
       ...newOptions
     }) => {
-      const duplicateOptionChanged = typeof newOptions.fireDuplicates === 'boolean' && virtualEvent.options.fireDuplicates !== newOptions.fireDuplicates;
+      const duplicateOptionChanged = isBoolean(newOptions.fireDuplicates) && virtualEvent.options.fireDuplicates !== newOptions.fireDuplicates;
       virtualEvent.options = { ...virtualEvent.options, ...newOptions };
       if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());

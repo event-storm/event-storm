@@ -5,10 +5,6 @@ const subscribe = Symbol('subscribe');
 const mirror = _ => _;
 const exact = fragment => fragment[subscribe];
 
-// change the subscription strategy to virtual model
-// the provided function is the handler
-// the exact resuts are the models to be subcribed on
-
 function createProxyRecursive(data, onChange) {
   const proxy = new Proxy(data, {
     get: (target, prop) => {
@@ -16,7 +12,7 @@ function createProxyRecursive(data, onChange) {
         onChange(target);
         return;
       }
-      return createProxyRecursive(target.models[prop], onChange); // maybe must be somehow recursive
+      return createProxyRecursive(target.models[prop], onChange);
     },
   });
   return proxy;

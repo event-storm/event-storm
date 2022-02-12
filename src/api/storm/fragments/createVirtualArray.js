@@ -19,7 +19,6 @@ function createVirtualArray(models, creator, initialConfiguration) {
         possibleNextValues,
       });
     },
-    // TODO:: remove models from API
     models,
     setOptions: function (configuration) {
       this.models.forEach(model => model.setOptions(configuration));
