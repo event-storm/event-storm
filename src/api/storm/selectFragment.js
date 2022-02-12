@@ -10,7 +10,7 @@ function createProxyRecursive(data, onChange) {
     get: (target, prop) => {
       if (prop === subscribe) {
         onChange(target);
-        return;
+        return target.getState();
       }
       return createProxyRecursive(target.models[prop], onChange);
     },

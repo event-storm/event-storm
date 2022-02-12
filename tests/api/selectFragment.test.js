@@ -1,5 +1,7 @@
 import { createStorm, selectFragment } from 'src';
 
+import { defaultPublishConfigs } from './constants';
+
 describe('Subscribe to fragments of storm', () => {
   test('callback must not fire on the initialization', () => {
     const storm = createStorm({
@@ -70,5 +72,22 @@ describe('Subscribe to fragments of storm', () => {
     storm.publish({ age: 2, name: 'Jane' });
 
     expect(mock).toBeCalledTimes(1);
+  });
+
+
+  test('virtual model subscription must receive correct value', () => {
+    const storm = createStorm({
+      age: 1,
+      name: 'Bob',
+    });
+    const mock = jest.fn();
+
+    const model = selectFragment(storm, (state, exact) => 10 * exact(state.age));
+
+    model.subscribe(mock);
+    storm.publish({ age: 2 });
+
+    expect(mock).toBeCalledTimes(1);
+    expect(mock).lastCalledWith(20, defaultPublishConfigs);
   });
 });
