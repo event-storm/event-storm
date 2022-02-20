@@ -59,6 +59,5 @@
       "pre-commit": "lint-staged && yarn run jest",
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
-  },
-  "dependencies": {}
+  }
 }
