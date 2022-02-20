@@ -1,4 +1,4 @@
-import { createStorm, selectFragment } from 'src';
+import { createStorm, createSubStorm } from 'src';
 
 import { defaultPublishConfigs } from './constants';
 
@@ -10,7 +10,7 @@ describe('Subscribe to fragments of storm', () => {
     });
     const mock = jest.fn();
 
-    selectFragment(storm, (state, exact) => {
+    createSubStorm(storm, (state, exact) => {
       mock();
       return 10 * exact(state.age);
     });
@@ -24,7 +24,7 @@ describe('Subscribe to fragments of storm', () => {
     });
     const mock = jest.fn();
 
-    const model = selectFragment(storm, (state, exact) => {
+    const model = createSubStorm(storm, (state, exact) => {
       mock();
       return 10 * exact(state.age);
     });
@@ -41,7 +41,7 @@ describe('Subscribe to fragments of storm', () => {
     });
     const mock = jest.fn();
 
-    const model = selectFragment(storm, (state, exact) => {
+    const model = createSubStorm(storm, (state, exact) => {
       mock();
       return 10 * exact(state.age);
     });
@@ -59,7 +59,7 @@ describe('Subscribe to fragments of storm', () => {
     });
     const mock = jest.fn();
 
-    const model = selectFragment(storm, (state, exact) => {
+    const model = createSubStorm(storm, (state, exact) => {
       mock();
       return 10 * exact(state.age);
     });
@@ -82,7 +82,7 @@ describe('Subscribe to fragments of storm', () => {
     });
     const mock = jest.fn();
 
-    const model = selectFragment(storm, (state, exact) => 10 * exact(state.age));
+    const model = createSubStorm(storm, (state, exact) => 10 * exact(state.age));
 
     model.subscribe(mock);
     storm.publish({ age: 2 });

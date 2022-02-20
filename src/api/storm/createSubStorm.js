@@ -18,7 +18,7 @@ function createProxyRecursive(data, onChange) {
   return proxy;
 }
 
-const selectFragment = (storm, callback) => {
+const createSubStorm = (storm, callback) => {
   const models = [];
   const virtualModel = createVirtualModel({ handler: mirror, models: [storm] });
   const changeHandler = () => callback(storm.getState(), mirror);
@@ -36,4 +36,4 @@ const selectFragment = (storm, callback) => {
   return virtualModel;
 }
 
-export default selectFragment;
+export default createSubStorm;
