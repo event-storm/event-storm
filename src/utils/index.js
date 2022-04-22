@@ -12,7 +12,7 @@ const noop = () => {};
 
 const isFunction = fn => typeof fn === 'function';
 
-const isPromise = possiblePromise => isFunction(possiblePromise.then);
+const isPromise = possiblePromise => !!possiblePromise && isFunction(possiblePromise.then);
 
 const isArray = options => Array.isArray(options);
 const isBoolean = value => typeof value === 'boolean';

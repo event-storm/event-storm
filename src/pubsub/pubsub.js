@@ -13,8 +13,9 @@ const publish = async (event, valueSetter, publishConfigs) => {
   let skipUpdate;
   const { lastState } = neededEvent;
   neededEvent.lastState = nextState;
+  const fireDuplicates = publishConfigs.fireDuplicates || neededEvent.options.fireDuplicates;
   neededEvent.subscribers.forEach(({ equalityFn, callback }) => {
-    if (publishConfigs.fireDuplicates || neededEvent.options.fireDuplicates) return callback(nextState, publishConfigs);
+    if (fireDuplicates) return callback(nextState, publishConfigs);
 
     if (isFunction(equalityFn) && !equalityFn(nextState, lastState)) return callback(nextState, publishConfigs);
 

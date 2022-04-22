@@ -22,6 +22,7 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   virtualEvent.options.models = models;
 
   const updateHandler = publishConfigs => {
+    if (virtualEvent.options.freeze) return;
     const nextState = virtualEvent.options.handler();
 
     let skipUpdate;
