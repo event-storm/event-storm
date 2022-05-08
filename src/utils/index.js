@@ -6,8 +6,6 @@ const createDefault = ({ options = {}, ...rest }) => {
   return { lastState, options, subscribers: [] };
 }
 
-const isDefault = state => state === defaultState;
-
 const noop = () => {};
 
 const isFunction = fn => typeof fn === 'function';
@@ -19,5 +17,4 @@ const isBoolean = value => typeof value === 'boolean';
 
 const isObject = options => typeof options === 'object' && options !== null;
 
-export { default as isEqual } from './isEqual';
-export { isPromise, createDefault, isBoolean, noop, isDefault, isFunction, isArray, isObject };
+export { isPromise, createDefault, isBoolean, noop, isFunction, isArray, isObject };

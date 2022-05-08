@@ -1,8 +1,8 @@
-import { isEqual, isPromise, isFunction, isBoolean } from 'utils';
+import { isPromise, isFunction } from 'utils';
 
 import { getEvent } from './events';
 
-const publish = async (event, valueSetter, publishConfigs) => {
+const publish = async (event, valueSetter, { force, ...publishConfigs }) => {
   const neededEvent = getEvent(event);
 
   if (!neededEvent) return;
@@ -10,17 +10,18 @@ const publish = async (event, valueSetter, publishConfigs) => {
   const intermediateValue = isFunction(valueSetter) ? valueSetter(neededEvent.lastState) : valueSetter;
   const nextState = isPromise(intermediateValue) ? await intermediateValue : intermediateValue;
 
-  let skipUpdate;
   const { lastState } = neededEvent;
   neededEvent.lastState = nextState;
+
+  if (neededEvent.options.freeze) return;
+
   const fireDuplicates = publishConfigs.fireDuplicates || neededEvent.options.fireDuplicates;
   neededEvent.subscribers.forEach(({ equalityFn, callback }) => {
-    if (fireDuplicates) return callback(nextState, publishConfigs);
+    if (fireDuplicates || force) return callback(nextState, publishConfigs);
 
     if (isFunction(equalityFn) && !equalityFn(nextState, lastState)) return callback(nextState, publishConfigs);
 
-    skipUpdate = isBoolean(skipUpdate) ? skipUpdate : isEqual(nextState, lastState);
-    if (!skipUpdate) return callback(nextState, publishConfigs);
+    if (nextState !== lastState) return callback(nextState, publishConfigs);
   });
 }
 

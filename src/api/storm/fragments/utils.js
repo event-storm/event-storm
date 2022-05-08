@@ -31,39 +31,31 @@ const objectPublisher = async function({
     }
   }
 
-  const duplicateChangesNeeded = nextModelEntries.length !== Object.keys(this.models).length || hasNewKey;
-
   // unsubscribe to not propagate on each key change
-  duplicateChangesNeeded && virtualModel.setOptions({
-    models: [],
-    handler: createObjectHandler(nextModelEntries),
+  virtualModel.setOptions({
+    freeze: true,
+    // NOTE::: update this case too if needed
+    models: nextModelEntries.map(([, value]) => value),
+    ...((
+      hasNewKey || nextModelEntries.length !== this.models.length
+    ) && { handler: createObjectHandler(nextModelEntries) }),
   });
 
-  // publishing models expect the last one
+  // publishing models
   this.models = {};
-  for (let index = 0; index < nextModelEntries.length - 1; index++) {
+  for (let index = 0; index < nextModelEntries.length; index++) {
     const key = nextModelEntries[index][0];
     this.models[key] = nextModelEntries[index][1];
     this.models[key].publish(nextValues[key], configs);
   }
 
-  if (duplicateChangesNeeded) {
-    // subscribe back to all changes :)
-    virtualModel.setOptions({
-      // NOTE::: update this case too if needed
-      models: nextModelEntries.map(([, value]) => value),
-      fireDuplicates: true,
-    });
-  }
-
-  // execute the last one separately to update the list even if the firing was turned off manually
-  const [key, model] = nextModelEntries[nextModelEntries.length - 1];
-  this.models[key] = model;
-  this.models[key].publish(nextValues[key], configs);
-  duplicateChangesNeeded && virtualModel.setOptions({ fireDuplicates: false });
+  // unfreeze all the models
+  virtualModel.setOptions({
+    freeze: false,
+  });
 }
 
-const arrayPublisher = async function ({
+const arrayPublisher = async function({
   configs,
   creator,
   virtualModel,
@@ -72,8 +64,7 @@ const arrayPublisher = async function ({
   const possiblePromiseValues = isFunction(possibleNextValues) ? possibleNextValues(this.getState()) : possibleNextValues;
   const nextValues = isPromise(possiblePromiseValues) ? await possiblePromiseValues : possiblePromiseValues;
   // unsubscribe to not propagate on each key change
-  const duplicateChangesNeeded = nextValues.length !== this.models.length;
-  duplicateChangesNeeded && virtualModel.setOptions({ freeze: true });
+  let areModelsTheSame = true;
 
   if (nextValues.length < this.models.length) {
     const nextModels = this.models.filter((_, index) => index < nextValues.length);
@@ -81,6 +72,7 @@ const arrayPublisher = async function ({
       handler: createArrayHandler(nextModels),
     });
     this.models = nextModels;
+    areModelsTheSame = false;
   }
   if (nextValues.length > this.models.length) {
     const newModelsData = nextValues.filter((_, index) => index >= this.models.length);
@@ -89,25 +81,24 @@ const arrayPublisher = async function ({
       handler: createArrayHandler(nextModels),
     });
     this.models = nextModels;
+    areModelsTheSame = false;
   }
 
-  for (let index = 0; index < nextValues.length - 1; index++) {
+  // unsubscribe to not propagate on each key change
+  virtualModel.setOptions({
+    freeze: true,
+    models: this.models,
+    ...(!areModelsTheSame && { handler: createArrayHandler(this.models) }),
+  });
+
+  for (let index = 0; index < nextValues.length; index++) {
     this.models[index].publish(nextValues[index], configs);
   }
 
-  if (duplicateChangesNeeded) {
-    // subscribe back to all changes :)
-    virtualModel.setOptions({
-      models: this.models,
-      freeze: false,
-      fireDuplicates: true,
-    });
-  }
-
-  // execute the last one separately to update the list even if the firing was turned off manually
-  const lastIndex = this.models.length - 1;
-  this.models[lastIndex].publish(nextValues[lastIndex], configs);
-  duplicateChangesNeeded && virtualModel.setOptions({ fireDuplicates: false });
+  // unfreeze all the models
+  virtualModel.setOptions({
+    freeze: false,
+  });
 }
 
 const valuePublisher = async function({

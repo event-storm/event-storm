@@ -2,7 +2,7 @@ import { createVirtualModel } from 'api/configure';
 
 import { createValueHandler, valuePublisher } from './utils';
 
-function createVirtualObject(model, creator, initialConfiguration) {
+function createVirtualValue(model, creator, initialConfiguration) {
   const virtualModel = createVirtualModel({
     ...initialConfiguration,
     models: [model],
@@ -26,4 +26,4 @@ function createVirtualObject(model, creator, initialConfiguration) {
   };
 }
 
-export default createVirtualObject;
+export default createVirtualValue;

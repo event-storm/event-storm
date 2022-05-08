@@ -1,18 +1,34 @@
-import { isEqual, isFunction, createDefault, noop, isBoolean } from 'utils';
+import { isFunction, createDefault, noop, isBoolean } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId } from './utils';
 
 const createModel = (defaultData, configuration) => {
-  const event = generateId();
+  const id = generateId();
 
-  const model = registerEvent(event, defaultData, configuration);
+  const event = registerEvent(id, defaultData, configuration);
+  let freezePublishConfigs = null;
+  let freezeTimes = 0;
 
   return {
-    getState: () => model.lastState,
-    publish: (data, options) => publish(event, data, { ...options }),
-    setOptions: configs => updateEvent(event, configs),
-    subscribe: (callback, options) => subscribe(event, callback, options),
+    getState: () => event.lastState,
+    publish: (data, options) => {
+      if (event.options.freeze) {
+        freezePublishConfigs = options;
+      }
+      publish(id, data, { ...options });
+    },
+    setOptions: configs => {
+      if (isBoolean(configs.freeze)) {
+        configs.freeze ? freezeTimes++ : freezeTimes--;
+      }
+      updateEvent(id, configs);
+      if (!freezeTimes && freezePublishConfigs !== null) {
+        publish(id, event.lastState, { ...(freezePublishConfigs || {}), force: true });
+        freezePublishConfigs = null;
+      }
+    },
+    subscribe: (callback, options) => subscribe(id, callback, options),
   };
 }
 
@@ -24,17 +40,15 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   const updateHandler = publishConfigs => {
     if (virtualEvent.options.freeze) return;
     const nextState = virtualEvent.options.handler();
-
-    let skipUpdate;
+    
     const { lastState } = virtualEvent;
     virtualEvent.lastState = nextState;
     virtualEvent.subscribers.forEach(({ callback, equalityFn }) => {
       if (virtualEvent.options.fireDuplicates) return callback(nextState, publishConfigs);
-
+      
       if (isFunction(equalityFn) && !equalityFn(nextState, lastState)) return callback(nextState, publishConfigs);
-
-      skipUpdate = isBoolean(skipUpdate) ? skipUpdate : isEqual(nextState, lastState);
-      if (!skipUpdate) return callback(nextState, publishConfigs);
+      
+      if (nextState !== lastState) return callback(nextState, publishConfigs);
     });
   }
 
@@ -58,17 +72,21 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
     },
     setOptions: ({
       models: newModels,
+      handler: newHandler = virtualEvent.options.handler,
       ...newOptions
     }) => {
-      const duplicateOptionChanged = isBoolean(newOptions.fireDuplicates) && virtualEvent.options.fireDuplicates !== newOptions.fireDuplicates;
-      virtualEvent.options = { ...virtualEvent.options, ...newOptions };
+      virtualEvent.options = {
+        ...virtualEvent.options,
+        ...newOptions,
+        handler: newHandler
+      };
       if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());
         virtualEvent.options.models = newModels;
         subscriptions = newModels.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
       }
-      duplicateOptionChanged && virtualEvent.options.models.forEach(model => {
-        model.setOptions({ fireDuplicates: virtualEvent.options.fireDuplicates });
+      virtualEvent.options.models.forEach(model => {
+        model.setOptions(newOptions);
       });
     }
   });
