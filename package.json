@@ -7,7 +7,7 @@
   "types": "./types/index.d.ts",
   "author": "artur93gev",
   "scripts": {
-    "test": "NODE_ENV='production' jest --coverage",
+    "test": "NODE_ENV='production' jest",
     "test:watch": "NODE_ENV='production' jest --watch",
     "bundle": "rollup -c",
     "lint": "eslint src/*.js",
