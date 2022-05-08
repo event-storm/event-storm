@@ -17,44 +17,45 @@ const objectPublisher = async function({
 }) {
   const possiblePromiseValues = isFunction(possibleNextValues) ? possibleNextValues(this.getState()) : possibleNextValues;
   const nextValues = isPromise(possiblePromiseValues) ? await possiblePromiseValues : possiblePromiseValues;
-  const nextModelEntries = Object.entries(nextValues).reduce((acc, [key, value]) => {
-    if (!this.models.hasOwnProperty(key)) {
-      acc.push([key, creator(value)]);
-    } else {
-      acc.unshift([key, this.models[key]]);
-    }
-    return acc;
-  }, []);
 
-  const duplicateChangesNeeded = nextModelEntries.length !== Object.keys(this.models).length || nextModelEntries.some(([key]) => !this.models.hasOwnProperty(key));
+  // collect new values
+  const nextModelEntries = [];
+  let hasNewKey = false;
+
+  for (const key in nextValues) {
+    if (!this.models.hasOwnProperty(key)) {
+      hasNewKey = true;
+      nextModelEntries.push([key, creator(nextValues[key])]);
+    } else {
+      nextModelEntries.unshift([key, this.models[key]]);
+    }
+  }
 
   // unsubscribe to not propagate on each key change
-  duplicateChangesNeeded && virtualModel.setOptions({
-    models: [],
-    handler: createObjectHandler(nextModelEntries),
+  virtualModel.setOptions({
+    freeze: true,
+    // NOTE::: update this case too if needed
+    models: nextModelEntries.map(([, value]) => value),
+    ...((
+      hasNewKey || nextModelEntries.length !== this.models.length
+    ) && { handler: createObjectHandler(nextModelEntries) }),
   });
 
-  this.models = nextModelEntries.reduce((acc, [key, value]) => {
-    acc[key] = value;
-    return acc;
-  }, {});
-
-  nextModelEntries.forEach(([key], index) => {
-    if (index  === Object.entries(nextValues).length - 1) {
-      // subscribe back to all changes :)
-      duplicateChangesNeeded && virtualModel.setOptions({
-        models: nextModelEntries.map(([, value]) => value),
-        ...(duplicateChangesNeeded && { fireDuplicates: true }),
-      });
-    }
+  // publishing models
+  this.models = {};
+  for (let index = 0; index < nextModelEntries.length; index++) {
+    const key = nextModelEntries[index][0];
+    this.models[key] = nextModelEntries[index][1];
     this.models[key].publish(nextValues[key], configs);
-  });
-  duplicateChangesNeeded && virtualModel.setOptions({
-    fireDuplicates: false,
+  }
+
+  // unfreeze all the models
+  virtualModel.setOptions({
+    freeze: false,
   });
 }
 
-const arrayPublisher = async function ({
+const arrayPublisher = async function({
   configs,
   creator,
   virtualModel,
@@ -63,8 +64,7 @@ const arrayPublisher = async function ({
   const possiblePromiseValues = isFunction(possibleNextValues) ? possibleNextValues(this.getState()) : possibleNextValues;
   const nextValues = isPromise(possiblePromiseValues) ? await possiblePromiseValues : possiblePromiseValues;
   // unsubscribe to not propagate on each key change
-  const duplicateChangesNeeded = nextValues.length !== this.models.length;
-  duplicateChangesNeeded && virtualModel.setOptions({ models: [] });
+  let areModelsTheSame = true;
 
   if (nextValues.length < this.models.length) {
     const nextModels = this.models.filter((_, index) => index < nextValues.length);
@@ -72,6 +72,7 @@ const arrayPublisher = async function ({
       handler: createArrayHandler(nextModels),
     });
     this.models = nextModels;
+    areModelsTheSame = false;
   }
   if (nextValues.length > this.models.length) {
     const newModelsData = nextValues.filter((_, index) => index >= this.models.length);
@@ -80,19 +81,24 @@ const arrayPublisher = async function ({
       handler: createArrayHandler(nextModels),
     });
     this.models = nextModels;
+    areModelsTheSame = false;
   }
-  nextValues.forEach((nextValue, index) => {
-    if (index === nextValues.length - 1) {
-      // subscribe back to all changes :)
-      duplicateChangesNeeded && virtualModel.setOptions({
-        models: this.models,
-        ...(duplicateChangesNeeded && { fireDuplicates: true }),
-      });
-    }
-    this.models[index].publish(nextValue, configs);
+
+  // unsubscribe to not propagate on each key change
+  virtualModel.setOptions({
+    freeze: true,
+    models: this.models,
+    ...(!areModelsTheSame && { handler: createArrayHandler(this.models) }),
   });
 
-  duplicateChangesNeeded && virtualModel.setOptions({ fireDuplicates: false });
+  for (let index = 0; index < nextValues.length; index++) {
+    this.models[index].publish(nextValues[index], configs);
+  }
+
+  // unfreeze all the models
+  virtualModel.setOptions({
+    freeze: false,
+  });
 }
 
 const valuePublisher = async function({

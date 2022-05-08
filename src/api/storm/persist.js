@@ -5,9 +5,9 @@ const persisted = createStorm => ({
   beforeunload = noop,
   permanent = false,
 }) => defaultState => {
-  const storage = permanent ? window.localStorage : window.sessionStorage;
   let fragment;
   try {
+    const storage = permanent ? window.localStorage : window.sessionStorage;
     fragment = JSON.parse(storage.getItem(storageKey));
   } catch {
     fragment = {};
@@ -18,7 +18,12 @@ const persisted = createStorm => ({
     ...fragment,
   });
   window.addEventListener('beforeunload', () => {
-    storage.setItem(storageKey, JSON.stringify(beforeunload(storm.getState())));
+    try {
+      const storage = permanent ? window.localStorage : window.sessionStorage;
+      storage.setItem(storageKey, JSON.stringify(beforeunload(storm.getState())));
+    } catch {
+      noop();
+    }
   });
   return storm;
 };

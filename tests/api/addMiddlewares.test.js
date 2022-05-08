@@ -24,6 +24,7 @@ describe('Adding a middleware', () => {
     expect(middleware2).toBeCalledTimes(1);
   });
 
+  // TODO:: find whether it is need to run before or not
   test('middleware must run before subscribe callback fires', () => {
     const callback = jest.fn();
     const middleware = jest.fn(() => {
@@ -31,8 +32,8 @@ describe('Adding a middleware', () => {
     });
     const example = createModel('start');
 
-    example.subscribe(callback);
     addMiddlewares({ example })(middleware);
+    example.subscribe(callback);
     example.publish('final');
     expect(middleware).toBeCalledTimes(1);
   });
@@ -58,7 +59,7 @@ describe('Using middlewares with storm', () => {
       name: 'Bob',
     };
     const finalState = {
-      age: 30,
+      age: 28,
       name: 'Jane',
     };
 
@@ -70,7 +71,7 @@ describe('Using middlewares with storm', () => {
 
     addMiddlewares(storm.models)(middleware);
     storm.publish(finalState, publishConfigs);
-    
+
     expect(middleware).toBeCalledTimes(1);
     expect(middleware).lastCalledWith(initialState, finalState, publishConfigs);
   });

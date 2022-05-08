@@ -37,7 +37,8 @@ module.exports = {
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
     "json",
-  //   "text",
+    "text",
+    "html-spa",
   //   "lcov",
   //   "clover"
   ],
@@ -202,10 +203,10 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 85,
-      lines: 85,
-      statements: 85,
+      branches: 89,
+      functions: 96,
+      lines: 96,
+      statements: 96,
     },
   },
 };
