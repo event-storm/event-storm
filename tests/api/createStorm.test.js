@@ -1,3 +1,4 @@
+// import { produce } from 'immer';
 import { createStorm } from 'src';
 
 import { defaultPublishConfigs } from './constants';
@@ -180,43 +181,6 @@ describe('Creating a storm', () => {
     expect(ageSubscriber).toBeCalledTimes(0);
     expect(nameSubscriber).toBeCalledTimes(1);
   });
-  // TODO:: udpate after subscribeToFragment will be ready
-  // test('Nested state updates with array: virtual model', () => {
-  //   const initialSelectedId = '1';
-  //   const finalSelectedId = '2';
-  //   const initialState = {
-  //     layers: [{
-  //       name: 'Layer 1',
-  //       id: '1',
-  //     },{
-  //       name: 'Layer 2',
-  //       id: '2',
-  //     },{
-  //       name: 'Layer 3',
-  //       id: '3',
-  //     },{
-  //       name: 'Layer 4',
-  //       id: '4',
-  //     }],
-  //     selectedLayerId: initialSelectedId,
-  //     selectedLayer: ({ layers, selectedLayerId }) => {
-  //       return layers.find(layer => layer.id === selectedLayerId);
-  //     },
-  //   };
-  //   const subscriptionCallback = jest.fn();
-
-  //   const storm = createStorm(initialState);
-
-  //   storm.models.selectedLayer.subscribe(subscriptionCallback);
-
-  //   expect(storm.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === initialSelectedId));
-
-  //   storm.publish({
-  //     selectedLayerId: finalSelectedId,
-  //   });
-
-  //   expect(storm.getState().selectedLayer).toEqual(initialState.layers.find(layer => layer.id === finalSelectedId));
-  // });
 
   test('Nested state updates with array: publishing from storm', () => {
     const initialState = {
@@ -254,7 +218,7 @@ describe('Creating a storm', () => {
           ? {
             ...layer,
             settings: {
-              ...layer.settings,
+              ...layer.xsettings,
               type: 'dynamic',
             },
           }
@@ -289,12 +253,6 @@ describe('Creating a storm', () => {
         settings: {
           type: 'static',
         },
-      },{
-        name: 'Layer 4',
-        id: '4',
-        settings: {
-          type: 'static',
-        },
       }],
     };
     const subscriptionCallback = jest.fn();
@@ -319,35 +277,6 @@ describe('Creating a storm', () => {
     expect(subscriptionCallbackFor1Id).toBeCalledTimes(0);
     expect(subscriptionCallbackFor1Settings).toBeCalledTimes(1);
   });
-  // TODO:: change to subscribeToFragment
-  // test('Nested state updates must not fire additional subscription functions: virtualModel', () => {
-  //   const selecterFn = jest.fn();
-  //   const initialState = {
-  //     user: {
-  //       name: 'Bob',
-  //       age: 21,
-  //       info: {
-  //         paid: false,
-  //       }
-  //     },
-  //     message: 'Some message',
-  //     isPaid: selecterFn,
-  //   };
-
-  //   const paidSubscriber = jest.fn();
-
-  //   const storm = createStorm(initialState);
-  //   storm.models.isPaid.subscribe(paidSubscriber);
-
-  //   storm.publish({
-  //     user: {
-  //       name: 'Alice',
-  //     },
-  //   });
-
-  //   expect(paidSubscriber).toBeCalledTimes(0);
-  //   expect(selecterFn).toBeCalledTimes(0);
-  // });
 
   test('updating arrays', () => {
     const initialState = {
@@ -392,7 +321,7 @@ describe('storm array segment CRUD', () => {
 
     storm.publish(finalState);
 
-    expect(subscriptionCallback).toBeCalledTimes(2);
+    expect(subscriptionCallback).toBeCalledTimes(3);
     expect(subscriptionCallback).lastCalledWith([1, 2], defaultPublishConfigs);
 
     const firstItemSubscriptionCallback = jest.fn();
@@ -418,10 +347,10 @@ describe('storm array segment CRUD', () => {
       users: [{ name: 'Alice' }],
     };
     const updateItem = { name: 'Bob' };
-
     const subscriptionCallback = jest.fn();
     const storm = createStorm(initialState);
     storm.models.users.subscribe(subscriptionCallback);
+
     storm.publish(prev => ({ users: [...prev.users, updateItem] }));
 
     expect(subscriptionCallback).toBeCalledTimes(1);

@@ -5,9 +5,7 @@ import { createVirtualObject, createVirtualArray, createVirtualValue } from './f
 
 function createStorm(options, configuration) {
   if (isArray(options)) {
-    const optionModels = options.map((option) =>
-      createStorm(option, configuration)
-    );
+    const optionModels = options.map(option => createStorm(option, configuration));
     return createVirtualArray(optionModels, createStorm, configuration);
   } else if (isObject(options)) {
     const optionsModels = Object.entries(options).reduce(

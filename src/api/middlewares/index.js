@@ -7,9 +7,12 @@ const addMiddlewares = modelsObject => {
     return result;
   }, {});
 
-  entries.forEach(([key, model]) => {
+  entries.forEach(([_, model]) => {
     model.subscribe((nextValue, options) => {
-      const nextValues = { ...values, [key]: nextValue };
+      const nextValues = entries.reduce((result, [key, model]) => {
+        result[key] = model.getState();
+        return result;
+      }, {});
       middlewares.forEach(middleware => {
         middleware(values, nextValues, options);
       });

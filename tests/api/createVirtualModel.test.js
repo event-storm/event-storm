@@ -15,6 +15,19 @@ describe('Creating a Virtual Model', () => {
     expect(typeof virtualModel.getState).toBe('function');
     expect(typeof virtualModel.subscribe).toBe('function');
   });
+  test('publish method is doing nothing', () => {
+    const first = createModel('first');
+    const second = createModel('second');
+    const processor = jest.fn(() => {});
+
+    const virtualModel = createVirtualModel({ models: [first, second], handler: processor });
+
+    expect(processor).toBeCalledTimes(0);
+
+    virtualModel.publish('any value');
+
+    expect(processor).toBeCalledTimes(0);
+  });
 
   test('Get state must give the default state, when nothing published', () => {
     const name = createModel('Foo');
