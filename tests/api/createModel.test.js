@@ -85,4 +85,19 @@ describe('Creating a Model', () => {
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(initialValue);
   });
+
+  test('Unsubcribe call must make the callback not fire anymore', () => {
+    const initialValue = 'test';
+    const finalState = 'final';
+    const model = createModel(initialValue);
+    const callback = jest.fn();
+
+    const unsubscribe = model.subscribe(callback);
+    unsubscribe();
+
+    model.publish(finalState);
+
+    expect(model.getState()).toEqual(finalState);
+    expect(callback).toBeCalledTimes(0);
+  });
 });

@@ -51,10 +51,10 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
 
   for (let key in partialState) {
     if (!(key in state)) {
-      paths.push(`${rootPath}${isArray(state) ? `[${key}]` : `${rootPath ? '.' : ''}${key}`}`);
+      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
       state[key] = partialState[key];
     } else if (isObject(partialState[key]) && partialState[key] && state[key] !== partialState[key]) {
-      paths.push(`${rootPath}${isArray(state) ? `[${key}]` : `${rootPath ? '.' : ''}${key}`}`);
+      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
       if (partialState[key] && state[key]) {
         return mergeRecursive(state[key], partialState[key], paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
       } else {
@@ -62,7 +62,7 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
       }
     } else if (state[key] !== partialState[key]) {
       state[key] = partialState[key];
-      paths.push(`${rootPath}${isArray(state) ? `[${key}]` : `${rootPath ? '.' : ''}${key}`}`);
+      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
     }
   }
   return paths;

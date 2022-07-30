@@ -21,13 +21,33 @@ describe('Creating a storm', () => {
 
     expect(storm.getState()).toEqual(initialState);
 
-    storm.publish(prev => ({ ...prev, name: 'Jain' }));
+    storm.publish(prev => ({ ...prev, name: 'Jain', age: 34 }));
 
     expect(storm.getState()).toEqual({
+      age: 34,
       name: 'Jain',
       surname: 'Doe',
     });
   });
+  test('it must be possible to add new keys to the existing object', () => {
+    const initialState = { user: {} };
+    const storm = createStorm(initialState);
+
+    storm.publish({ user: { age: 1 } });
+
+    expect(storm.getState()).toEqual({ user: { age: 1 } });
+  });
+
+  // test('Changing key data type must be possible', () => {
+  //   const initialState = {
+  //     user: {}
+  //   };
+  //   const storm = createStorm(initialState);
+
+  //   storm.publish({ user: [] });
+
+  //   expect(storm.getState()).toEqual({ user: [] });
+  // });
 
   test('storm indiviudal key subscribe', () => {
     const initialState = {
@@ -336,12 +356,7 @@ describe('storm array segment CRUD', () => {
     expect(firstItemSubscriptionCallback).toBeCalledTimes(2);
   });
 
-  test('Reading an array', () => {
-
-  });
-
   test('Updating an array', () => {
-
     const initialState = {
       users: [{ name: 'Alice' }],
     };
@@ -360,6 +375,33 @@ describe('storm array segment CRUD', () => {
   });
 
   test('Deleting an array', () => {
+    const initialState = {
+      users: [{ name: 'Alice' }],
+    };
+    const finalState = { users: null };
+    const storm = createStorm(initialState);
+    const subscriptionCallback = jest.fn();
+    const unsubscribe = storm.subscribe((state, subscribe) => {
+      subscriptionCallback(state);
+      return subscribe(state.users);
+    });
+    unsubscribe();
 
+    storm.publish(finalState);
+
+    expect(subscriptionCallback).toBeCalledTimes(1);
+    expect(storm.getState()).toEqual(finalState);
+  });
+
+  test('Deleting an array item(reassigning to null)', () => {
+    const initialState = {
+      users: [{ name: 'Alice' }],
+    };
+    const finalState = { users: [null] };
+    const storm = createStorm(initialState);
+
+    storm.publish(finalState);
+
+    expect(storm.getState()).toEqual(finalState);
   });
 });

@@ -51,6 +51,7 @@ describe('Creating a persisted storm', () => {
 
     const storm = persisted(createStorm)({
       storageKey: 'event_storm',
+      permanent: true,
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
@@ -66,5 +67,46 @@ describe('Creating a persisted storm', () => {
     })(initialState);
 
     expect(storeAfterUnload.getState()).toEqual({ ...initialState, name: 'Jane' });
+  });
+
+  it('on crash everything must be as initial', () => {
+    Object.defineProperty(window, 'sessionStorage', {
+      value: {
+        getItem: () => {
+          throw new Error('testing crash');
+        },
+        setItem: () => {
+          throw new Error('testing crash');
+        }
+      }
+    });
+    const initialState = {
+      age: 21,
+      name: 'John',
+      surname: 'Doe',
+    };
+
+    const fragment = {
+      name: 'Jane',
+      age: 25,
+    }
+
+    const storm = persisted(createStorm)({
+      storageKey: 'event_storm',
+      beforeunload: state => ({ name: state.name }),
+    })(initialState);
+
+    storm.publish(prev => ({ ...prev, ...fragment }));
+
+    expect(storm.getState()).toEqual({ ...initialState, ...fragment });
+
+    window.dispatchEvent(new Event("beforeunload"));
+
+    const storeAfterUnload = persisted(createStorm)({
+      storageKey: 'event_storm',
+      beforeunload: state => ({ name: state.name }),
+    })(initialState);
+
+    expect(storeAfterUnload.getState()).toEqual(initialState);
   });
 });

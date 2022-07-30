@@ -5,8 +5,6 @@ import { getEvent } from './events';
 const publish = async (event, valueSetter, { force, ...publishConfigs }) => {
   const neededEvent = getEvent(event);
 
-  if (!neededEvent) return;
-
   const intermediateValue = isFunction(valueSetter) ? valueSetter(neededEvent.lastState) : valueSetter;
   const nextState = isPromise(intermediateValue) ? await intermediateValue : intermediateValue;
 

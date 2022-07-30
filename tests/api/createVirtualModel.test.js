@@ -29,6 +29,28 @@ describe('Creating a Virtual Model', () => {
     expect(processor).toBeCalledTimes(0);
   });
 
+  test('Unsubscribing must make the callback not fire anymore', () => {
+    const value1 = 'Peter';
+    const model1 = createModel(value1);
+    const value2 = 20;
+    const model2 = createModel(value2);
+    const value3 = { city: 'New York' };
+    const model3 = createModel(value3);
+    const virtual = createVirtualModel({
+      models: [model1, model2, model3],
+      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+    });
+    const callback = jest.fn();
+    const nextValue2 = 80;
+
+    const unsubscribe = virtual.subscribe(callback);
+    unsubscribe();
+    model2.publish(nextValue2);
+
+    expect(callback).toBeCalledTimes(0);
+  });
+
+
   test('Get state must give the default state, when nothing published', () => {
     const name = createModel('Foo');
     const surname = createModel('Bar');
@@ -97,6 +119,47 @@ describe('Creating a Virtual Model', () => {
 
     expect(callback).toBeCalledTimes(2);
     expect(callback).lastCalledWith(`${value1} is alone in ${nextValue3.city} at his ${nextValue2}`, defaultPublishConfigs);
+  });
+
+  test('Subscribe method must be fired when needPrevious is set to true', () => {
+    const value1 = 'Peter';
+    const model1 = createModel(value1);
+    const value2 = 20;
+    const model2 = createModel(value2);
+    const value3 = { city: 'New York' };
+    const model3 = createModel(value3);
+    const virtual = createVirtualModel({
+      models: [model1, model2, model3],
+      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+    });
+    const callback = jest.fn();
+
+    virtual.subscribe(callback, { needPrevious: true });
+
+    expect(callback).toBeCalledTimes(1);
+    expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${value2}`);
+  });
+
+  test('Subscribe method must be fired anytime when fireDuplicates is set to true', () => {
+    const value1 = 'Peter';
+    const model1 = createModel(value1);
+    const value2 = 20;
+    const model2 = createModel(value2);
+    const value3 = { city: 'New York' };
+    const model3 = createModel(value3);
+    const virtual = createVirtualModel({
+      models: [model1, model2, model3],
+      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+    });
+    const callback = jest.fn();
+
+    virtual.setOptions({ fireDuplicates: true });
+    virtual.subscribe(callback);
+
+    model1.publish(value1);
+
+    expect(callback).toBeCalledTimes(1);
+    expect(callback).lastCalledWith(`${value1} is alone in ${value3.city} at his ${value2}`, defaultPublishConfigs);
   });
 
   test('It must be possible to create virtualModel over virtual model', () => {
