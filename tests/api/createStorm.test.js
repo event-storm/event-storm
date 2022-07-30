@@ -1,7 +1,4 @@
-// import { produce } from 'immer';
 import { createStorm } from 'src';
-
-import { defaultPublishConfigs } from './constants';
 
 describe('Creating a storm', () => {
   test('storm object matches pattern', () => {
@@ -10,7 +7,6 @@ describe('Creating a storm', () => {
       surname: 'Doe',
     });
 
-    expect(typeof storm.models).toBe('object');
     expect(typeof storm.publish).toBe('function');
     expect(typeof storm.getState).toBe('function');
     expect(typeof storm.subscribe).toBe('function');
@@ -44,13 +40,19 @@ describe('Creating a storm', () => {
     const changableSubscriptionCallback = jest.fn();
     const nonChangableSubscriptionCallback = jest.fn();
 
-    storm.models.changable.subscribe(changableSubscriptionCallback);
-    storm.models.nonChangable.subscribe(nonChangableSubscriptionCallback);
+    storm.subscribe((state, subscribe) => {
+      changableSubscriptionCallback();
+      return subscribe(state.changable);
+    });
+    storm.subscribe((state, subscribe) => {
+      nonChangableSubscriptionCallback();
+      return subscribe(state.nonChangable);
+    });
 
     storm.publish(prev => ({ ...prev, changable: !prev.changable }));
 
-    expect(changableSubscriptionCallback).toBeCalledTimes(1);
-    expect(nonChangableSubscriptionCallback).toBeCalledTimes(0);
+    expect(changableSubscriptionCallback).toBeCalledTimes(2);
+    expect(nonChangableSubscriptionCallback).toBeCalledTimes(1);
   });
 
   test('subscribe must fire on any fragment change', () => {
@@ -62,11 +64,14 @@ describe('Creating a storm', () => {
     const storm = createStorm(initialState);
     const callback = jest.fn();
 
-    storm.subscribe(callback);
+    storm.subscribe((state, subscribe) => {
+      callback(state);
+      return subscribe(state);
+    });
     storm.publish(prev => ({ ...prev, ...finalState }));
 
-    expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith({ ...initialState, ...finalState }, defaultPublishConfigs);
+    expect(callback).toBeCalledTimes(2);
+    expect(callback).lastCalledWith({ ...initialState, ...finalState });
   });
 
   test('publish method must update single information unit', () => {
@@ -81,22 +86,22 @@ describe('Creating a storm', () => {
     const storm = createStorm(initialState);
     storm.publish(fragment);
 
-    expect(storm.getState()).toEqual(fragment);
+    expect(storm.getState()).toEqual({ ...initialState, ...fragment});
   });
 
-  test('publish method must update the storm with async function', async () => {
-    const initialValue = { type: 'sync' };
-    const finalValue = { type: 'async' };
-    const storm = createStorm(initialValue);
-    const waitTime = 1000;
-    const callback = () => {
-      return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
-    }
+  // test('publish method must update the storm with async function', async () => {
+  //   const initialValue = { type: 'sync' };
+  //   const finalValue = { type: 'async' };
+  //   const storm = createStorm(initialValue);
+  //   const waitTime = 1000;
+  //   const callback = () => {
+  //     return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
+  //   }
 
-    await storm.publish(callback);
+  //   await storm.publish(callback);
 
-    expect(storm.getState()).toEqual(finalValue);
-  });
+  //   expect(storm.getState()).toEqual(finalValue);
+  // });
 
   test('publish method must update the storm by multiple values', () => {
     const initialState = {
@@ -141,8 +146,14 @@ describe('Creating a storm', () => {
     const nameSubscriber = jest.fn();
 
     const storm = createStorm(initialState);
-    storm.models.user.subscribe(userSubscriber);
-    storm.models.user.models.name.subscribe(nameSubscriber);
+    storm.subscribe((state, subscribe) => {
+      userSubscriber();
+      return subscribe(state.user)
+    });
+    storm.subscribe((state, subscribe) => {
+      nameSubscriber();
+      return subscribe(state.user.name);
+    });
 
     storm.publish({
       user: {
@@ -150,8 +161,8 @@ describe('Creating a storm', () => {
       },
     });
 
-    expect(userSubscriber).toBeCalledTimes(1);
-    expect(nameSubscriber).toBeCalledTimes(1);
+    expect(userSubscriber).toBeCalledTimes(2);
+    expect(nameSubscriber).toBeCalledTimes(2);
   });
 
   test('Nested state updates must not fire additional subscription functions', () => {
@@ -169,8 +180,14 @@ describe('Creating a storm', () => {
     const nameSubscriber = jest.fn();
 
     const storm = createStorm(initialState);
-    storm.models.user.models.age.subscribe(ageSubscriber);
-    storm.models.user.models.name.subscribe(nameSubscriber);
+    storm.subscribe((state, subscribe) => {
+      ageSubscriber();
+      return subscribe(state.user.age);
+    });
+    storm.subscribe((state, subscribe) => {
+      nameSubscriber();
+      return subscribe(state.user.name);
+    });
 
     storm.publish({
       user: {
@@ -178,21 +195,21 @@ describe('Creating a storm', () => {
       },
     });
 
-    expect(ageSubscriber).toBeCalledTimes(0);
-    expect(nameSubscriber).toBeCalledTimes(1);
+    expect(ageSubscriber).toBeCalledTimes(1);
+    expect(nameSubscriber).toBeCalledTimes(2);
   });
 
   test('Nested state updates with array: publishing from storm', () => {
     const initialState = {
       layers: [{
-        name: 'Layer 1',
-        id: '1',
+        name: 'Layer 0',
+        id: '0',
         settings: {
           type: 'static',
         },
       },{
-        name: 'Layer 2',
-        id: '2',
+        name: 'Layer 1',
+        id: '1',
         settings: {
           type: 'static',
         },
@@ -206,19 +223,34 @@ describe('Creating a storm', () => {
 
     const storm = createStorm(initialState);
 
-    storm.models.layers.subscribe(subscriptionCallback);
-    storm.models.layers.models[0].subscribe(subscriptionCallbackFor0);
-    storm.models.layers.models[1].subscribe(subscriptionCallbackFor1);
-    storm.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
-    storm.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallback();
+      return subscribe(state.layers);
+    });
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallbackFor0();
+      return subscribe(state.layers[0]);
+    });
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallbackFor1();
+      return subscribe(state.layers[1]);
+    });
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallbackFor1Settings();
+      return subscribe(state.layers[1].settings);
+    });
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallbackFor1Id();
+      return subscribe(state.layers[1].id);
+    });
 
     storm.publish(prev => ({
       layers: prev.layers.map(layer =>
-        layer.id === '2'
+        layer.id === '1'
           ? {
             ...layer,
             settings: {
-              ...layer.xsettings,
+              ...layer.settings,
               type: 'dynamic',
             },
           }
@@ -226,56 +258,11 @@ describe('Creating a storm', () => {
       )
     }));
 
-    expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallbackFor0).toBeCalledTimes(0);
-    expect(subscriptionCallbackFor1).toBeCalledTimes(1);
-    expect(subscriptionCallbackFor1Id).toBeCalledTimes(0);
-    expect(subscriptionCallbackFor1Settings).toBeCalledTimes(1);
-  });
-
-  test('Nested state updates with array: publish from single model', () => {
-    const initialState = {
-      layers: [{
-        name: 'Layer 1',
-        id: '1',
-        settings: {
-          type: 'static',
-        },
-      },{
-        name: 'Layer 2',
-        id: '2',
-        settings: {
-          type: 'static',
-        },
-      },{
-        name: 'Layer 3',
-        id: '3',
-        settings: {
-          type: 'static',
-        },
-      }],
-    };
-    const subscriptionCallback = jest.fn();
-    const subscriptionCallbackFor0 = jest.fn();
-    const subscriptionCallbackFor1 = jest.fn();
-    const subscriptionCallbackFor1Id = jest.fn();
-    const subscriptionCallbackFor1Settings = jest.fn();
-
-    const storm = createStorm(initialState);
-
-    storm.models.layers.subscribe(subscriptionCallback);
-    storm.models.layers.models[0].subscribe(subscriptionCallbackFor0);
-    storm.models.layers.models[1].subscribe(subscriptionCallbackFor1);
-    storm.models.layers.models[1].models.settings.subscribe(subscriptionCallbackFor1Settings);
-    storm.models.layers.models[1].models.id.subscribe(subscriptionCallbackFor1Id);
-
-    storm.models.layers.models[1].models.settings.models.type.publish('dynamic');
-
-    expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallbackFor0).toBeCalledTimes(0);
-    expect(subscriptionCallbackFor1).toBeCalledTimes(1);
-    expect(subscriptionCallbackFor1Id).toBeCalledTimes(0);
-    expect(subscriptionCallbackFor1Settings).toBeCalledTimes(1);
+    expect(subscriptionCallback).toBeCalledTimes(2);
+    expect(subscriptionCallbackFor0).toBeCalledTimes(2);
+    expect(subscriptionCallbackFor1).toBeCalledTimes(2);
+    expect(subscriptionCallbackFor1Id).toBeCalledTimes(1);
+    expect(subscriptionCallbackFor1Settings).toBeCalledTimes(2);
   });
 
   test('updating arrays', () => {
@@ -290,11 +277,14 @@ describe('Creating a storm', () => {
     const subscriptionCallback = jest.fn();
 
     const storm = createStorm(initialState);
-    storm.models.users.subscribe(subscriptionCallback);
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallback();
+      return subscribe(state.users);
+    });
 
     storm.publish(finalState);
 
-    expect(subscriptionCallback).toBeCalledTimes(1);
+    expect(subscriptionCallback).toBeCalledTimes(2);
   });
 });
 
@@ -313,28 +303,37 @@ describe('storm array segment CRUD', () => {
 
     const subscriptionCallback = jest.fn();
     const storm = createStorm(initialState);
-    storm.models.users.subscribe(subscriptionCallback);
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallback(state);
+      return subscribe(state.users);
+    });
     storm.publish(intermediateState);
 
-    expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallback).lastCalledWith([], defaultPublishConfigs);
+    expect(subscriptionCallback).toBeCalledTimes(2);
+    expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual(intermediateState);
 
     storm.publish(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(3);
-    expect(subscriptionCallback).lastCalledWith([1, 2], defaultPublishConfigs);
+    expect(subscriptionCallback.mock.calls[2][0]).toStrictEqual(finalState);
 
     const firstItemSubscriptionCallback = jest.fn();
     const secondItemSubscriptionCallback = jest.fn();
-    storm.models.users.models[0].subscribe(firstItemSubscriptionCallback);
-    storm.models.users.models[1].subscribe(secondItemSubscriptionCallback);
+    storm.subscribe((state, subscribe) => {
+      firstItemSubscriptionCallback();
+      return subscribe(state.users[0]);
+    });
+    storm.subscribe((state, subscribe) => {
+      secondItemSubscriptionCallback();
+      return subscribe(state.users[1]);
+    });
 
     storm.publish({
       users: [110, 2]
     });
 
-    expect(secondItemSubscriptionCallback).toBeCalledTimes(0);
-    expect(firstItemSubscriptionCallback).toBeCalledTimes(1);
+    expect(secondItemSubscriptionCallback).toBeCalledTimes(2);
+    expect(firstItemSubscriptionCallback).toBeCalledTimes(2);
   });
 
   test('Reading an array', () => {
@@ -349,12 +348,15 @@ describe('storm array segment CRUD', () => {
     const updateItem = { name: 'Bob' };
     const subscriptionCallback = jest.fn();
     const storm = createStorm(initialState);
-    storm.models.users.subscribe(subscriptionCallback);
+    storm.subscribe((state, subscribe) => {
+      subscriptionCallback(state);
+      return subscribe(state.users);
+    });
 
     storm.publish(prev => ({ users: [...prev.users, updateItem] }));
 
-    expect(subscriptionCallback).toBeCalledTimes(1);
-    expect(subscriptionCallback).lastCalledWith([...initialState.users, updateItem], defaultPublishConfigs);
+    expect(subscriptionCallback).toBeCalledTimes(2);
+    expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual({ ...initialState, users: [ ...initialState.users, updateItem ] });
   });
 
   test('Deleting an array', () => {

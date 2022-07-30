@@ -60,9 +60,9 @@ With the store you can:
   **Creating a store**
 
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -72,9 +72,9 @@ With the store you can:
   ```
   **Updating the store information**
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -86,9 +86,9 @@ With the store you can:
   ```
   **Subscribe/unsubscribe to store changes**
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -106,9 +106,9 @@ With the store you can:
 
   **Deriving a state in the store**
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
     netSalary: ({ taxes, grossSalary }) => grossSalary * (100 - taxes) / 100,
@@ -126,9 +126,9 @@ With the store you can:
 
   **Accessing the models**
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -144,9 +144,9 @@ With the store you can:
   - a subscription
   - own publishment method
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -167,9 +167,9 @@ With the store you can:
   **Functional publish**.
   Updating the store may require having the store's previous state. For that purpose you can use the following:
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -185,9 +185,9 @@ With the store you can:
   **Asynchronous publish**
   For asynchronous events, it's also possible to `await` the publish process
   ```js
-  import { createStore } from 'event-storm';
+  import { createStorm } from 'event-storm';
 
-  const store = createStore({
+  const store = createStorm({
     taxes: 20,
     grossSalary: 100_000,
   });
@@ -278,9 +278,9 @@ With the store you can:
 - Middlewares
   **Middlewares are needed to intercept to publishing process, to capture some values**
     ```js
-    import { addMiddlewares, createStore } from 'event-storm';
+    import { addMiddlewares, createStorm } from 'event-storm';
 
-    const store = createStore({
+    const store = createStorm({
       taxes: 20,
       grossSalary: 100_000,
     });
@@ -295,9 +295,9 @@ With the store you can:
 - Store Persistence
 You can easly make your store any segment to be persisted by `persisted` function.
 ```js
-import { createStore, persisted } from 'event-storm';
+import { createStorm, persisted } from 'event-storm';
 
-const createPersistedStore = persisted(createStore)({
+const createPersistedStore = persisted(createStorm)({
   storageKey: 'some_store_key',
   beforeunload: state => ({
     users: state.users,
@@ -321,9 +321,9 @@ By default the `sessionStorage` is used to store the persisted data. To change t
 `permanent` property to `true`:
 
 ```js
-import { createStore, persisted } from 'event-storm';
+import { createStorm, persisted } from 'event-storm';
 
-const createPersistedStore = persisted(createStore)({
+const createPersistedStore = persisted(createStorm)({
   permanent: true,
   storageKey: 'some_store_key',
   beforeunload: state => ({

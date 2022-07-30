@@ -1,8 +1,7 @@
 import path from 'path';
 import copy from 'rollup-plugin-copy';
 import alias from '@rollup/plugin-alias';
-import gzipPlugin from 'rollup-plugin-gzip';
-// import { terser } from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
 
 const config = {
@@ -24,15 +23,7 @@ const config = {
       ],
     }),
     resolve(),
-    // terser({
-    //   toplevel: true,
-    //   compress: {
-    //     passes: 5,
-    //     unsafe: true,
-    //     pure_getters: true
-    //   },
-    // }),
-    gzipPlugin(),
+    terser(),
     copy({
       targets: [
         { src: './package.json', dest: './dist' },

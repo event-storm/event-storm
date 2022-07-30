@@ -52,7 +52,7 @@
     }
   },
   "lint-staged": {
-    "src/*.js": [
+    "*.js": [
       "yarn run lint"
     ]
   },
