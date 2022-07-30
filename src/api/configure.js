@@ -1,4 +1,4 @@
-import { isFunction, createDefault, noop, isBoolean } from 'utils';
+import { createDefault, noop } from 'utils';
 import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
 
 import { generateId } from './utils';
@@ -7,27 +7,13 @@ const createModel = (defaultData, configuration) => {
   const id = generateId();
 
   const event = registerEvent(id, defaultData, configuration);
-  let freezePublishConfigs = null;
-  let freezeTimes = 0;
 
   return {
     getState: () => event.lastState,
     publish: (data, options) => {
-      if (event.options.freeze) {
-        freezePublishConfigs = options;
-      }
       publish(id, data, { ...options });
     },
-    setOptions: configs => {
-      if (isBoolean(configs.freeze)) {
-        configs.freeze ? freezeTimes++ : freezeTimes--;
-      }
-      updateEvent(id, configs);
-      if (!freezeTimes && freezePublishConfigs !== null) {
-        publish(id, event.lastState, { ...(freezePublishConfigs || {}), force: true });
-        freezePublishConfigs = null;
-      }
-    },
+    setOptions: configs => updateEvent(id, configs),
     subscribe: (callback, options) => subscribe(id, callback, options),
   };
 }
@@ -38,15 +24,12 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   virtualEvent.options.models = models;
 
   const updateHandler = publishConfigs => {
-    if (virtualEvent.options.freeze) return;
     const nextState = virtualEvent.options.handler();
     
     const { lastState } = virtualEvent;
     virtualEvent.lastState = nextState;
-    virtualEvent.subscribers.forEach(({ callback, equalityFn }) => {
+    virtualEvent.subscribers.forEach(({ callback }) => {
       if (virtualEvent.options.fireDuplicates) return callback(nextState, publishConfigs);
-      
-      if (isFunction(equalityFn) && !equalityFn(nextState, lastState)) return callback(nextState, publishConfigs);
       
       if (nextState !== lastState) return callback(nextState, publishConfigs);
     });
@@ -63,7 +46,6 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
     subscribe: function(callback, options = {}) {
       options.needPrevious && callback(this.getState());
       !virtualEvent.subscribers.some(subscription => subscription.callback === callback) && virtualEvent.subscribers.push({
-        equalityFn: options.equalityFn,
         callback,
       });
       return () => {

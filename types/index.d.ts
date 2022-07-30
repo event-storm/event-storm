@@ -24,7 +24,6 @@ export interface IPersistConfiguration<T> {
 
 export interface ISubscriptionOptions<T> {
   needPrevious?: boolean;
-  equalityFn?: (prev: T, next: T) => boolean;
 }
 
 export interface IVirtualModelParams<T> extends IModelConfiguration {
@@ -39,22 +38,14 @@ export interface IModel<T, G extends IModelConfiguration = IModelConfiguration> 
   subscribe: (callback: (nextValue: T) => void, configuration?: ISubscriptionOptions<T>) => () => void;
 }
 
-export type IStormSubcription<T> = (key: keyof T, value: Values<T>, model: IModel<Values<T>>) => void;
+export type IStormSubcription<T> = (state: IStormState<T>, model: IModel<Values<T>>) => void;
 
 export interface IStorm<T> {
   getState: () => IStormState<T>;
   subscribe: (callback: IStormSubcription<T>) => () => void;
-  models: { [Property in keyof T]: IModel<T[Property] extends object ? IStorm<T[Property]> : T[Property]> };
   publish: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T> | Promise<Partial<T>>), configuration?: IModelConfiguration) => void | Promise<any>;
 }
 
-export function createSubStorm<T, G, K extends any>(
-  storm: IStorm<T>,
-  callback: (
-    state: IStormState<T>,
-    subscribe: (value: K) => K,
-  ) => G,
-): IModel<G, IVirtualModelConfiguration>;
 export function createModel<T>(value: T, configuration: IModelConfiguration): IModel<T>;
 export function createVirtualModel<T>(options: IVirtualModelParams<T>): IModel<T, IVirtualModelConfiguration>;
 
