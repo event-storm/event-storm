@@ -1,3 +1,5 @@
+import { produce, setAutoFreeze } from 'immer';
+
 import { isArray, isFunction, isObject, isUndefined } from 'utils';
 
 const mirror = _ => _;
@@ -6,6 +8,9 @@ const exact = fragment => {
   fragment?.[subscribe];
   return fragment;
 };
+// This is required to create a different proxy on top of internal state
+// https://immerjs.github.io/immer/freezing
+setAutoFreeze(false);
 
 const createProxyRecursive = (destination, sendPath, rootPath = '') => {
   const proxyObject = new Proxy(destination, {
@@ -16,7 +21,7 @@ const createProxyRecursive = (destination, sendPath, rootPath = '') => {
       }
       if (destination[prop] && isObject(destination[prop])) {
         return createProxyRecursive(
-          target[prop],
+          destination[prop],
           sendPath,
           `${rootPath}${isArray(target) ? `[${prop}]` : `${rootPath ? '.' : ''}${prop}`}`
         );
@@ -69,8 +74,9 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
 };
 
 const createStorm = defaultState => {
-  let lastState = JSON.parse(JSON.stringify(defaultState));
+  let lastState = defaultState;
   let subscribersTree = {};
+  let middlewares = [];
   return {
     getState: () => lastState,
     subscribe: callback => {
@@ -87,11 +93,22 @@ const createStorm = defaultState => {
           .filter(subscription => subscription !== callback);
       };
     },
-    // TODO: think of middlewares
-    publish: partialState => {
-      const nextState = isFunction(partialState) ? partialState(lastState) : partialState;
-      const updatePaths = mergeRecursive(lastState, nextState);
+    addMiddleware: middleware => {
+      middlewares.push(middleware);
+      return () => {
+        middlewares = middlewares.filter(installedMiddleware => installedMiddleware !== middleware);
+      }
+    },
+    publish: (partialState, configs) => {
+      let updatePaths;
+      const nextState = produce(lastState, draftState => {
+        const nextState = isFunction(partialState) ? partialState(draftState) : partialState;
+        updatePaths = mergeRecursive(draftState, nextState);
+      });
 
+      middlewares.forEach(middleware => middleware(nextState, lastState, configs));
+      lastState = nextState;
+      
       updatePaths.forEach(updatePath => {
         if (subscribersTree[updatePath]) {
           subscribersTree[updatePath].forEach(subscriber => {

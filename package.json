@@ -62,6 +62,6 @@
     }
   },
   "dependencies": {
-    "immer": "^9.0.12"
+    "immer": "^9.0.15"
   }
 }

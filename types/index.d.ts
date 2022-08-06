@@ -38,19 +38,20 @@ export interface IModel<T, G extends IModelConfiguration = IModelConfiguration> 
   subscribe: (callback: (nextValue: T) => void, configuration?: ISubscriptionOptions<T>) => () => void;
 }
 
-export type IStormSubcription<T> = (state: IStormState<T>, model: IModel<Values<T>>) => void;
+export type IStormSubcription<T, G = any> = (state: IStormState<T>, subscribe: (state: G) => G) => void;
+
+export type IStormMiddleware<T> = (nextState: IStormState<T>, prevState: IStormState<T>, configs: AnyObject) => void;
 
 export interface IStorm<T> {
   getState: () => IStormState<T>;
   subscribe: (callback: IStormSubcription<T>) => () => void;
-  publish: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T> | Promise<Partial<T>>), configuration?: IModelConfiguration) => void | Promise<any>;
+  addMiddleware: (middleware: IStormMiddleware) => () => void;
+  publish: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), configuration?: AnyObject) => void;
 }
 
 export function createModel<T>(value: T, configuration: IModelConfiguration): IModel<T>;
 export function createVirtualModel<T>(options: IVirtualModelParams<T>): IModel<T, IVirtualModelConfiguration>;
 
-export function addMiddlewares(modelsObject: Record<string, IModel<any>>): (...callbacks: Array<(prevValue: any, nextValue: any, options?: Record<string, any>) => void>) => void;
-
-export function createStorm<T extends AnyObject>(data: T, configuration?: IModelConfiguration): IStorm<T>;
+export function createStorm<T extends AnyObject>(data: T): IStorm<T>;
 
 export function persisted(stormCreator: typeof createStorm): <T>(configuration: IPersistConfiguration<T>) => typeof createStorm;

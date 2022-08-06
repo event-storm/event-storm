@@ -15,6 +15,6 @@ const isPromise = possiblePromise => !!possiblePromise && isFunction(possiblePro
 const isArray = options => Array.isArray(options);
 const isUndefined = value => typeof value === 'undefined';
 
-const isObject = options => typeof options === 'object' && options !== null;
+const isObject = options => typeof options === 'object' && options;
 
 export { isPromise, createDefault, noop, isFunction, isArray, isObject, isUndefined };
