@@ -34,7 +34,7 @@ export interface IVirtualModelParams<T> extends IModelConfiguration {
 export interface IModel<T, G extends IModelConfiguration = IModelConfiguration> {
   getState: () => T;
   setOptions: (configuration: G) => void;
-  publish: (value: T, configuration?: IModelConfiguration) => void | Promise<void>;
+  dispatch: (value: T, configuration?: IModelConfiguration) => void | Promise<void>;
   subscribe: (callback: (nextValue: T) => void, configuration?: ISubscriptionOptions<T>) => () => void;
 }
 
@@ -46,7 +46,7 @@ export interface IStorm<T> {
   getState: () => IStormState<T>;
   subscribe: (callback: IStormSubcription<T>) => () => void;
   addMiddleware: (middleware: IStormMiddleware) => () => void;
-  publish: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), configuration?: AnyObject) => void;
+  dispatch: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), configuration?: AnyObject) => void;
 }
 
 export function createModel<T>(value: T, configuration: IModelConfiguration): IModel<T>;

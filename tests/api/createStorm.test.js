@@ -7,7 +7,7 @@ describe('Creating a storm', () => {
       surname: 'Doe',
     });
 
-    expect(typeof storm.publish).toBe('function');
+    expect(typeof storm.dispatch).toBe('function');
     expect(typeof storm.getState).toBe('function');
     expect(typeof storm.subscribe).toBe('function');
   });
@@ -21,7 +21,7 @@ describe('Creating a storm', () => {
 
     expect(storm.getState()).toEqual(initialState);
 
-    storm.publish(prev => ({ ...prev, name: 'Jain', age: 34 }));
+    storm.dispatch(prev => ({ ...prev, name: 'Jain', age: 34 }));
 
     expect(storm.getState()).toEqual({
       age: 34,
@@ -33,7 +33,7 @@ describe('Creating a storm', () => {
     const initialState = { user: {} };
     const storm = createStorm(initialState);
 
-    storm.publish({ user: { age: 1 } });
+    storm.dispatch({ user: { age: 1 } });
 
     expect(storm.getState()).toEqual({ user: { age: 1 } });
   });
@@ -44,7 +44,7 @@ describe('Creating a storm', () => {
   //   };
   //   const storm = createStorm(initialState);
 
-  //   storm.publish({ user: [] });
+  //   storm.dispatch({ user: [] });
 
   //   expect(storm.getState()).toEqual({ user: [] });
   // });
@@ -69,7 +69,7 @@ describe('Creating a storm', () => {
       return subscribe(state.nonChangable);
     });
 
-    storm.publish(prev => ({ ...prev, changable: !prev.changable }));
+    storm.dispatch(prev => ({ ...prev, changable: !prev.changable }));
 
     expect(changableSubscriptionCallback).toBeCalledTimes(2);
     expect(nonChangableSubscriptionCallback).toBeCalledTimes(1);
@@ -88,13 +88,13 @@ describe('Creating a storm', () => {
       callback(state);
       return subscribe(state);
     });
-    storm.publish(prev => ({ ...prev, ...finalState }));
+    storm.dispatch(prev => ({ ...prev, ...finalState }));
 
     expect(callback).toBeCalledTimes(2);
     expect(callback).lastCalledWith({ ...initialState, ...finalState });
   });
 
-  test('publish method must update single information unit', () => {
+  test('dispatch method must update single information unit', () => {
     const initialState = {
       name: 'John',
       surname: null,
@@ -104,12 +104,12 @@ describe('Creating a storm', () => {
     }
 
     const storm = createStorm(initialState);
-    storm.publish(fragment);
+    storm.dispatch(fragment);
 
     expect(storm.getState()).toEqual({ ...initialState, ...fragment});
   });
 
-  // test('publish method must update the storm with async function', async () => {
+  // test('dispatch method must update the storm with async function', async () => {
   //   const initialValue = { type: 'sync' };
   //   const finalValue = { type: 'async' };
   //   const storm = createStorm(initialValue);
@@ -118,12 +118,12 @@ describe('Creating a storm', () => {
   //     return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
   //   }
 
-  //   await storm.publish(callback);
+  //   await storm.dispatch(callback);
 
   //   expect(storm.getState()).toEqual(finalValue);
   // });
 
-  test('publish method must update the storm by multiple values', () => {
+  test('dispatch method must update the storm by multiple values', () => {
     const initialState = {
       age: 21,
       name: 'John',
@@ -135,7 +135,7 @@ describe('Creating a storm', () => {
     }
 
     const storm = createStorm(initialState);
-    storm.publish(prev => ({ ...prev, ...fragment }));
+    storm.dispatch(prev => ({ ...prev, ...fragment }));
 
     expect(storm.getState()).toEqual({ ...initialState, ...fragment });
   });
@@ -175,7 +175,7 @@ describe('Creating a storm', () => {
       return subscribe(state.user.name);
     });
 
-    storm.publish({
+    storm.dispatch({
       user: {
         name: 'Alice',
       },
@@ -209,7 +209,7 @@ describe('Creating a storm', () => {
       return subscribe(state.user.name);
     });
 
-    storm.publish({
+    storm.dispatch({
       user: {
         name: 'Alice',
       },
@@ -219,7 +219,7 @@ describe('Creating a storm', () => {
     expect(nameSubscriber).toBeCalledTimes(2);
   });
 
-  test('Nested state updates with array: publishing from storm', () => {
+  test('Nested state updates with array: dispatching from storm', () => {
     const initialState = {
       layers: [{
         name: 'Layer 0',
@@ -264,7 +264,7 @@ describe('Creating a storm', () => {
       return subscribe(state.layers[1].id);
     });
 
-    storm.publish(prev => ({
+    storm.dispatch(prev => ({
       layers: prev.layers.map(layer =>
         layer.id === '1'
           ? {
@@ -302,7 +302,7 @@ describe('Creating a storm', () => {
       return subscribe(state.users);
     });
 
-    storm.publish(finalState);
+    storm.dispatch(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(2);
   });
@@ -327,12 +327,12 @@ describe('storm array segment CRUD', () => {
       subscriptionCallback(state);
       return subscribe(state.users);
     });
-    storm.publish(intermediateState);
+    storm.dispatch(intermediateState);
 
     expect(subscriptionCallback).toBeCalledTimes(2);
     expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual(intermediateState);
 
-    storm.publish(finalState);
+    storm.dispatch(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(3);
     expect(subscriptionCallback.mock.calls[2][0]).toStrictEqual(finalState);
@@ -348,7 +348,7 @@ describe('storm array segment CRUD', () => {
       return subscribe(state.users[1]);
     });
 
-    storm.publish({
+    storm.dispatch({
       users: [110, 2]
     });
 
@@ -368,7 +368,7 @@ describe('storm array segment CRUD', () => {
       return subscribe(state.users);
     });
 
-    storm.publish(prev => ({ users: [...prev.users, updateItem] }));
+    storm.dispatch(prev => ({ users: [...prev.users, updateItem] }));
 
     expect(subscriptionCallback).toBeCalledTimes(2);
     expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual({ ...initialState, users: [ ...initialState.users, updateItem ] });
@@ -387,7 +387,7 @@ describe('storm array segment CRUD', () => {
     });
     unsubscribe();
 
-    storm.publish(finalState);
+    storm.dispatch(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(1);
     expect(storm.getState()).toEqual(finalState);
@@ -400,7 +400,7 @@ describe('storm array segment CRUD', () => {
     const finalState = { users: [null] };
     const storm = createStorm(initialState);
 
-    storm.publish(finalState);
+    storm.dispatch(finalState);
 
     expect(storm.getState()).toEqual(finalState);
   });

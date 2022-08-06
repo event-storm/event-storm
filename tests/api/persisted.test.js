@@ -25,7 +25,7 @@ describe('Creating a persisted storm', () => {
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    storm.publish(fragment);
+    storm.dispatch(fragment);
 
     window.dispatchEvent(new Event("beforeunload"));
 
@@ -55,7 +55,7 @@ describe('Creating a persisted storm', () => {
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    storm.publish(prev => ({ ...prev, ...fragment }));
+    storm.dispatch(prev => ({ ...prev, ...fragment }));
 
     expect(storm.getState()).toEqual({ ...initialState, ...fragment });
 
@@ -96,7 +96,7 @@ describe('Creating a persisted storm', () => {
       beforeunload: state => ({ name: state.name }),
     })(initialState);
 
-    storm.publish(prev => ({ ...prev, ...fragment }));
+    storm.dispatch(prev => ({ ...prev, ...fragment }));
 
     expect(storm.getState()).toEqual({ ...initialState, ...fragment });
 

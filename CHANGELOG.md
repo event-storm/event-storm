@@ -100,7 +100,7 @@
 
 ### Bug Fixes
 
-* **store:** missing defualt state fragment crashes on publish ([07d1dbc](https://github.com/event-storm/event-storm/commit/07d1dbc891a21ff89d7353d8e8a580ac9c891895))
+* **store:** missing defualt state fragment crashes on dispatch ([07d1dbc](https://github.com/event-storm/event-storm/commit/07d1dbc891a21ff89d7353d8e8a580ac9c891895))
 
 
 
@@ -141,7 +141,7 @@
 
 ### Bug Fixes
 
-* **types:** types for store publish: functional publish is not type correct ([0a69a7d](https://github.com/event-storm/event-storm/commit/0a69a7d55d0a839deaf74f5863947e32d4b46299))
+* **types:** types for store dispatch: functional dispatch is not type correct ([0a69a7d](https://github.com/event-storm/event-storm/commit/0a69a7d55d0a839deaf74f5863947e32d4b46299))
 
 
 
@@ -206,7 +206,7 @@
 
 ### Features
 
-* **store:** adding async publish support ([c012b93](https://github.com/event-storm/event-storm/commit/c012b93894311541e2931e0938b20af8ea459f05))
+* **store:** adding async dispatch support ([c012b93](https://github.com/event-storm/event-storm/commit/c012b93894311541e2931e0938b20af8ea459f05))
 
 
 
@@ -251,7 +251,7 @@
 ### Features
 
 * **api:** create history ([edef680](https://github.com/event-storm/event-storm/commit/edef680eadaf05dfb5710e4f091b76a7e441b781))
-* **publishmodel:** async callback handling ([c8d88ac](https://github.com/event-storm/event-storm/commit/c8d88ac03d264d49c72b039f9903ffff4bde4485))
+* **dispatchmodel:** async callback handling ([c8d88ac](https://github.com/event-storm/event-storm/commit/c8d88ac03d264d49c72b039f9903ffff4bde4485))
 
 
 
@@ -260,7 +260,7 @@
 
 ### Features
 
-* **pubsub:** add middlewares hook into publishment process ([4cb3173](https://github.com/event-storm/event-storm/commit/4cb317304f085e4a96044881d15d66e47f5a9b32))
+* **pubsub:** add middlewares hook into dispatchment process ([4cb3173](https://github.com/event-storm/event-storm/commit/4cb317304f085e4a96044881d15d66e47f5a9b32))
 
 
 

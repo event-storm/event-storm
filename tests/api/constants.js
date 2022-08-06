@@ -1,3 +1,3 @@
-const defaultPublishConfigs = {};
+const defaultdispatchConfigs = {};
 
-export { defaultPublishConfigs };
+export { defaultdispatchConfigs };

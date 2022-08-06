@@ -1,4 +1,4 @@
-<a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/badge/npm-event--storm-brightgreen.svg"></a> <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/npm/v/event-storm.svg"></a> [![Publish](https://github.com/event-storm/event-storm/actions/workflows/publish.yml/badge.svg?branch=master)](https://github.com/event-storm/event-storm/actions/workflows/publish.yml) <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/bundlephobia/minzip/event-storm?style=plastic"> </a>
+<a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/badge/npm-event--storm-brightgreen.svg"></a> <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/npm/v/event-storm.svg"></a> [![dispatch](https://github.com/event-storm/event-storm/actions/workflows/dispatch.yml/badge.svg?branch=master)](https://github.com/event-storm/event-storm/actions/workflows/dispatch.yml) <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/bundlephobia/minzip/event-storm?style=plastic"> </a>
 
 # In memory event store
 
@@ -43,7 +43,7 @@ The library is suggesting a decentralized store with a single user interface as 
 ## Basic concepts
 
 The library consists of 2 parts: event store implementation and data model abstraction. The event store supports:
-- :star: publish/subscribe of models
+- :star: dispatch/subscribe of models
 - :star: not propagates on duplicate changes(configurable)
 - :boom: middlewares support
 - :zap: store persistence
@@ -78,10 +78,10 @@ With the store you can:
     taxes: 20,
     grossSalary: 100_000,
   });
-  store.publish({ taxes: 100 });
+  store.dispatch({ taxes: 100 });
   console.log(store.getState()); // { taxes: 100, grossSalary: 200_000 }
 
-  store.publish({ taxes: 150, grossSalary: 300_000 });
+  store.dispatch({ taxes: 150, grossSalary: 300_000 });
   console.log(store.getState()); // { taxes: 150, grossSalary: 300_000 }
   ```
   **Subscribe/unsubscribe to store changes**
@@ -97,11 +97,11 @@ With the store you can:
     console.log(key, nextValue, model); // "taxes" "100" ModelObject
   });
 
-  store.publish({ taxes: 100 });
+  store.dispatch({ taxes: 100 });
 
   subscription();
 
-  store.publish({ taxes: 70 }); // the handler will not be fired
+  store.dispatch({ taxes: 70 }); // the handler will not be fired
   ```
 
   **Deriving a state in the store**
@@ -116,7 +116,7 @@ With the store you can:
 
   console.log(store.getState().netSalary); // 80_000
 
-  store.publish({ taxes: 40 });
+  store.dispatch({ taxes: 40 });
 
   console.log(store.getState().netSalary); // 60_000
   ```
@@ -142,7 +142,7 @@ With the store you can:
   As mentioned above you can use the models independently. Each model will give:
   - an access to last state
   - a subscription
-  - own publishment method
+  - own dispatchment method
   ```js
   import { createStorm } from 'event-storm';
 
@@ -155,7 +155,7 @@ With the store you can:
 
   console.log(taxes.getState()); // 20;
 
-  taxes.publish(40);
+  taxes.dispatch(40);
 
   taxes.subscribe(nextValue => {
     console.log(nextValue); // 40
@@ -164,7 +164,7 @@ With the store you can:
   console.log(taxes.getState()); // 40;
   ```
 
-  **Functional publish**.
+  **Functional dispatch**.
   Updating the store may require having the store's previous state. For that purpose you can use the following:
   ```js
   import { createStorm } from 'event-storm';
@@ -174,7 +174,7 @@ With the store you can:
     grossSalary: 100_000,
   });
 
-  store.publish(prevState => ({
+  store.dispatch(prevState => ({
     ...prevState
     taxes: prevState.taxes + 10,
   }));
@@ -182,8 +182,8 @@ With the store you can:
   console.log(store.getState()); // { taxes: 30, grossSalary: 100_000 }
   ```
 
-  **Asynchronous publish**
-  For asynchronous events, it's also possible to `await` the publish process
+  **Asynchronous dispatch**
+  For asynchronous events, it's also possible to `await` the dispatch process
   ```js
   import { createStorm } from 'event-storm';
 
@@ -192,7 +192,7 @@ With the store you can:
     grossSalary: 100_000,
   });
 
-  await store.publish(async prevState => {
+  await store.dispatch(async prevState => {
     const promise = Promise.resolve().then(() => ({
       ...prevState
       taxes: prevState.taxes + 10,
@@ -202,7 +202,7 @@ With the store you can:
     return result;
   });
 
-  // some stuff after the store publish is done on async operation
+  // some stuff after the store dispatch is done on async operation
   console.log(store.getState()); // { taxes: 30, grossSalary: 100_000 }
   ```
 - Creating a model manually(source of truth)
@@ -231,15 +231,15 @@ With the store you can:
 
 
   /* As mentioned above the API is the same.
-   It's possible to make a functional and asynchronous publish process for a single model.
+   It's possible to make a functional and asynchronous dispatch process for a single model.
    */
-  popupModel.publish(false);
+  popupModel.dispatch(false);
 
   console.log(popupModel.getState()); // false
 
   subscription();
 
-  popupModel.publish(false); // the callback will not be fired
+  popupModel.dispatch(false); // the callback will not be fired
   ```
 - Model API with state derivation
   **createVirtualModel**
@@ -262,7 +262,7 @@ With the store you can:
     console.log(nextValue); // 10
   });
 
-  time.publish(1);
+  time.dispatch(1);
   ```
   The second argument is responsible for updates. Whenever any provided model is updated, the handler function will be triggered.
   This will also cause the subscribers update.
@@ -276,7 +276,7 @@ With the store you can:
     <code>virtualModel.setOptions({ models: [/* any models here */] })</code>
   </details>
 - Middlewares
-  **Middlewares are needed to intercept to publishing process, to capture some values**
+  **Middlewares are needed to intercept to dispatching process, to capture some values**
     ```js
     import { addMiddlewares, createStorm } from 'event-storm';
 

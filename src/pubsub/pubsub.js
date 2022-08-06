@@ -2,7 +2,7 @@ import { isPromise, isFunction } from 'utils';
 
 import { getEvent } from './events';
 
-const publish = async (event, valueSetter, { force, ...publishConfigs }) => {
+const dispatch = async (event, valueSetter, { force, ...dispatchConfigs }) => {
   const neededEvent = getEvent(event);
 
   const intermediateValue = isFunction(valueSetter) ? valueSetter(neededEvent.lastState) : valueSetter;
@@ -11,11 +11,11 @@ const publish = async (event, valueSetter, { force, ...publishConfigs }) => {
   const { lastState } = neededEvent;
   neededEvent.lastState = nextState;
 
-  const fireDuplicates = publishConfigs.fireDuplicates || neededEvent.options.fireDuplicates;
+  const fireDuplicates = dispatchConfigs.fireDuplicates || neededEvent.options.fireDuplicates;
   neededEvent.subscribers.forEach(({ callback }) => {
-    if (fireDuplicates || force) return callback(nextState, publishConfigs);
+    if (fireDuplicates || force) return callback(nextState, dispatchConfigs);
 
-    if (nextState !== lastState) return callback(nextState, publishConfigs);
+    if (nextState !== lastState) return callback(nextState, dispatchConfigs);
   });
 }
 
@@ -30,4 +30,4 @@ const subscribe = (event, callback, options = {}) => {
   }
 }
 
-export { publish, subscribe };
+export { dispatch, subscribe };

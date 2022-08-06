@@ -1,5 +1,5 @@
 import { createDefault, noop } from 'utils';
-import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
+import { registerEvent, updateEvent, subscribe, dispatch } from 'pubsub';
 
 import { generateId } from './utils';
 
@@ -10,8 +10,8 @@ const createModel = (defaultData, configuration) => {
 
   return {
     getState: () => event.lastState,
-    publish: (data, options) => {
-      publish(id, data, { ...options });
+    dispatch: (data, options) => {
+      dispatch(id, data, { ...options });
     },
     setOptions: configs => updateEvent(id, configs),
     subscribe: (callback, options) => subscribe(id, callback, options),
@@ -23,22 +23,22 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   virtualEvent.options.handler = handler;
   virtualEvent.options.models = models;
 
-  const updateHandler = publishConfigs => {
+  const updateHandler = dispatchConfigs => {
     const nextState = virtualEvent.options.handler();
     
     const { lastState } = virtualEvent;
     virtualEvent.lastState = nextState;
     virtualEvent.subscribers.forEach(({ callback }) => {
-      if (virtualEvent.options.fireDuplicates) return callback(nextState, publishConfigs);
+      if (virtualEvent.options.fireDuplicates) return callback(nextState, dispatchConfigs);
       
-      if (nextState !== lastState) return callback(nextState, publishConfigs);
+      if (nextState !== lastState) return callback(nextState, dispatchConfigs);
     });
   }
 
-  let subscriptions = models.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
+  let subscriptions = models.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
 
   return ({
-    publish: noop,
+    dispatch: noop,
     getState: () => {
       virtualEvent.lastState = virtualEvent.options.handler();
       return virtualEvent.lastState;
@@ -65,7 +65,7 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
       if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());
         virtualEvent.options.models = newModels;
-        subscriptions = newModels.map(model => model.subscribe((_, publishConfigs) => updateHandler(publishConfigs)));
+        subscriptions = newModels.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
       }
       virtualEvent.options.models.forEach(model => {
         model.setOptions(newOptions);

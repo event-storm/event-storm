@@ -6,7 +6,7 @@ describe('Adding a middleware', () => {
     const example = createModel('start');
 
     addMiddlewares({ example })(middleware);
-    example.publish('final');
+    example.dispatch('final');
 
     expect(middleware).toBeCalledTimes(1);
   });
@@ -18,7 +18,7 @@ describe('Adding a middleware', () => {
     const example = createModel('start');
 
     addMiddlewares({ example })(middleware1, middleware2);
-    example.publish('final');
+    example.dispatch('final');
 
     expect(middleware1).toBeCalledTimes(1);
     expect(middleware2).toBeCalledTimes(1);
@@ -34,7 +34,7 @@ describe('Adding a middleware', () => {
 
     addMiddlewares({ example })(middleware);
     example.subscribe(callback);
-    example.publish('final');
+    example.dispatch('final');
     expect(middleware).toBeCalledTimes(1);
   });
 
@@ -46,7 +46,7 @@ describe('Adding a middleware', () => {
     const example = createModel(initialValue);
 
     addMiddlewares({ example })(middleware);
-    example.publish(finalValue);
+    example.dispatch(finalValue);
 
     expect(middleware).lastCalledWith({ example: initialValue }, { example: finalValue }, modelOptions);
   });

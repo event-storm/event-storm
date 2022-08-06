@@ -99,7 +99,7 @@ const createStorm = defaultState => {
         middlewares = middlewares.filter(installedMiddleware => installedMiddleware !== middleware);
       }
     },
-    publish: (partialState, configs) => {
+    dispatch: (partialState, configs) => {
       let updatePaths;
       const nextState = produce(lastState, draftState => {
         const nextState = isFunction(partialState) ? partialState(draftState) : partialState;
