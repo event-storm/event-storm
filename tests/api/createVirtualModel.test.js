@@ -15,20 +15,6 @@ describe('Creating a Virtual Model', () => {
     expect(typeof virtualModel.getState).toBe('function');
     expect(typeof virtualModel.subscribe).toBe('function');
   });
-  test('dispatch method is doing nothing', () => {
-    const first = createModel('first');
-    const second = createModel('second');
-    const processor = jest.fn(() => {});
-
-    const virtualModel = createVirtualModel({ models: [first, second], handler: processor });
-
-    expect(processor).toBeCalledTimes(0);
-
-    virtualModel.dispatch('any value');
-
-    expect(processor).toBeCalledTimes(0);
-  });
-
   test('Unsubscribing must make the callback not fire anymore', () => {
     const value1 = 'Peter';
     const model1 = createModel(value1);
