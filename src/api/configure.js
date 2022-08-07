@@ -1,4 +1,4 @@
-import { createDefault, noop } from 'utils';
+import { createDefault } from 'utils';
 import { registerEvent, updateEvent, subscribe, dispatch } from 'pubsub';
 
 import { generateId } from './utils';
@@ -38,7 +38,6 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   let subscriptions = models.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
 
   return ({
-    dispatch: noop,
     getState: () => {
       virtualEvent.lastState = virtualEvent.options.handler();
       return virtualEvent.lastState;

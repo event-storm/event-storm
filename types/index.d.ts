@@ -7,16 +7,12 @@ export type AnyFunction = (...args: any) => any;
 export type IStormState<Type> = {
   [Property in keyof Type]: Type[Property];
 };
-export interface IModelConfiguration {
+export interface IModelOptions {
   fireDuplicates?: boolean;
   [key: string]: any;
 }
 
-export interface IVirtualModelConfiguration extends IModelConfiguration {
-  models?: IModel<any>[];
-}
-
-export interface IPersistConfiguration<T> {
+export interface IPersistOptions<T> {
   storageKey: string;
   beforeunload: (storm: IStormState<T>) => Partial<IStormState<T>>;
   permanent?: boolean,
@@ -26,16 +22,16 @@ export interface ISubscriptionOptions<T> {
   needPrevious?: boolean;
 }
 
-export interface IVirtualModelParams<T> extends IModelConfiguration {
+export interface IVirtualModelOptions<T> extends IModelOptions {
   handler: () => T;
   models: IModel<any>[];
 }
 
-export interface IModel<T, G extends IModelConfiguration = IModelConfiguration> {
+export interface IModel<T, G extends IModelOptions = IModelOptions> {
   getState: () => T;
-  setOptions: (configuration: G) => void;
-  dispatch: (value: T, configuration?: IModelConfiguration) => void | Promise<void>;
-  subscribe: (callback: (nextValue: T) => void, configuration?: ISubscriptionOptions<T>) => () => void;
+  setOptions: (options: G) => void;
+  dispatch: (value: T, options?: IModelOptions) => void | Promise<void>;
+  subscribe: (callback: (nextValue: T, options?: IModelOptions) => void, options?: ISubscriptionOptions<T>) => () => void;
 }
 
 export type IStormSubcription<T, G = any> = (state: IStormState<T>, subscribe: (state: G) => G) => void;
@@ -46,12 +42,12 @@ export interface IStorm<T> {
   getState: () => IStormState<T>;
   subscribe: (callback: IStormSubcription<T>) => () => void;
   addMiddleware: (middleware: IStormMiddleware) => () => void;
-  dispatch: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), configuration?: AnyObject) => void;
+  dispatch: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), options?: AnyObject) => void;
 }
 
-export function createModel<T>(value: T, configuration: IModelConfiguration): IModel<T>;
-export function createVirtualModel<T>(options: IVirtualModelParams<T>): IModel<T, IVirtualModelConfiguration>;
+export function createModel<T>(value: T, options: IModelOptions): IModel<T>;
+export function createVirtualModel<T>(options: IVirtualModelOptions<T>): Omit<IModel<T, IVirtualModelOptions>, 'dispatch'>;
 
 export function createStorm<T extends AnyObject>(data: T): IStorm<T>;
 
-export function persisted(stormCreator: typeof createStorm): <T>(configuration: IPersistConfiguration<T>) => typeof createStorm;
+export function persisted(stormCreator: typeof createStorm): <T>(options: IPersistOptions<T>) => typeof createStorm;
