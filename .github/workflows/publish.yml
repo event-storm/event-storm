@@ -2,7 +2,7 @@ name: dispatch
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [master, dev]
     paths:
       - 'src/*.js'
       - 'types/*.d.ts'
@@ -23,6 +23,9 @@ jobs:
         run: yarn run lint
       - name: Testing
         run: yarn run jest
+      - uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage
       - name: Generate changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2

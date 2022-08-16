@@ -79,7 +79,7 @@ const createStorm = defaultState => {
   let middlewares = [];
   return {
     getState: () => lastState,
-    subscribe: callback => {
+    subscribe: (callback = exact) => {
       let subscriptionPath;
       const proxyStore = createProxyRecursive(lastState, pathString => {
         subscriptionPath = pathString || 'default';

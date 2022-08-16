@@ -41,7 +41,7 @@ export type IStormMiddleware<T> = (nextState: IStormState<T>, prevState: IStormS
 export interface IStorm<T> {
   getState: () => IStormState<T>;
   subscribe: (callback: IStormSubcription<T>) => () => void;
-  addMiddleware: (middleware: IStormMiddleware) => () => void;
+  addMiddleware: (middleware: IStormMiddleware<T>) => () => void;
   dispatch: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), options?: AnyObject) => void;
 }
 
