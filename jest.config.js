@@ -39,7 +39,7 @@ module.exports = {
     'json',
     'text',
     'html-spa',
-  //   'lcov',
+    'lcov',
   //   'clover'
   ],
 

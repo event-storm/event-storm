@@ -22,7 +22,7 @@ jobs:
       - name: Linting
         run: yarn run lint
       - name: Testing
-        run: yarn run jest
+        run: yarn run jest --collectCoverage
       - uses: codecov/codecov-action@v3
         with:
           directory: ./coverage
