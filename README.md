@@ -1,4 +1,5 @@
 <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/badge/npm-event--storm-brightgreen.svg"></a> <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/npm/v/event-storm.svg"></a> [![publish](https://github.com/event-storm/event-storm/actions/workflows/publish.yml/badge.svg?branch=master)](https://github.com/event-storm/event-storm/actions/workflows/dispatch.yml) <a href="https://www.npmjs.com/package/event-storm"><img src="https://img.shields.io/bundlephobia/minzip/event-storm?style=plastic"> </a>
+[![codecov](https://codecov.io/gh/event-storm/event-storm/branch/dev/graph/badge.svg?token=1AT35BHEIC)](https://codecov.io/gh/event-storm/event-storm)
 
 # In memory event store
 
