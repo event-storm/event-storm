@@ -22,5 +22,3 @@ jobs:
       - uses: codecov/codecov-action@v3
         with:
           directory: ./coverage
-      - uses: actions/checkout@v1
-      - uses: ArtiomTr/jest-coverage-report-action@v2
