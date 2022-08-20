@@ -1,4 +1,4 @@
 {
-  "dispatchDirectory": "dist",
+  "publishDirectory": "dist",
   "sandboxes": ["vanilla", "vanilla-typescript-vanilla-ts"]
 }
