@@ -2223,24 +2223,24 @@ commander@^6.2.0:
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
 
 commitizen@^4.0.3:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/commitizen/-/commitizen-4.2.5.tgz#48e5a5c28334c6e8ed845cc24fc9f072efd3961e"
-  integrity sha512-9sXju8Qrz1B4Tw7kC5KhnvwYQN88qs2zbiB8oyMsnXZyJ24PPGiNM3nHr73d32dnE3i8VJEXddBFIbOgYSEXtQ==
+version "4.2.3"
+  resolved "https://registry.yarnpkg.com/commitizen/-/commitizen-4.2.3.tgz#088d0ef72500240d331b11e02e288223667c1475"
+  integrity sha512-pYlYEng7XMV2TW4xtjDKBGqeJ0Teq2zyRSx2S3Ml1XAplHSlJZK8vm1KdGclpMEZuGafbS5TeHXIVnHk8RWIzQ==
   dependencies:
-    cachedir "2.3.0"
-    cz-conventional-changelog "3.3.0"
+    cachedir "2.2.0"
+    cz-conventional-changelog "3.2.0"
     dedent "0.7.0"
-    detect-indent "6.1.0"
-    find-node-modules "^2.1.2"
+    detect-indent "6.0.0"
+    find-node-modules "2.0.0"
     find-root "1.1.0"
-    fs-extra "9.1.0"
-    glob "7.2.3"
-    inquirer "8.2.4"
+    fs-extra "8.1.0"
+    glob "7.1.4"
+    inquirer "6.5.2"
     is-utf8 "^0.2.1"
-    lodash "4.17.21"
-    minimist "1.2.6"
+    lodash "^4.17.20"
+    minimist "1.2.5"
     strip-bom "4.0.0"
-    strip-json-comments "3.1.1"
+    strip-json-comments "3.0.1"
 
 compare-func@^2.0.0:
   version "2.0.0"
