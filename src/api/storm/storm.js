@@ -106,7 +106,9 @@ const createStorm = defaultState => {
         updatePaths = mergeRecursive(draftState, nextState);
       });
 
-      middlewares.forEach(middleware => middleware(nextState, lastState, configs));
+      const args = [nextState, lastState];
+      !isUndefined(configs) && args.push(configs);
+      middlewares.forEach(middleware => middleware(...args));
       lastState = nextState;
       
       updatePaths.forEach(updatePath => {

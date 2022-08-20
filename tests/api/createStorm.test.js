@@ -306,6 +306,45 @@ describe('Creating a storm', () => {
 
     expect(subscriptionCallback).toBeCalledTimes(2);
   });
+
+  test('Middleware must receive the prev and next states of the store', () => {
+    const initialState = {
+      users: [],
+    };
+    const finalState = {
+      users: [{
+        name: 'Alice',
+      }],
+    };
+    const configs = {};
+    const middleware = jest.fn();
+
+    const storm = createStorm(initialState);
+    storm.addMiddleware(middleware);
+    storm.dispatch(finalState, configs);
+
+    expect(middleware).toBeCalledTimes(1);
+    expect(middleware).toHaveBeenCalledWith(finalState, initialState, configs);
+  })
+
+  test('After unsubscribe middleware must not receive any update', () => {
+    const initialState = {
+      users: [],
+    };
+    const finalState = {
+      users: [{
+        name: 'Alice',
+      }],
+    };
+    const middleware = jest.fn();
+
+    const storm = createStorm(initialState);
+    const unsubscribe = storm.addMiddleware(middleware);
+    unsubscribe();
+    storm.dispatch(finalState);
+
+    expect(middleware).toBeCalledTimes(0);
+  })
 });
 
 describe('storm array segment CRUD', () => {
