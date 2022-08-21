@@ -101,9 +101,9 @@ const createStorm = (defaultState, configs) => {
     },
     dispatch: (partialState, publishConfigs) => {
       let updatePaths;
+      const nextPatch = isFunction(partialState) ? partialState(lastState) : partialState;
       const nextState = produce(lastState, draftState => {
-        const nextState = isFunction(partialState) ? partialState(draftState) : partialState;
-        updatePaths = mergeRecursive(draftState, nextState, { ...configs, ...(publishConfigs || {})});
+        updatePaths = mergeRecursive(draftState, nextPatch, { ...configs, ...(publishConfigs || {})});
       });
 
       const args = [nextState, lastState];

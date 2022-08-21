@@ -443,4 +443,23 @@ describe('storm array segment CRUD', () => {
 
     expect(storm.getState()).toEqual(finalState);
   });
+
+  test('Adding an array item', () => {
+    const initialState = {
+      users: [],
+      activeId: 'some-id',
+    };
+    const finalState = { users: [{ name: 'Alice' }] };
+    const storm = createStorm(initialState);
+    const fn = jest.fn();
+    
+    storm.subscribe((state, subscribe) => {
+      fn();
+      subscribe(state.users);
+    });
+    storm.dispatch(finalState);
+
+    expect(storm.getState()).toEqual({ ...initialState, ...finalState });
+    expect(fn).toBeCalledTimes(2);
+  });
 });
