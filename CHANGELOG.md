@@ -1,3 +1,12 @@
+## [5.0.1](https://github.com/event-storm/event-storm/compare/v5.0.0...v5.0.1) (2022-08-21)
+
+
+### Bug Fixes
+
+* **storm:** multiple subscriptions at a time must not depend on order ([184d705](https://github.com/event-storm/event-storm/commit/184d7055a5f8a7a909de411f80ff4a9895d3f1fb))
+
+
+
 # [5.0.0](https://github.com/event-storm/event-storm/compare/v2.0.0...v5.0.0) (2022-08-21)
 
 
