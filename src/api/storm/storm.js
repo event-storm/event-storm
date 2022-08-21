@@ -36,7 +36,7 @@ const createProxyRecursive = (destination, sendPath, rootPath = '') => {
   return proxyObject;
 };
 
-const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
+const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '') => {
   if (isArray(state) && isArray(partialState)) {
     partialState.forEach((item, index) => {
       paths.push(`${rootPath}[${index}]`);
@@ -44,7 +44,7 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
         state[index] = item;
       } else {
         if (partialState[index]) {
-          return mergeRecursive(state[index], partialState[index], paths, `${rootPath}[${index}]`);
+          return mergeRecursive(state[index], partialState[index], configs, paths, `${rootPath}[${index}]`);
         } else {
           state[index] = partialState[index];
         }
@@ -58,14 +58,14 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
     if (!(key in state)) {
       paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
       state[key] = partialState[key];
-    } else if (isObject(partialState[key]) && partialState[key] && state[key] !== partialState[key]) {
+    } else if (isObject(partialState[key]) && partialState[key] && (configs.fireDuplicates || state[key] !== partialState[key])) {
       paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
       if (partialState[key] && state[key]) {
-        return mergeRecursive(state[key], partialState[key], paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
+        return mergeRecursive(state[key], partialState[key], configs, paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
       } else {
         state[key] = partialState[key];
       }
-    } else if (state[key] !== partialState[key]) {
+    } else if (configs.fireDuplicates || state[key] !== partialState[key]) {
       state[key] = partialState[key];
       paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
     }
@@ -73,7 +73,7 @@ const mergeRecursive = (state, partialState, paths = [], rootPath = '') => {
   return paths;
 };
 
-const createStorm = defaultState => {
+const createStorm = (defaultState, configs) => {
   let lastState = defaultState;
   let subscribersTree = {};
   let middlewares = [];
@@ -99,15 +99,15 @@ const createStorm = defaultState => {
         middlewares = middlewares.filter(installedMiddleware => installedMiddleware !== middleware);
       }
     },
-    dispatch: (partialState, configs) => {
+    dispatch: (partialState, publishConfigs) => {
       let updatePaths;
+      const nextPatch = isFunction(partialState) ? partialState(lastState) : partialState;
       const nextState = produce(lastState, draftState => {
-        const nextState = isFunction(partialState) ? partialState(draftState) : partialState;
-        updatePaths = mergeRecursive(draftState, nextState);
+        updatePaths = mergeRecursive(draftState, nextPatch, { ...configs, ...(publishConfigs || {})});
       });
 
       const args = [nextState, lastState];
-      !isUndefined(configs) && args.push(configs);
+      !isUndefined(publishConfigs) && args.push(publishConfigs);
       middlewares.forEach(middleware => middleware(...args));
       lastState = nextState;
       
