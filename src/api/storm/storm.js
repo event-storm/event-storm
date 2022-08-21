@@ -79,7 +79,7 @@ const createStorm = (defaultState, configs) => {
   let middlewares = [];
   return {
     getState: () => lastState,
-    subscribe: (callback = exact) => {
+    subscribe: callback => {
       let subscriptionPath;
       const proxyStore = createProxyRecursive(lastState, pathString => {
         subscriptionPath = pathString || 'default';
@@ -101,9 +101,9 @@ const createStorm = (defaultState, configs) => {
     },
     dispatch: (partialState, publishConfigs) => {
       let updatePaths;
-      const nextPatch = isFunction(partialState) ? partialState(lastState) : partialState;
       const nextState = produce(lastState, draftState => {
-        updatePaths = mergeRecursive(draftState, nextPatch, { ...configs, ...(publishConfigs || {})});
+        const nextState = isFunction(partialState) ? partialState(draftState) : partialState;
+        updatePaths = mergeRecursive(draftState, nextState, { ...configs, ...(publishConfigs || {})});
       });
 
       const args = [nextState, lastState];
