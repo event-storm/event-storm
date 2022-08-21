@@ -1,4 +1,4 @@
-# [3.0.0](https://github.com/event-storm/event-storm/compare/v2.0.0...v3.0.0) (2022-08-16)
+# [4.0.0](https://github.com/event-storm/event-storm/compare/v2.0.0...v4.0.0) (2022-08-21)
 
 
 ### Bug Fixes
@@ -7,9 +7,11 @@
 * **dependencies:** remove package-lock add to yarn ([99b9ce1](https://github.com/event-storm/event-storm/commit/99b9ce110ae8df989ff13520386b108747d6e874))
 * **deps:** remove pakage lock file ([8e7ef42](https://github.com/event-storm/event-storm/commit/8e7ef4230604ad4d3901597829cb93e78e1f2d7d))
 * **deps tree:** remove dependency section from the package json ([479d47f](https://github.com/event-storm/event-storm/commit/479d47f2b8f0492aed74f0a6fa7181df81fad259))
+* **docs:** Readme syntax issue ([962a9f8](https://github.com/event-storm/event-storm/commit/962a9f8e81e1b1db5c9714f37c82cb73d4660d31))
 * **env:** update node version ([d9dd9f3](https://github.com/event-storm/event-storm/commit/d9dd9f3a1af4ff7e45f198ad794c1560be0d98ef))
 * **eslint:** remove jest staff from linter config ([c1eac60](https://github.com/event-storm/event-storm/commit/c1eac6015de6693e27bebcc685ee762ca9813077))
 * **publishing:** fix the publish configuration ([356b534](https://github.com/event-storm/event-storm/commit/356b5342a96395709ab1e49a58acc9678b3d9d64))
+* **remove middlewares:** removing middlewares on models ([d9bea99](https://github.com/event-storm/event-storm/commit/d9bea99f5aa9f02de83fff44a4378b4b20e52bd9))
 * **storm:** select to fragment return value was wrong ([f4128f6](https://github.com/event-storm/event-storm/commit/f4128f6f665b128ae9e46f3d0d68931163d5787b))
 * **storm:** updating reported bugs regarding the middlewares ([602a6c4](https://github.com/event-storm/event-storm/commit/602a6c40f760d1b60776d1038aadd53cfd5e02f1))
 * **types:** gap between the source and the types is filled ([7c4f944](https://github.com/event-storm/event-storm/commit/7c4f944d7035fea98982550460e6ec04e5c070a1))
@@ -23,6 +25,7 @@
 * **models:** add custom equality function ([0a35375](https://github.com/event-storm/event-storm/commit/0a35375c08ee560f4ac8cb378e22ad6dda1b62e2))
 * **pubsub:** adding a check for duplicated subscriber callbacks ([49a746d](https://github.com/event-storm/event-storm/commit/49a746d7a106e8660944a20437944d976c768d7a))
 * **store:** changing the store creation strategy ([bf74687](https://github.com/event-storm/event-storm/commit/bf746876672c90b59a395a194f223b7c02663902))
+* **storm:** add creation configs support ([f4c4111](https://github.com/event-storm/event-storm/commit/f4c411108eb583c6897502eff9f5ed5f36ec6b23))
 * **storm:** adding value virtualization ([d996869](https://github.com/event-storm/event-storm/commit/d996869accf5f2ffcfd8ee5f455807692125452e))
 * **storm:** change storm implementation ([4b2e04e](https://github.com/event-storm/event-storm/commit/4b2e04e9cb7dc5856fb55f0dda98609f9b02db6c))
 * **storm:** fragmental selection of storm ([7f5bec8](https://github.com/event-storm/event-storm/commit/7f5bec8f0d10f8381a5120aa4e5e37163246dad9))
