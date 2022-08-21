@@ -11,11 +11,14 @@ jobs:
       - name: Use NodeJS
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Linting
         run: yarn run lint
       - name: Testing
-        run: yarn run jest
+        run: yarn run jest --collectCoverage
+      - uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage

@@ -1,3 +1,2 @@
-export { configure } from './logger';
-export { publish, subscribe } from './pubsub';
+export { dispatch, subscribe } from './pubsub';
 export { registerEvent, updateEvent } from './events';

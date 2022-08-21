@@ -1,6 +1,6 @@
 {
   "name": "event-storm",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "In memory event store",
   "main": "./index.js",
   "license": "MIT",
@@ -8,10 +8,11 @@
   "author": "artur93gev",
   "scripts": {
     "test": "NODE_ENV='production' jest",
+    "test:watch": "NODE_ENV='production' jest --watch",
     "bundle": "rollup -c",
     "lint": "eslint src/*.js",
     "build": "rimraf ./dist && yarn run bundle",
-    "publish-lib": "yarn run build && cd dist && yarn publish"
+    "dispatch-lib": "yarn run build && cd dist && yarn publish"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -50,7 +51,7 @@
     }
   },
   "lint-staged": {
-    "src/*.js": [
+    "*.js": [
       "yarn run lint"
     ]
   },
@@ -59,5 +60,8 @@
       "pre-commit": "lint-staged && yarn run jest",
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
+  },
+  "dependencies": {
+    "immer": "^9.0.15"
   }
 }
