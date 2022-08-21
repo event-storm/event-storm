@@ -1,4 +1,4 @@
-# [4.0.0](https://github.com/event-storm/event-storm/compare/v2.0.0...v4.0.0) (2022-08-21)
+# [5.0.0](https://github.com/event-storm/event-storm/compare/v2.0.0...v5.0.0) (2022-08-21)
 
 
 ### Bug Fixes
@@ -7,11 +7,13 @@
 * **dependencies:** remove package-lock add to yarn ([99b9ce1](https://github.com/event-storm/event-storm/commit/99b9ce110ae8df989ff13520386b108747d6e874))
 * **deps:** remove pakage lock file ([8e7ef42](https://github.com/event-storm/event-storm/commit/8e7ef4230604ad4d3901597829cb93e78e1f2d7d))
 * **deps tree:** remove dependency section from the package json ([479d47f](https://github.com/event-storm/event-storm/commit/479d47f2b8f0492aed74f0a6fa7181df81fad259))
+* **dispatch:** updater fix ([758ef07](https://github.com/event-storm/event-storm/commit/758ef071aaf53a90f1fedb7d7da708c5e0706b3b))
 * **docs:** Readme syntax issue ([962a9f8](https://github.com/event-storm/event-storm/commit/962a9f8e81e1b1db5c9714f37c82cb73d4660d31))
 * **env:** update node version ([d9dd9f3](https://github.com/event-storm/event-storm/commit/d9dd9f3a1af4ff7e45f198ad794c1560be0d98ef))
 * **eslint:** remove jest staff from linter config ([c1eac60](https://github.com/event-storm/event-storm/commit/c1eac6015de6693e27bebcc685ee762ca9813077))
 * **publishing:** fix the publish configuration ([356b534](https://github.com/event-storm/event-storm/commit/356b5342a96395709ab1e49a58acc9678b3d9d64))
 * **remove middlewares:** removing middlewares on models ([d9bea99](https://github.com/event-storm/event-storm/commit/d9bea99f5aa9f02de83fff44a4378b4b20e52bd9))
+* **storm:** hide the proxy object ([0923ad0](https://github.com/event-storm/event-storm/commit/0923ad096b01513158bcc0f6672d7f360efe6f5a))
 * **storm:** select to fragment return value was wrong ([f4128f6](https://github.com/event-storm/event-storm/commit/f4128f6f665b128ae9e46f3d0d68931163d5787b))
 * **storm:** updating reported bugs regarding the middlewares ([602a6c4](https://github.com/event-storm/event-storm/commit/602a6c40f760d1b60776d1038aadd53cfd5e02f1))
 * **types:** gap between the source and the types is filled ([7c4f944](https://github.com/event-storm/event-storm/commit/7c4f944d7035fea98982550460e6ec04e5c070a1))
