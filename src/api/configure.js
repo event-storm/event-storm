@@ -1,58 +1,80 @@
-import { isEqual, createDefault, noop, isDefault } from 'utils';
-import { registerEvent, updateEvent, subscribe, publish } from 'pubsub';
+import { createDefault, isDefaultState } from 'utils';
+import { registerEvent, updateEvent, subscribe, dispatch } from 'pubsub';
 
-import { generateId, collectState } from './utils';
+import { generateId } from './utils';
 
-const createModel = (defaultData, options) => {
-  const event = generateId();
+const createModel = (defaultData, configuration) => {
+  const id = generateId();
 
-  const model = registerEvent(event, defaultData, options);
+  const event = registerEvent(id, defaultData, configuration);
 
   return {
-    getState: () => model.lastState,
-    publish: (data, options) => publish(event, data, { ...options }),
-    setOptions: options => updateEvent(event, options),
-    subscribe: (callback, needPrevious) => subscribe(event, callback, needPrevious),
+    getState: () => event.lastState,
+    dispatch: (data, options) => {
+      dispatch(id, data, { ...options });
+    },
+    setOptions: configs => updateEvent(id, configs),
+    subscribe: (callback, options) => subscribe(id, callback, options),
   };
 }
 
-const createVirtualModel = (handler, { models = [], ...options } = {}) => {
+const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   const virtualEvent = createDefault({ options });
+  virtualEvent.options.handler = handler;
+  virtualEvent.options.models = models;
 
-  const updateHandler = neededModels => {
-    const nextState = handler();
-    if (virtualEvent.options.fireDuplcates || !isEqual(nextState, virtualEvent.lastState)) {
-      virtualEvent.lastState = nextState;
-      virtualEvent.subscribers.forEach(subscriber => subscriber(virtualEvent.lastState));
-    }
+  const getModelsState = () => virtualEvent.options.models.map(model => model.getState());
+  
+  const updateHandler = dispatchConfigs => {
+    const nextState = virtualEvent.options.handler(...getModelsState());
+    
+    const { lastState } = virtualEvent;
+    virtualEvent.lastState = nextState;
+    virtualEvent.subscribers.forEach(({ callback }) => {
+      if (virtualEvent.options.fireDuplicates) return callback(nextState, dispatchConfigs);
+      
+      if (nextState !== lastState) return callback(nextState, dispatchConfigs);
+    });
   }
 
-  let subscriptions = models.map(model => model.subscribe(() => updateHandler(models)));
+  let subscriptions = models.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
+  let needToCalculate = false;
 
   return ({
-    publish: noop,
     getState: () => {
-      if (isDefault(virtualEvent.lastState)) {
-        virtualEvent.lastState = handler();
+      if (needToCalculate || isDefaultState(virtualEvent.lastState)) {
+        virtualEvent.lastState = virtualEvent.options.handler(...getModelsState());
       }
       return virtualEvent.lastState;
     },
-    subscribe: (callback, needPrevious) => {
-      needPrevious && callback(virtualEvent.lastState);
-      virtualEvent.subscribers.push(callback);
+    subscribe: function(callback, options = {}) {
+      options.needPrevious && callback(this.getState());
+      !virtualEvent.subscribers.some(subscription => subscription.callback === callback) && virtualEvent.subscribers.push({
+        callback,
+      });
       return () => {
-        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscriber => subscriber !== callback);
+        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscription => subscription.callback !== callback);
       }
     },
     setOptions: ({
-      models: newModels = [],
+      models: newModels,
+      handler: newHandler = virtualEvent.options.handler,
       ...newOptions
     }) => {
-      virtualEvent.options = { ...virtualEvent.options, ...newOptions };
-      if (newModels.length) {
+      virtualEvent.options = {
+        ...virtualEvent.options,
+        ...newOptions,
+        handler: newHandler
+      };
+      if (newModels) {
         subscriptions.map(unsubscribe => unsubscribe());
-        subscriptions = newModels.map(model => model.subscribe(() => updateHandler(newModels)));
+        virtualEvent.options.models = newModels;
+        subscriptions = newModels.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
+        needToCalculate = true;
       }
+      virtualEvent.options.models.forEach(model => {
+        model.setOptions(newOptions);
+      });
     }
   });
 }

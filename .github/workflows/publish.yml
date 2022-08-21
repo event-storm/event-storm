@@ -1,4 +1,4 @@
-name: Publish
+name: dispatch
 on:
   workflow_dispatch:
   push:
@@ -15,14 +15,17 @@ jobs:
       - name: Use NodeJS
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Linting
         run: yarn run lint
       - name: Testing
-        run: yarn run jest
+        run: yarn run jest --collectCoverage
+      - uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage
       - name: Generate changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v2
@@ -32,8 +35,8 @@ jobs:
           output-file: 'CHANGELOG.md'
           release-count: '0'
           package-json: './package.json'
-      - name: Publish to npm
-        run: yarn run publish-lib
+      - name: dispatch to npm
+        run: yarn run dispatch-lib
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create release

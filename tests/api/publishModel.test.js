@@ -1,6 +1,8 @@
 import { createModel } from 'src';
 
-describe('Publishing a Model', () => {
+import { defaultdispatchConfigs } from './constants';
+
+describe('dispatching a Model', () => {
 
   test('model must be updated(simple value)', () => {
     const initalValue = [];
@@ -11,10 +13,10 @@ describe('Publishing a Model', () => {
     expect(model.getState()).toBe(initalValue);
 
     model.subscribe(callback);
-    model.publish(nextValue);
+    model.dispatch(nextValue);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue, {});
+    expect(callback).lastCalledWith(nextValue, defaultdispatchConfigs);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -24,17 +26,17 @@ describe('Publishing a Model', () => {
     const nextValue = 10;
     const model = createModel(initalValue);
     const callback = jest.fn();
-    const publisher = jest.fn(() => nextValue);
+    const dispatcher = jest.fn(() => nextValue);
 
     expect(model.getState()).toBe(initalValue);
 
     model.subscribe(callback);
-    model.publish(publisher);
+    model.dispatch(dispatcher);
 
     expect(callback).toBeCalledTimes(1);
-    expect(callback).lastCalledWith(nextValue, {});
-    expect(publisher).toBeCalledTimes(1);
-    expect(publisher).toReturnWith(nextValue);
+    expect(callback).lastCalledWith(nextValue, defaultdispatchConfigs);
+    expect(dispatcher).toBeCalledTimes(1);
+    expect(dispatcher).toReturnWith(nextValue);
 
     expect(model.getState()).toBe(nextValue);
   });
@@ -44,7 +46,7 @@ describe('Publishing a Model', () => {
     const model = createModel(initialValue);
     const callback = jest.fn();
 
-    model.publish(callback);
+    model.dispatch(callback);
 
     expect(callback).toBeCalledTimes(1);
     expect(callback).lastCalledWith(initialValue);
@@ -59,7 +61,7 @@ describe('Publishing a Model', () => {
       return new Promise(resolve => setTimeout(() => resolve(finalValue), waitTime));
     }
 
-    model.publish(callback);
+    model.dispatch(callback);
     await callback();
 
     expect(model.getState()).toBe(finalValue);

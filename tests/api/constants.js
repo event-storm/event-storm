@@ -1,0 +1,3 @@
+const defaultdispatchConfigs = {};
+
+export { defaultdispatchConfigs };

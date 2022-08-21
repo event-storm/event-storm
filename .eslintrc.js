@@ -3,7 +3,7 @@ module.exports = {
     "node": true,
     "commonjs": true,
     "browser": true,
-    "es2021": true
+    "es2021": true,
   },
   "extends": "eslint:recommended",
   "parserOptions": {
@@ -11,5 +11,6 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
+    "no-prototype-builtins": 0,
   }
 };
