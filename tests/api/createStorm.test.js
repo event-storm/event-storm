@@ -456,6 +456,7 @@ describe('storm array segment CRUD', () => {
     storm.subscribe((state, subscribe) => {
       fn();
       subscribe(state.users);
+      subscribe(state.activeId);
     });
     storm.dispatch(finalState);
 

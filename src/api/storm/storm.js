@@ -80,17 +80,24 @@ const createStorm = (defaultState, configs) => {
   return {
     getState: () => lastState,
     subscribe: callback => {
-      let subscriptionPath;
+      let subscriptionPaths = new Set();
       const proxyStore = createProxyRecursive(lastState, pathString => {
-        subscriptionPath = pathString || 'default';
+        pathString && subscriptionPaths.add(pathString);
       });
       callback(proxyStore, exact);
 
-      subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath] || [];
-      subscribersTree[subscriptionPath].push(callback);
+      !subscriptionPaths.size && subscriptionPaths.add('default');
+
+      subscriptionPaths.forEach(subscriptionPath => {
+        subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath] || [];
+        subscribersTree[subscriptionPath].push(callback);
+      });
+
       return () => {
-        subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath]
-          .filter(subscription => subscription !== callback);
+        subscriptionPaths.forEach(subscriptionPath => {
+          subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath]
+            .filter(subscription => subscription !== callback);
+        });
       };
     },
     addMiddleware: middleware => {
