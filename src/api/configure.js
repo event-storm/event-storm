@@ -1,4 +1,4 @@
-import { createDefault } from 'utils';
+import { createDefault, isDefaultState } from 'utils';
 import { registerEvent, updateEvent, subscribe, dispatch } from 'pubsub';
 
 import { generateId } from './utils';
@@ -23,8 +23,10 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   virtualEvent.options.handler = handler;
   virtualEvent.options.models = models;
 
+  const getModelsState = () => virtualEvent.options.models.map(model => model.getState());
+  
   const updateHandler = dispatchConfigs => {
-    const nextState = virtualEvent.options.handler();
+    const nextState = virtualEvent.options.handler(...getModelsState());
     
     const { lastState } = virtualEvent;
     virtualEvent.lastState = nextState;
@@ -36,10 +38,13 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
   }
 
   let subscriptions = models.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
+  let needToCalculate = false;
 
   return ({
     getState: () => {
-      virtualEvent.lastState = virtualEvent.options.handler();
+      if (needToCalculate || isDefaultState(virtualEvent.lastState)) {
+        virtualEvent.lastState = virtualEvent.options.handler(...getModelsState());
+      }
       return virtualEvent.lastState;
     },
     subscribe: function(callback, options = {}) {
@@ -65,6 +70,7 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
         subscriptions.map(unsubscribe => unsubscribe());
         virtualEvent.options.models = newModels;
         subscriptions = newModels.map(model => model.subscribe((_, dispatchConfigs) => updateHandler(dispatchConfigs)));
+        needToCalculate = true;
       }
       virtualEvent.options.models.forEach(model => {
         model.setOptions(newOptions);

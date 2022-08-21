@@ -10,11 +10,14 @@ const noop = () => {};
 
 const isFunction = fn => typeof fn === 'function';
 
-const isPromise = possiblePromise => !!possiblePromise && isFunction(possiblePromise.then);
-
 const isArray = options => Array.isArray(options);
+
 const isUndefined = value => typeof value === 'undefined';
 
+export const isDefaultState = state => state === defaultState;
+
 const isObject = options => typeof options === 'object' && options;
+
+const isPromise = possiblePromise => !!possiblePromise && isFunction(possiblePromise.then);
 
 export { isPromise, createDefault, noop, isFunction, isArray, isObject, isUndefined };

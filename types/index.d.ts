@@ -22,9 +22,10 @@ export interface ISubscriptionOptions<T> {
   needPrevious?: boolean;
 }
 
-export interface IVirtualModelOptions<T> extends IModelOptions {
-  handler: () => T;
+export interface IVirtualModelOptions<T> {
+  handler: (...args: any[]) => T;
   models: IModel<any>[];
+  options: IModelOptions;
 }
 
 export interface IModel<T, G extends IModelOptions = IModelOptions> {

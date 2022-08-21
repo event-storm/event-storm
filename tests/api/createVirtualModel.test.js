@@ -24,7 +24,7 @@ describe('Creating a Virtual Model', () => {
     const model3 = createModel(value3);
     const virtual = createVirtualModel({
       models: [model1, model2, model3],
-      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+      handler: (model1State, model2State, model3State) => `${model1State} is alone in ${model3State.city} at his ${model2State}`,
     });
     const callback = jest.fn();
     const nextValue2 = 80;
@@ -43,7 +43,7 @@ describe('Creating a Virtual Model', () => {
     const fullname = createVirtualModel(
       {
         models: [name, surname],
-        handler: () => `${name.getState()} ${surname.getState()}`,
+        handler: (nameState, surnameState) => `${nameState} ${surnameState}`,
       },
     );
 
@@ -55,7 +55,7 @@ describe('Creating a Virtual Model', () => {
     const taxes = createModel(20);
     const netSalary = createVirtualModel({
       models: [grossSalary, taxes],
-      handler: () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      handler: (grossSalaryState, taxesState) => grossSalaryState * (100 - taxesState) / 100,
     });
 
     expect(netSalary.getState()).toBe(80_000);
@@ -65,12 +65,29 @@ describe('Creating a Virtual Model', () => {
     expect(netSalary.getState()).toBe(160_000);
   });
 
+  test('It must be possible to change the models during runtime', () => {
+    const width = createModel(100);
+    const height = createModel(200);
+    const sqaure = createVirtualModel({
+      models: [width, height],
+      handler: (widthState, heightState) => widthState * heightState,
+    });
+
+    expect(sqaure.getState()).toBe(20_000);
+
+    const width2 = createModel(500);
+    const height2 = createModel(200);
+    sqaure.setOptions({ models: [width2, height2] });
+
+    expect(sqaure.getState()).toBe(100_000);
+  });
+
   test('State must be updated after dispatchment(by function)', () => {
     const grossSalary = createModel(100_000);
     const taxes = createModel(20);
     const netSalary = createVirtualModel({
       models: [grossSalary, taxes],
-      handler: () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      handler: (grossSalaryState, taxesState) => grossSalaryState * (100 - taxesState) / 100,
     });
 
     expect(netSalary.getState()).toBe(80_000);
@@ -89,7 +106,7 @@ describe('Creating a Virtual Model', () => {
     const model3 = createModel(value3);
     const virtual = createVirtualModel({
       models: [model1, model2, model3],
-      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+      handler: (model1State, model2State, model3State) => `${model1State} is alone in ${model3State.city} at his ${model2State}`,
     });
     const callback = jest.fn();
     const nextValue2 = 80;
@@ -116,7 +133,7 @@ describe('Creating a Virtual Model', () => {
     const model3 = createModel(value3);
     const virtual = createVirtualModel({
       models: [model1, model2, model3],
-      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+      handler: (model1State, model2State, model3State) => `${model1State} is alone in ${model3State.city} at his ${model2State}`,
     });
     const callback = jest.fn();
 
@@ -135,7 +152,7 @@ describe('Creating a Virtual Model', () => {
     const model3 = createModel(value3);
     const virtual = createVirtualModel({
       models: [model1, model2, model3],
-      handler: () => `${model1.getState()} is alone in ${model3.getState().city} at his ${model2.getState()}`,
+      handler: (model1State, model2State, model3State) => `${model1State} is alone in ${model3State.city} at his ${model2State}`,
     });
     const callback = jest.fn();
 
@@ -153,12 +170,12 @@ describe('Creating a Virtual Model', () => {
     const taxes = createModel(20);
     const netSalary = createVirtualModel({
       models: [grossSalary, taxes],
-      handler: () => grossSalary.getState() * (100 - taxes.getState()) / 100,
+      handler: (grossSalaryState, taxesState) => grossSalaryState * (100 - taxesState) / 100,
     });
     const euroRate = createModel(0.8);
     const netSalaryInEuros = createVirtualModel({
       models: [netSalary, euroRate],
-      handler: () => euroRate.getState() * netSalary.getState(),
+      handler: (netSalaryState, euroState) => euroState * netSalaryState,
     });
     const callback = jest.fn();
 
@@ -172,20 +189,5 @@ describe('Creating a Virtual Model', () => {
 
     expect(callback).toBeCalledTimes(2);
     expect(callback).lastCalledWith(30_000, defaultdispatchConfigs);
-  });
-
-  test('changing virtual models dependency models', () => {
-    const grossSalary = createModel(100_000);
-    const taxes = createModel(20);
-    const netSalary = createVirtualModel({
-      handler: () => grossSalary.getState() * (100 - taxes.getState()) / 100,
-    });
-
-    expect(netSalary.getState()).toBe(80_000);
-
-    netSalary.setOptions({ models: [grossSalary] });
-    grossSalary.dispatch(200_000);
-
-    expect(netSalary.getState()).toBe(160_000);
   });
 });
