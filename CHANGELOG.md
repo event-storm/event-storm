@@ -1,3 +1,12 @@
+## [5.0.3](https://github.com/event-storm/event-storm/compare/v5.0.2...v5.0.3) (2022-08-22)
+
+
+### Bug Fixes
+
+* **types:** createModel must have optional types ([45c9c25](https://github.com/event-storm/event-storm/commit/45c9c25ea84777bf166352bde2c7b1ae76af7e1e))
+
+
+
 ## [5.0.2](https://github.com/event-storm/event-storm/compare/v5.0.1...v5.0.2) (2022-08-21)
 
 
