@@ -54,22 +54,29 @@ const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '')
     return paths;
   }
 
-  for (let key in partialState) {
-    if (!(key in state)) {
-      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
-      state[key] = partialState[key];
-    } else if (isObject(partialState[key]) && partialState[key] && (configs.fireDuplicates || state[key] !== partialState[key])) {
-      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
-      if (partialState[key] && state[key]) {
-        return mergeRecursive(state[key], partialState[key], configs, paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
-      } else {
+  if (isObject(partialState)) {
+    for (let key in partialState) {
+      if (!(key in state)) {
+        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
         state[key] = partialState[key];
+      } else if (isObject(partialState[key]) && partialState[key] && (configs.fireDuplicates || state[key] !== partialState[key])) {
+        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
+        if (partialState[key] && state[key]) {
+          return mergeRecursive(state[key], partialState[key], configs, paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
+        } else {
+          state[key] = partialState[key];
+        }
+      } else if (configs.fireDuplicates || state[key] !== partialState[key]) {
+        state[key] = partialState[key];
+        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
       }
-    } else if (configs.fireDuplicates || state[key] !== partialState[key]) {
-      state[key] = partialState[key];
-      paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
     }
+    return paths;
   }
+  if (configs.fireDuplicates || state !== partialState) {
+    state = partialState;
+  }
+
   return paths;
 };
 

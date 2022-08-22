@@ -38,16 +38,16 @@ describe('Creating a storm', () => {
     expect(storm.getState()).toEqual({ user: { age: 1 } });
   });
 
-  // test('Changing key data type must be possible', () => {
-  //   const initialState = {
-  //     user: {}
-  //   };
-  //   const storm = createStorm(initialState);
+  test('Changing key data type must be possible', () => {
+    const initialState = {
+      user: null
+    };
+    const storm = createStorm(initialState);
 
-  //   storm.dispatch({ user: [] });
+    storm.dispatch({ user: [] });
 
-  //   expect(storm.getState()).toEqual({ user: [] });
-  // });
+    expect(storm.getState()).toEqual({ user: [] });
+  });
 
   test('storm indiviudal key subscribe', () => {
     const initialState = {
@@ -77,22 +77,40 @@ describe('Creating a storm', () => {
 
   test('subscribe must fire on any fragment change', () => {
     const initialState = {
-      name: 'John',
-      surname: 'Doe',
+      info: [],
     }
-    const finalState = { name: 'Jain' };
     const storm = createStorm(initialState);
+    const addedValue= 'addedValue';
     const callback = jest.fn();
 
     storm.subscribe((state, subscribe) => {
       callback(state);
       return subscribe(state);
     });
-    storm.dispatch(prev => ({ ...prev, ...finalState }));
+    storm.dispatch(prev => ({ info: [...prev.info, addedValue] }));
+    storm.dispatch(prev => ({ info: [...prev.info, addedValue] }));
 
-    expect(callback).toBeCalledTimes(2);
-    expect(callback).lastCalledWith({ ...initialState, ...finalState });
+    expect(callback).lastCalledWith({ info: [addedValue, addedValue] });
   });
+
+  // test('subscribe must fire on any fragment change', () => {
+  //   const initialState = {
+  //     name: 'John',
+  //     surname: 'Doe',
+  //   }
+  //   const finalState = { name: 'Jain' };
+  //   const storm = createStorm(initialState);
+  //   const callback = jest.fn();
+
+  //   storm.subscribe((state, subscribe) => {
+  //     callback(state);
+  //     return subscribe(state);
+  //   });
+  //   storm.dispatch(prev => ({ ...prev, ...finalState }));
+
+  //   expect(callback).toBeCalledTimes(2);
+  //   expect(callback).lastCalledWith({ ...initialState, ...finalState });
+  // });
 
   test('dispatch method must update single information unit', () => {
     const initialState = {
