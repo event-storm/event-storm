@@ -46,7 +46,7 @@ export interface IStorm<T> {
   dispatch: (segments: Partial<T> | ((params: IStormState<T>) => Partial<T>), options?: AnyObject) => void;
 }
 
-export function createModel<T>(value: T, options: IModelOptions): IModel<T>;
+export function createModel<T>(value?: T, options?: IModelOptions): IModel<T>;
 export function createVirtualModel<T>(options: IVirtualModelOptions<T>): Omit<IModel<T, IVirtualModelOptions<T>>, 'dispatch'>;
 
 export function createStorm<T extends AnyObject>(data: T): IStorm<T>;
