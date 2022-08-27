@@ -1,3 +1,12 @@
+## [5.0.4](https://github.com/event-storm/event-storm/compare/v5.0.3...v5.0.4) (2022-08-22)
+
+
+### Bug Fixes
+
+* **storm:** primitive values handling has issues ([7ab7cd1](https://github.com/event-storm/event-storm/commit/7ab7cd13692998c5b35a0a48dfe45eff4cc731a8))
+
+
+
 ## [5.0.3](https://github.com/event-storm/event-storm/compare/v5.0.2...v5.0.3) (2022-08-22)
 
 
