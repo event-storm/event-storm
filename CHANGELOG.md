@@ -1,3 +1,23 @@
+## [5.0.9](https://github.com/event-storm/event-storm/compare/v5.0.8...v5.0.9) (2022-10-26)
+
+
+
+## [5.0.8](https://github.com/event-storm/event-storm/compare/v5.0.7...v5.0.8) (2022-08-27)
+
+
+
+## [5.0.7](https://github.com/event-storm/event-storm/compare/v5.0.6...v5.0.7) (2022-08-27)
+
+
+
+## [5.0.6](https://github.com/event-storm/event-storm/compare/v5.0.5...v5.0.6) (2022-08-27)
+
+
+
+## [5.0.5](https://github.com/event-storm/event-storm/compare/v5.0.4...v5.0.5) (2022-08-27)
+
+
+
 ## [5.0.4](https://github.com/event-storm/event-storm/compare/v5.0.3...v5.0.4) (2022-08-22)
 
 
