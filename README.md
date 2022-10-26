@@ -40,16 +40,16 @@ const defaultState = {
 const storm = createStorm(defaultState);
 
 // subscribing to listen all the changes
-store.subscribe((state, access) => console.log(access(store)));
+storm.subscribe((state, access) => console.log(access(storm)));
 
 // subscribing to listen only partial changes
-store.subscribe((state, access) => console.log(access(store.name)));
+storm.subscribe((state, access) => console.log(access(storm.name)));
 
 // update the state
-store.dispatch({ name: 'Event Storm - manage your state effectively' });
+storm.dispatch({ name: 'Event Storm - manage your state effectively' });
 
 // use previous state to make the updates
-store.dispatch(prev => ({ isActive: !prev.isActive }));
+storm.dispatch(prev => ({ isActive: !prev.isActive }));
 ```
 
 ### See it in action
