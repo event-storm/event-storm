@@ -5,8 +5,8 @@ import { isArray, isFunction, isObject, isUndefined } from 'utils';
 const mirror = _ => _;
 const subscribe = Symbol('subscribe');
 const exact = fragment => {
-  fragment?.[subscribe];
-  return fragment;
+  const result = fragment?.[subscribe];
+  return result || fragment;
 };
 // This is required to create a different proxy on top of internal state
 // https://immerjs.github.io/immer/freezing
@@ -17,7 +17,7 @@ const createProxyRecursive = (destination, sendPath, rootPath = '') => {
     get: (target, prop) => {
       if (prop === subscribe) {
         sendPath(rootPath);
-        return destination[prop];
+        return destination;
       }
       if (destination[prop] && isObject(destination[prop])) {
         return createProxyRecursive(

@@ -387,12 +387,12 @@ describe('storm array segment CRUD', () => {
     storm.dispatch(intermediateState);
 
     expect(subscriptionCallback).toBeCalledTimes(2);
-    expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual(intermediateState);
+    expect(subscriptionCallback.mock.calls[1][0]).toEqual(intermediateState);
 
     storm.dispatch(finalState);
 
     expect(subscriptionCallback).toBeCalledTimes(3);
-    expect(subscriptionCallback.mock.calls[2][0]).toStrictEqual(finalState);
+    expect(subscriptionCallback.mock.calls[2][0]).toEqual(finalState);
 
     const firstItemSubscriptionCallback = jest.fn();
     const secondItemSubscriptionCallback = jest.fn();
@@ -428,7 +428,7 @@ describe('storm array segment CRUD', () => {
     storm.dispatch(prev => ({ users: [...prev.users, updateItem] }));
 
     expect(subscriptionCallback).toBeCalledTimes(2);
-    expect(subscriptionCallback.mock.calls[1][0]).toStrictEqual({ ...initialState, users: [ ...initialState.users, updateItem ] });
+    expect(subscriptionCallback.mock.calls[1][0]).toEqual({ ...initialState, users: [ ...initialState.users, updateItem ] });
   });
 
   test('Deleting an array', () => {
