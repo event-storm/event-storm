@@ -1,3 +1,12 @@
+## [5.0.11](https://github.com/event-storm/event-storm/compare/v5.0.10...v5.0.11) (2022-10-31)
+
+
+### Bug Fixes
+
+* **storm:** proxy state was outputted for nested structures ([5fee349](https://github.com/event-storm/event-storm/commit/5fee349b74ef6a022cb88f7af68134c2c6323182))
+
+
+
 ## [5.0.10](https://github.com/event-storm/event-storm/compare/v5.0.9...v5.0.10) (2022-10-26)
 
 
