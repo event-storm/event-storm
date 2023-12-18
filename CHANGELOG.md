@@ -1,3 +1,12 @@
+## [5.0.12](https://github.com/event-storm/event-storm/compare/v5.0.11...v5.0.12) (2023-12-18)
+
+
+### Bug Fixes
+
+* **model:** options must not be persistant ([e238063](https://github.com/event-storm/event-storm/commit/e238063de709cb7e856dae2a746411c35041d52a))
+
+
+
 ## [5.0.11](https://github.com/event-storm/event-storm/compare/v5.0.10...v5.0.11) (2022-10-31)
 
 
