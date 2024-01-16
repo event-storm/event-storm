@@ -93,7 +93,7 @@ const createStorm = (defaultState, configs) => {
       });
       callback(proxyStore, exact);
 
-      !subscriptionPaths.size && subscriptionPaths.add('default');
+      !subscriptionPaths.size && subscriptionPaths.add('default', callback);
 
       subscriptionPaths.forEach(subscriptionPath => {
         subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath] || [];

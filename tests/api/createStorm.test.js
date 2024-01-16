@@ -93,24 +93,24 @@ describe('Creating a storm', () => {
     expect(callback).lastCalledWith({ info: [addedValue, addedValue] });
   });
 
-  // test('subscribe must fire on any fragment change', () => {
-  //   const initialState = {
-  //     name: 'John',
-  //     surname: 'Doe',
-  //   }
-  //   const finalState = { name: 'Jain' };
-  //   const storm = createStorm(initialState);
-  //   const callback = jest.fn();
+  test('subscribe must fire on any fragment change', () => {
+    const initialState = {
+      name: 'John',
+      surname: 'Doe',
+    }
+    const finalState = { name: 'Jain' };
+    const storm = createStorm(initialState);
+    const callback = jest.fn();
 
-  //   storm.subscribe((state, subscribe) => {
-  //     callback(state);
-  //     return subscribe(state);
-  //   });
-  //   storm.dispatch(prev => ({ ...prev, ...finalState }));
+    storm.subscribe((state, subscribe) => {
+      callback(state);
+      return subscribe(state);
+    });
+    storm.dispatch(prev => ({ ...prev, ...finalState }));
 
-  //   expect(callback).toBeCalledTimes(2);
-  //   expect(callback).lastCalledWith({ ...initialState, ...finalState });
-  // });
+    expect(callback).toBeCalledTimes(2);
+    expect(callback).lastCalledWith({ ...initialState, ...finalState });
+  });
 
   test('dispatch method must update single information unit', () => {
     const initialState = {
