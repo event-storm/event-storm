@@ -1,3 +1,12 @@
+## [5.0.13](https://github.com/event-storm/event-storm/compare/v5.0.12...v5.0.13) (2024-01-16)
+
+
+### Bug Fixes
+
+* **storm:** whole storm update subscription was missed ([1fd7532](https://github.com/event-storm/event-storm/commit/1fd7532c137ed6b162ea4877f4c543e5814c60de))
+
+
+
 ## [5.0.12](https://github.com/event-storm/event-storm/compare/v5.0.11...v5.0.12) (2023-12-18)
 
 
