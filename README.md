@@ -58,4 +58,4 @@ Examples:
  - [**Typescript**](https://codesandbox.io/s/beautiful-currying-bl9dv)
  - [**React**](https://codesandbox.io/s/intelligent-http-iupz5)
 
-## [Documentation](https://eventstorm.tech/)
+## [Documentation](https://event-storm.github.io/event-storm-documentation/)
