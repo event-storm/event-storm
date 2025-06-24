@@ -1,3 +1,12 @@
+## [5.0.14](https://github.com/event-storm/event-storm/compare/v5.0.13...v5.0.14) (2025-06-24)
+
+
+### Bug Fixes
+
+* **README.md:** Update documentation link ([a58b5d4](https://github.com/event-storm/event-storm/commit/a58b5d4c9df6f56e7430edb1d6f84ea3e51f75c2))
+
+
+
 ## [5.0.13](https://github.com/event-storm/event-storm/compare/v5.0.12...v5.0.13) (2024-01-16)
 
 
