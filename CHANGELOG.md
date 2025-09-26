@@ -1,3 +1,7 @@
+## [5.0.17](https://github.com/event-storm/event-storm/compare/v5.0.16...v5.0.17) (2025-09-26)
+
+
+
 ## [5.0.16](https://github.com/event-storm/event-storm/compare/v5.0.15...v5.0.16) (2025-09-26)
 
 
