@@ -1,3 +1,12 @@
+## [5.0.15](https://github.com/event-storm/event-storm/compare/v5.0.14...v5.0.15) (2025-09-26)
+
+
+### Bug Fixes
+
+* **storm:** array updates fixed ([1fdd3d1](https://github.com/event-storm/event-storm/commit/1fdd3d14b3fb98aceaa40362eb2372f9fe70263c))
+
+
+
 ## [5.0.14](https://github.com/event-storm/event-storm/compare/v5.0.13...v5.0.14) (2025-06-24)
 
 
