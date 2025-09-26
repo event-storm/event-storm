@@ -112,6 +112,24 @@ describe('Creating a storm', () => {
     expect(callback).lastCalledWith({ ...initialState, ...finalState });
   });
 
+    test('partial state update with array replacement', () => {
+    const initialState = {
+      users: ['a'],
+      activeId: 'some-id',
+    };
+    const finalState = {
+      users: ['Alice'],
+      activeId: 'some-id',
+    };
+
+    const patch = { users: ['Alice'] };
+
+    const storm = createStorm(initialState);
+    storm.dispatch(patch);
+
+    expect(storm.getState()).toEqual(finalState);
+  });
+
   test('dispatch method must update single information unit', () => {
     const initialState = {
       name: 'John',

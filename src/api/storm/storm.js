@@ -43,7 +43,7 @@ const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '')
       if (isUndefined(state[index])) {
         state[index] = item;
       } else {
-        if (partialState[index]) {
+        if (partialState[index] && isObject(partialState[index])) {
           return mergeRecursive(state[index], partialState[index], configs, paths, `${rootPath}[${index}]`);
         } else {
           state[index] = partialState[index];

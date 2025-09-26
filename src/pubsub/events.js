@@ -4,8 +4,8 @@ const events = {};
 
 const doesEventExist = event => !!events[event];
 
-const createEvent = (event, inital, options) => {
-  events[event] = createDefault({ lastState: inital, options });
+const createEvent = (event, initial, options) => {
+  events[event] = createDefault({ lastState: initial, options });
   return getEvent(event);
 }
 
