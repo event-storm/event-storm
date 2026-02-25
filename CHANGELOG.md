@@ -1,3 +1,12 @@
+## [5.0.18](https://github.com/event-storm/event-storm/compare/v5.0.17...v5.0.18) (2026-02-25)
+
+
+### Bug Fixes
+
+* **storm:** handle Symbol keys in Proxy and fix multi-key dispatch ([b354a0d](https://github.com/event-storm/event-storm/commit/b354a0d706d63c1e9ee13b3cff424aa368560fd7))
+
+
+
 ## [5.0.17](https://github.com/event-storm/event-storm/compare/v5.0.16...v5.0.17) (2025-09-26)
 
 
