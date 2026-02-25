@@ -19,6 +19,11 @@ const createProxyRecursive = (destination, sendPath, rootPath = '') => {
         sendPath(rootPath);
         return destination;
       }
+      // Symbols cannot be coerced to strings in template literals —
+      // return the raw value without path tracking
+      if (typeof prop === 'symbol') {
+        return destination[prop];
+      }
       if (destination[prop] && isObject(destination[prop])) {
         return createProxyRecursive(
           destination[prop],
@@ -56,19 +61,20 @@ const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '')
 
   if (isObject(partialState)) {
     for (let key in partialState) {
+      const childPath = `${rootPath}${rootPath ? '.' : ''}${key}`;
       if (!(key in state)) {
-        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
+        paths.push(childPath);
         state[key] = partialState[key];
       } else if (isObject(partialState[key]) && partialState[key] && (configs.fireDuplicates || state[key] !== partialState[key])) {
-        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
+        paths.push(childPath);
         if (partialState[key] && state[key]) {
-          return mergeRecursive(state[key], partialState[key], configs, paths, `${rootPath}${rootPath ? '.' : ''}${key}`);
+          mergeRecursive(state[key], partialState[key], configs, paths, childPath);
         } else {
           state[key] = partialState[key];
         }
       } else if (configs.fireDuplicates || state[key] !== partialState[key]) {
         state[key] = partialState[key];
-        paths.push(`${rootPath}${`${rootPath ? '.' : ''}${key}`}`);
+        paths.push(childPath);
       }
     }
     return paths;
