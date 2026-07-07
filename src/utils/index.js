@@ -18,6 +18,10 @@ export const isDefaultState = state => state === defaultState;
 
 const isObject = options => typeof options === 'object' && options;
 
+// An empty object/array in a patch is a terminal reset signal, not a branch to
+// merge into — merging it would be a no-op and leave stale nested keys behind.
+const isEmpty = value => isObject(value) && Object.keys(value).length === 0;
+
 const isPromise = possiblePromise => !!possiblePromise && isFunction(possiblePromise.then);
 
-export { isPromise, createDefault, noop, isFunction, isArray, isObject, isUndefined };
+export { isPromise, createDefault, noop, isFunction, isArray, isObject, isUndefined, isEmpty };

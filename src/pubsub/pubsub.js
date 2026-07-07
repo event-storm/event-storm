@@ -12,7 +12,7 @@ const dispatch = async (event, valueSetter, { force, ...dispatchConfigs }) => {
   neededEvent.lastState = nextState;
 
   const fireDuplicates = dispatchConfigs.fireDuplicates || neededEvent.options.fireDuplicates;
-  neededEvent.subscribers.forEach(({ callback }) => {
+  neededEvent.subscribers?.forEach(({ callback }) => {
     if (fireDuplicates || force) return callback(nextState, dispatchConfigs);
 
     if (nextState !== lastState) return callback(nextState, dispatchConfigs);
@@ -26,7 +26,9 @@ const subscribe = (event, callback, options = {}) => {
   !neededEvent.subscribers.some(subscription => subscription.callback === callback) && neededEvent.subscribers.push({ callback });
 
   return () => {
-    neededEvent.subscribers = neededEvent.subscribers.filter(subscription => subscription.callback !== callback);
+    if (neededEvent.subscribers) {
+      neededEvent.subscribers = neededEvent.subscribers.filter(subscription => subscription.callback !== callback);
+    }
   }
 }
 

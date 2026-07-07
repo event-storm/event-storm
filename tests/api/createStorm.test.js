@@ -500,3 +500,119 @@ describe('storm array segment CRUD', () => {
     expect(fn).toBeCalledTimes(2);
   });
 });
+
+describe('Empty object/array are terminal replace values', () => {
+  test('empty object resets a nested branch instead of a no-op merge', () => {
+    const storm = createStorm({ a: 1, b: 2, user: { id: 1 } });
+    storm.dispatch(prev => ({ ...prev, user: {} }));
+    expect(storm.getState()).toEqual({ a: 1, b: 2, user: {} });
+  });
+
+  test('empty array resets a nested array', () => {
+    const storm = createStorm({ list: [1, 2, 3], keep: 'x' });
+    storm.dispatch({ list: [] });
+    expect(storm.getState()).toEqual({ list: [], keep: 'x' });
+  });
+
+  test('empty object replaces a non-empty array (type change)', () => {
+    const storm = createStorm({ x: [1, 2] });
+    storm.dispatch({ x: {} });
+    expect(storm.getState()).toEqual({ x: {} });
+  });
+
+  test('empty array replaces a non-empty object (type change)', () => {
+    const storm = createStorm({ x: { a: 1 } });
+    storm.dispatch({ x: [] });
+    expect(storm.getState()).toEqual({ x: [] });
+  });
+
+  test('deeply nested branch resets', () => {
+    const storm = createStorm({ a: { b: { c: 1, d: 2 } } });
+    storm.dispatch({ a: { b: {} } });
+    expect(storm.getState()).toEqual({ a: { b: {} } });
+  });
+
+  test('empty value on a brand new key is simply assigned', () => {
+    const storm = createStorm({ a: 1 });
+    storm.dispatch({ fresh: {} });
+    expect(storm.getState()).toEqual({ a: 1, fresh: {} });
+  });
+
+  test('non-empty patch still merges (regression)', () => {
+    const storm = createStorm({ user: { id: 1, name: 'a' } });
+    storm.dispatch({ user: { name: 'b' } });
+    expect(storm.getState()).toEqual({ user: { id: 1, name: 'b' } });
+  });
+
+  test('resetting an array element to empty clears it', () => {
+    const storm = createStorm({ layers: [{ id: '0', settings: { type: 'static' } }] });
+    storm.dispatch({ layers: [{}] });
+    expect(storm.getState()).toEqual({ layers: [{}] });
+  });
+});
+
+describe('Subscription correctness when a branch is reset', () => {
+  test('the branch subscriber fires, an unrelated subscriber does not', () => {
+    const storm = createStorm({ user: { id: 1 }, other: { n: 1 } });
+    const userSubscriber = jest.fn();
+    const otherSubscriber = jest.fn();
+    storm.subscribe((state, subscribe) => {
+      userSubscriber();
+      return subscribe(state.user);
+    });
+    storm.subscribe((state, subscribe) => {
+      otherSubscriber();
+      return subscribe(state.other);
+    });
+
+    storm.dispatch({ user: {} });
+
+    expect(userSubscriber).toBeCalledTimes(2);
+    expect(otherSubscriber).toBeCalledTimes(1);
+  });
+
+  test('the subscriber receives the emptied value', () => {
+    const storm = createStorm({ user: { id: 1 } });
+    const subscriber = jest.fn();
+    storm.subscribe((state, subscribe) => {
+      subscriber(state.user);
+      return subscribe(state.user);
+    });
+
+    storm.dispatch({ user: {} });
+
+    expect(subscriber.mock.calls[1][0]).toEqual({});
+  });
+
+  test('a subscriber on a leaf of the reset branch is notified it disappeared', () => {
+    const storm = createStorm({ user: { id: 1, profile: { name: 'a' } } });
+    const idSubscriber = jest.fn();
+    const nameSubscriber = jest.fn();
+    storm.subscribe((state, subscribe) => {
+      idSubscriber();
+      return subscribe(state.user?.id);
+    });
+    storm.subscribe((state, subscribe) => {
+      nameSubscriber();
+      return subscribe(state.user?.profile?.name);
+    });
+
+    storm.dispatch({ user: {} });
+
+    expect(idSubscriber).toBeCalledTimes(2);
+    expect(nameSubscriber).toBeCalledTimes(2);
+  });
+
+  test('a subscriber on a leaf of a reset array element is notified', () => {
+    const storm = createStorm({ layers: [{ id: '0', settings: { type: 'static' } }] });
+    const settingsSubscriber = jest.fn();
+    storm.subscribe((state, subscribe) => {
+      settingsSubscriber();
+      return subscribe(state.layers?.[0]?.settings?.type);
+    });
+
+    storm.dispatch({ layers: [{}] });
+
+    expect(settingsSubscriber).toBeCalledTimes(2);
+  });
+});

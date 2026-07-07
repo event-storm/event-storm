@@ -30,9 +30,9 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
     
     const { lastState } = virtualEvent;
     virtualEvent.lastState = nextState;
-    virtualEvent.subscribers.forEach(({ callback }) => {
+    virtualEvent.subscribers?.forEach(({ callback }) => {
       if (virtualEvent.options.fireDuplicates) return callback(nextState, dispatchConfigs);
-      
+
       if (nextState !== lastState) return callback(nextState, dispatchConfigs);
     });
   }
@@ -53,7 +53,9 @@ const createVirtualModel = ({ models = [], handler, ...options } = {}) => {
         callback,
       });
       return () => {
-        virtualEvent.subscribers = virtualEvent.subscribers.filter(subscription => subscription.callback !== callback);
+        if (virtualEvent.subscribers) {
+          virtualEvent.subscribers = virtualEvent.subscribers.filter(subscription => subscription.callback !== callback);
+        }
       }
     },
     setOptions: ({

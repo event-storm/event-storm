@@ -1,6 +1,6 @@
 import { produce, setAutoFreeze } from 'immer';
 
-import { isArray, isFunction, isObject, isUndefined } from 'utils';
+import { isArray, isFunction, isObject, isUndefined, isEmpty } from 'utils';
 
 const mirror = _ => _;
 const subscribe = Symbol('subscribe');
@@ -41,6 +41,21 @@ const createProxyRecursive = (destination, sendPath, rootPath = '') => {
   return proxyObject;
 };
 
+// When a branch is replaced wholesale (e.g. reset to an empty object/array), the
+// values that lived under it cease to exist. Their subscribers are watching paths
+// that will never appear in a merge diff, so we enumerate the old subtree's paths
+// explicitly and emit them — otherwise a component bound to a now-gone leaf would
+// never learn its value disappeared.
+const collectPaths = (value, rootPath, paths) => {
+  if (!isObject(value)) return paths;
+  for (let key in value) {
+    const childPath = `${rootPath}${isArray(value) ? `[${key}]` : `.${key}`}`;
+    paths.push(childPath);
+    collectPaths(value[key], childPath, paths);
+  }
+  return paths;
+};
+
 const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '') => {
   if (isArray(state) && isArray(partialState)) {
     partialState.forEach((item, index) => {
@@ -48,9 +63,10 @@ const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '')
       if (isUndefined(state[index])) {
         state[index] = item;
       } else {
-        if (partialState[index] && isObject(partialState[index])) {
+        if (partialState[index] && isObject(partialState[index]) && !isEmpty(partialState[index])) {
           return mergeRecursive(state[index], partialState[index], configs, paths, `${rootPath}[${index}]`);
         } else {
+          isEmpty(partialState[index]) && collectPaths(state[index], `${rootPath}[${index}]`, paths);
           state[index] = partialState[index];
         }
       }
@@ -63,6 +79,10 @@ const mergeRecursive = (state, partialState, configs, paths = [], rootPath = '')
     for (let key in partialState) {
       const childPath = `${rootPath}${rootPath ? '.' : ''}${key}`;
       if (!(key in state)) {
+        paths.push(childPath);
+        state[key] = partialState[key];
+      } else if (isEmpty(partialState[key]) && (configs.fireDuplicates || state[key] !== partialState[key])) {
+        collectPaths(state[key], childPath, paths);
         paths.push(childPath);
         state[key] = partialState[key];
       } else if (isObject(partialState[key]) && partialState[key] && (configs.fireDuplicates || state[key] !== partialState[key])) {
@@ -108,8 +128,10 @@ const createStorm = (defaultState, configs) => {
 
       return () => {
         subscriptionPaths.forEach(subscriptionPath => {
-          subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath]
-            .filter(subscription => subscription !== callback);
+          if (subscribersTree[subscriptionPath]) {
+            subscribersTree[subscriptionPath] = subscribersTree[subscriptionPath]
+              .filter(subscription => subscription !== callback);
+          }
         });
       };
     },
