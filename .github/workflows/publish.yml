@@ -40,6 +40,7 @@ jobs:
         env:
            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create release
+        if: steps.changelog.outputs.tag != ''
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}

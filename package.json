@@ -12,7 +12,7 @@
     "bundle": "rollup -c",
     "lint": "eslint src/*.js",
     "build": "rimraf ./dist && yarn run bundle",
-    "dispatch-lib": "yarn run build && cd dist && yarn publish"
+    "dispatch-lib": "yarn run build && cd dist && npm publish"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
