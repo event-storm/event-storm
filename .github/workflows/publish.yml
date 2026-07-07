@@ -4,60 +4,62 @@ on:
   push:
     branches: [master]
     paths:
-      - 'src/*.js'
-      - 'types/*.d.ts'
+      - 'src/**/*.js'
+      - 'types/**/*.d.ts'
+
+# id-token: write lets npm authenticate to the registry over OIDC (trusted
+# publishing) with no long-lived NPM_TOKEN, and enables build provenance.
+# contents: write lets the changelog action push the release commit and tag.
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout to repository
-        uses: actions/checkout@v2
-      - name: Use NodeJS
-        uses: actions/setup-node@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          node-version: '14.x'
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
+      # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the npm
+      # bundled with the Node runtime.
+      - name: Upgrade npm for trusted publishing
+        run: npm install --global npm@latest
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Linting
+      - name: Lint
         run: yarn run lint
-      - name: Testing
+      - name: Test
         run: yarn run jest --collectCoverage
-      - uses: codecov/codecov-action@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        continue-on-error: true
         with:
           directory: ./coverage
-      - name: Generate changelog
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Generate changelog and bump version
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v2
+        uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.RELEASE_TOKEN }}
           git-message: 'chore(release): {version}'
           output-file: 'CHANGELOG.md'
           release-count: '0'
-          package-json: './package.json'
-      - name: dispatch to npm
+          skip-on-empty: 'false'
+      - name: Publish to npm via trusted publishing
         run: yarn run dispatch-lib
-        env:
-           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Create release
+      - name: Create GitHub release
         if: steps.changelog.outputs.tag != ''
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
-          release_name: ${{ steps.changelog.outputs.tag }}
+          name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
-      - name: Rollback release
-        if: failure() && steps.changelog.outputs.id != ''
-        uses: author/action-rollback@stable
-        with:
-          id: ${{ steps.changelog.outputs.id }}
-          tag: ${{ steps.changelog.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Automatic Revert
-        if: failure()
-        uses: srt32/revert@v0.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN }}

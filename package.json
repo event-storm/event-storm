@@ -12,7 +12,7 @@
     "bundle": "rollup -c",
     "lint": "eslint src/*.js",
     "build": "rimraf ./dist && yarn run bundle",
-    "dispatch-lib": "yarn run build && cd dist && npm publish --registry https://registry.npmjs.org"
+    "dispatch-lib": "yarn run build && cd dist && npm publish --provenance --access public --registry https://registry.npmjs.org"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
