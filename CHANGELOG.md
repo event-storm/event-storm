@@ -1,3 +1,12 @@
+## [5.0.19](https://github.com/event-storm/event-storm/compare/v5.0.18...v5.0.19) (2026-07-07)
+
+
+### Bug Fixes
+
+* **storm:** treat empty object/array as terminal reset instead of no-op merge ([f1ae4fb](https://github.com/event-storm/event-storm/commit/f1ae4fb13480850ab6a794b5f5ba767ae7fca8f3))
+
+
+
 ## [5.0.18](https://github.com/event-storm/event-storm/compare/v5.0.17...v5.0.18) (2026-02-25)
 
 
