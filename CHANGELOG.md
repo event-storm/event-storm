@@ -1,3 +1,7 @@
+## [5.0.23](https://github.com/event-storm/event-storm/compare/v5.0.22...v5.0.23) (2026-07-07)
+
+
+
 ## [5.0.22](https://github.com/event-storm/event-storm/compare/v5.0.21...v5.0.22) (2026-07-07)
 
 
@@ -143,8 +147,8 @@
 
 * **build:** build was failing because of third party library ([070c159](https://github.com/event-storm/event-storm/commit/070c159f180cf4c009a4ac72b9276c46bca4a406))
 * **dependencies:** remove package-lock add to yarn ([99b9ce1](https://github.com/event-storm/event-storm/commit/99b9ce110ae8df989ff13520386b108747d6e874))
-* **deps:** remove pakage lock file ([8e7ef42](https://github.com/event-storm/event-storm/commit/8e7ef4230604ad4d3901597829cb93e78e1f2d7d))
 * **deps tree:** remove dependency section from the package json ([479d47f](https://github.com/event-storm/event-storm/commit/479d47f2b8f0492aed74f0a6fa7181df81fad259))
+* **deps:** remove pakage lock file ([8e7ef42](https://github.com/event-storm/event-storm/commit/8e7ef4230604ad4d3901597829cb93e78e1f2d7d))
 * **dispatch:** updater fix ([758ef07](https://github.com/event-storm/event-storm/commit/758ef071aaf53a90f1fedb7d7da708c5e0706b3b))
 * **docs:** Readme syntax issue ([962a9f8](https://github.com/event-storm/event-storm/commit/962a9f8e81e1b1db5c9714f37c82cb73d4660d31))
 * **env:** update node version ([d9dd9f3](https://github.com/event-storm/event-storm/commit/d9dd9f3a1af4ff7e45f198ad794c1560be0d98ef))
