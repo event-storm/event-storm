@@ -58,8 +58,16 @@ jobs:
           output-file: 'CHANGELOG.md'
           release-count: '0'
           skip-on-empty: 'false'
+      - name: Build package
+        run: yarn run build
+      # Publish with npm directly, NOT via `yarn run`: yarn injects
+      # npm_config_registry=registry.yarnpkg.com into the script env, which
+      # stops npm's OIDC trusted-publishing detection from engaging (it only
+      # runs against the npm registry). Invoked directly, npm uses its default
+      # registry and authenticates over OIDC with no token.
       - name: Publish to npm via trusted publishing
-        run: yarn run dispatch-lib
+        run: npm publish --access public
+        working-directory: dist
       - name: Create GitHub release
         if: steps.changelog.outputs.tag != ''
         uses: softprops/action-gh-release@v2
