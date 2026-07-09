@@ -1,3 +1,12 @@
+## [5.1.3](https://github.com/event-storm/event-storm/compare/v5.1.2...v5.1.3) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** publish without --provenance to dodge npm sigstore module bug ([12fde01](https://github.com/event-storm/event-storm/commit/12fde018b74f25205d9dc99ae4c80620e62cd442))
+
+
+
 ## [5.1.2](https://github.com/event-storm/event-storm/compare/v5.1.1...v5.1.2) (2026-07-09)
 
 
