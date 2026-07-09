@@ -1,3 +1,12 @@
+## [5.1.4](https://github.com/event-storm/event-storm/compare/v5.1.3...v5.1.4) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** pin npm to 11.x to avoid npm 12 sigstore regression ([273bfd4](https://github.com/event-storm/event-storm/commit/273bfd49817f39f099b12c1b3c8238a7808b3e99))
+
+
+
 ## [5.1.3](https://github.com/event-storm/event-storm/compare/v5.1.2...v5.1.3) (2026-07-09)
 
 
