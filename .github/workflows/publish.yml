@@ -23,14 +23,14 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TOKEN }}
-      # No registry-url here on purpose: it would write an .npmrc with a
-      # placeholder _authToken that shadows OIDC on the registry PUT and makes
-      # trusted publishing fail with a permission 404. The publish targets the
-      # npm registry explicitly via the --registry flag in dispatch-lib instead.
+      # registry-url is required by npm trusted publishing: it points npm at
+      # the npm registry so OIDC detection engages. No NODE_AUTH_TOKEN is set,
+      # so npm authenticates the publish over OIDC (docs.npmjs.com/trusted-publishers).
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
       # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the npm
       # bundled with the Node runtime. Pin to 11.x: npm 12.0.0 unbundled the
       # sigstore module, so it crashes with MODULE_NOT_FOUND when generating
