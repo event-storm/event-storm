@@ -32,9 +32,11 @@ jobs:
         with:
           node-version: '22'
       # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the npm
-      # bundled with the Node runtime.
+      # bundled with the Node runtime. Pin to 11.x: npm 12.0.0 unbundled the
+      # sigstore module, so it crashes with MODULE_NOT_FOUND when generating
+      # the provenance that trusted publishing enables automatically.
       - name: Upgrade npm for trusted publishing
-        run: npm install --global npm@latest
+        run: npm install --global npm@11
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Lint
