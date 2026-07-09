@@ -1,3 +1,12 @@
+## [5.1.7](https://github.com/event-storm/event-storm/compare/v5.1.6...v5.1.7) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** publish with NPM_TOKEN auth independent of trusted-publisher config ([63a99f8](https://github.com/event-storm/event-storm/commit/63a99f86122bcd8968e923396097eebac5f6b376))
+
+
+
 ## [5.1.6](https://github.com/event-storm/event-storm/compare/v5.1.5...v5.1.6) (2026-07-09)
 
 
