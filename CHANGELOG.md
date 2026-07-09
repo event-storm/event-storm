@@ -1,3 +1,12 @@
+## [5.1.2](https://github.com/event-storm/event-storm/compare/v5.1.1...v5.1.2) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** drop registry-url so OIDC is used for the npm publish ([962de52](https://github.com/event-storm/event-storm/commit/962de5256dc2458b113d84772cac1aa728fe93df))
+
+
+
 ## [5.1.1](https://github.com/event-storm/event-storm/compare/v5.1.0...v5.1.1) (2026-07-07)
 
 
