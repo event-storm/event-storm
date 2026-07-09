@@ -1,3 +1,12 @@
+## [5.1.6](https://github.com/event-storm/event-storm/compare/v5.1.5...v5.1.6) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** restore registry-url required by npm trusted publishing ([7022cae](https://github.com/event-storm/event-storm/commit/7022cae4c2af6d955061894aa3f884fc040d5e8c))
+
+
+
 ## [5.1.5](https://github.com/event-storm/event-storm/compare/v5.1.4...v5.1.5) (2026-07-09)
 
 
