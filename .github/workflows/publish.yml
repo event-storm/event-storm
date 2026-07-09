@@ -23,11 +23,14 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TOKEN }}
+      # No registry-url here on purpose: it would write an .npmrc with a
+      # placeholder _authToken that shadows OIDC on the registry PUT and makes
+      # trusted publishing fail with a permission 404. The publish targets the
+      # npm registry explicitly via the --registry flag in dispatch-lib instead.
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
       # Trusted publishing (OIDC) requires npm >= 11.5.1, newer than the npm
       # bundled with the Node runtime.
       - name: Upgrade npm for trusted publishing
