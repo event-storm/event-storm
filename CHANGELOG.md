@@ -1,3 +1,12 @@
+## [5.1.5](https://github.com/event-storm/event-storm/compare/v5.1.4...v5.1.5) (2026-07-09)
+
+
+### Bug Fixes
+
+* **ci:** publish with npm directly so OIDC engages ([45bdab6](https://github.com/event-storm/event-storm/commit/45bdab6d605a018d6586919c4910a08c5ad80693))
+
+
+
 ## [5.1.4](https://github.com/event-storm/event-storm/compare/v5.1.3...v5.1.4) (2026-07-09)
 
 
